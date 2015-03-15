@@ -1,5 +1,7 @@
 package;
 
+
+import haxe.ds.Vector;
 import haxe.Timer;
 import kha.Button;
 import kha.Color;
@@ -9,10 +11,24 @@ import kha.Game;
 import kha.Image;
 import kha.Loader;
 import kha.LoadingScreen;
+import kha.math.Quaternion;
 import kha.math.Random;
+import kha.math.Vector3;
 import kha.Scaler;
 import kha.Scheduler;
 import kha.Sound;
+import kha.vr.SensorState;
+import kha.vr.TimeWarpImage;
+import kha.vr.TimeWarpParms;
+
+
+import kha.vr.VrInterface;
+import kha.math.Matrix4;
+import kha.graphics4.TextureFormat;
+import kha.graphics4.Usage;
+import kha.math.Matrix4;
+
+import GlobeMesh;
 
 import BigBlock;
 
@@ -24,6 +40,12 @@ class BlocksFromHeaven extends Game {
 	private var lineSound: Sound;
 	private var backbuffer: Image;
 	
+	private var globe: GlobeMesh;
+	
+	private var images: Vector<Image>;
+	private var numImages: Int = 4;
+	private var currentImage: Int = 0;
+
 	public function new() {
 		super("BlocksFromHeaven", false);
 	}
@@ -31,7 +53,14 @@ class BlocksFromHeaven extends Game {
 	override public function init(): Void {
 		Configuration.setScreen(new LoadingScreen());
 		Loader.the.loadRoom("blocks", loadingFinished);
+		
+		
+		
 	}
+	
+	
+	
+	
 	
 	private function loadingFinished(): Void {
 		Random.init(Std.int(Timer.stamp() * 1000));
@@ -57,26 +86,147 @@ class BlocksFromHeaven extends Game {
 		
 		Configuration.setScreen(this);
 		Loader.the.getMusic("blocks").play();
+		
+		globe = new GlobeMesh(1.0, 1.0);
+		
+		coloredImage = Image.createRenderTarget(1024, 1024, TextureFormat.RGBA32);
+		redImage = Image.createRenderTarget(1024, 1024, TextureFormat.RGBA32);
+		
+		images = new Vector<Image>(4);
+		for (i in 0...4) {
+			images[i] = Image.createRenderTarget(1024, 1024, TextureFormat.RGBA32, true, 1);
+		}
+		
 	}
 	
-	override public function render(framebuffer: Framebuffer): Void {
-		var g = backbuffer.g2;
-		g.begin();
-		g.color = Color.White;
-		g.drawImage(board, 0, 0);
-		for (x in 0...GameBlock.xsize) {
-			for (y in 0...GameBlock.ysize) {
-				if (GameBlock.blocked[x][y] != null) {
-					GameBlock.blocked[x][y].draw(g);
-				}
+	private function nextImage(): Image {
+		currentImage++;
+		if (currentImage == numImages) currentImage = 0;
+		return images[currentImage];
+	}
+	
+	
+	private function degreesToRadians(d: Float): Float {
+		return d * Math.PI / 180;
+	}
+	
+	var prev: Float;
+	
+	var coloredImage: Image;
+	var redImage: Image;
+	
+	
+	// Convert a standard projection matrix into a TanAngle matrix for
+	// the primary time warp surface.
+	function TanAngleMatrixFromProjection(projection: Matrix4): Matrix4
+	{
+		// A projection matrix goes from a view point to NDC, or -1 to 1 space.
+		// Scale and bias to convert that to a 0 to 1 space.
+
+		var proj: Matrix4 = Matrix4.empty();
+		for (x in 0...4) {
+			for (y in 0...4) {
+				proj.set(x, y, projection.get(x, y));
 			}
 		}
-		next.draw(g);
-		current.draw(g);
-		g.end();
-		startRender(framebuffer);
-		Scaler.scale(backbuffer, framebuffer, kha.Sys.screenRotation);
-		endRender(framebuffer);
+
+		for ( i in 2...4 )
+		{
+			proj.set(i, 0, 0.0);
+			proj.set(i, 1, 0.0);
+			proj.set(i, 2, -1.0);
+			proj.set(i, 3, 0.0);
+		}
+		var result: Matrix4 = Matrix4.translation(0.5, 0.5, 0.0);
+		result = result.multmat(Matrix4.scale(0.5, 0.5, 1.0));
+		result.multmat(proj);
+		
+		return result;
+	}
+	
+	
+	
+	override public function render(framebuffer: Framebuffer): Void {
+		
+		
+		
+		
+		
+		var now: Float = VrInterface.instance.GetTimeInSeconds();
+		var rawDelta: Float = now - prev;
+		prev = now;
+		
+		var clampedPrediction = Math.min(0.1, rawDelta * 2.0);
+		
+		var state: SensorState = VrInterface.instance.GetPredictedSensorState(now + clampedPrediction);
+
+		var orientation: Quaternion = state.Predicted.Pose.Orientation;
+
+		var EyeYaw: Float;
+		var EyePitch: Float;
+		var EyeRoll: Float;
+
+		var eulerAngles: Vector3 = orientation.getEulerAngles(Quaternion.AXIS_Y, Quaternion.AXIS_X, Quaternion.AXIS_Z);
+
+		EyeYaw = eulerAngles.x;
+		EyePitch = eulerAngles.y;
+		EyeRoll = eulerAngles.z;
+		
+		var rollPitchYaw: Matrix4 = Matrix4.rotationY(EyeYaw).multmat(Matrix4.rotationX(EyePitch).multmat(Matrix4.rotationZ(EyeRoll)));
+
+		 
+		var projection: Matrix4 = Matrix4.perspectiveProjection(degreesToRadians(65), 1.0, 0.1, 200);
+		
+		
+		
+		
+		
+		
+		var curImage: Image = nextImage();
+		
+		curImage.g4.begin();
+		curImage.g4.clear(Color.Yellow, 0.0);		
+		
+		
+		var m: Matrix4 = Matrix4.identity();
+		var v: Matrix4 = Matrix4.lookAt(new Vector3(4, 4, 3), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+		var p: Matrix4 = Matrix4.perspectiveProjection(degreesToRadians(90), 1, 0.1, 200);
+		
+		var mvp: Matrix4 = p.multmat(v.multmat(m));
+		
+		globe.render(curImage.g4, mvp);
+		
+		curImage.g4.end();
+		
+		
+		// TODO: Why doesn't the depth buffer work?
+		
+		redImage.g4.begin();
+		redImage.g4.clear(Color.Red);
+		
+		redImage.g4.end();
+		
+		
+		var parms: TimeWarpParms = new TimeWarpParms();
+		var image: TimeWarpImage = new TimeWarpImage();
+		image.Image = curImage;
+		image.Pose = state.Predicted;
+		
+		var redTWImage: TimeWarpImage = new TimeWarpImage();
+		redTWImage.Pose = state.Predicted;
+		redTWImage.Image = redImage;
+		
+		parms.LeftImage = image;
+		parms.RightImage = redTWImage;
+		
+		// TODO: Port the code over
+		image.TexCoordsFromTanAngles = TanAngleMatrixFromProjection(p);
+		redTWImage.TexCoordsFromTanAngles = Matrix4.identity();
+		
+		
+		VrInterface.instance.WarpSwap(parms);
+		
+		
 	}
 	
 	private var left = false;
