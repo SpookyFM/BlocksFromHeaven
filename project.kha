@@ -103,6 +103,13 @@
       "file": "blocks",
       "name": "blocks",
       "scale": 1.0
+    },
+    {
+      "id": "975284e4-4e9a-45ab-bf63-45cf113ee05c",
+      "type": "blob",
+      "file": "oculussig_46abd844",
+      "name": "oculussig_46abd844",
+      "scale": 1.0
     }
   ],
   "rooms": [
