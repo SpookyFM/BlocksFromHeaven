@@ -243,9 +243,8 @@ class BlocksFromHeaven extends Game {
 		parms.RightImage = rightTimeWarpImage;
 		
 		// TODO: Port the code over
-		leftTimeWarpImage.TexCoordsFromTanAngles = TanAngleMatrixFromProjection(p);
-		rightTimeWarpImage.TexCoordsFromTanAngles = TanAngleMatrixFromProjection(p);
-		
+		leftTimeWarpImage.TexCoordsFromTanAngles = p;
+		rightTimeWarpImage.TexCoordsFromTanAngles = p;		
 
 		VrInterface.instance.WarpSwap(parms);
 	}
