@@ -6,14 +6,18 @@ import haxe.Timer;
 import kha.Button;
 import kha.Color;
 import kha.Configuration;
+import kha.graphics4.Graphics;
 import kha.Framebuffer;
 import kha.Game;
+import kha.graphics4.CompareMode;
+import kha.graphics4.CullMode;
 import kha.Image;
 import kha.Loader;
 import kha.LoadingScreen;
 import kha.math.Quaternion;
 import kha.math.Random;
 import kha.math.Vector3;
+import kha.math.Vector4;
 import kha.Scaler;
 import kha.Scheduler;
 import kha.Sound;
@@ -87,14 +91,16 @@ class BlocksFromHeaven extends Game {
 		Configuration.setScreen(this);
 		Loader.the.getMusic("blocks").play();
 		
-		globe = new GlobeMesh(1.0, 1.0);
+		globe = new GlobeMesh(1, 1);
+		globe.texture = Loader.the.getImage("panorama");
 		
 		coloredImage = Image.createRenderTarget(1024, 1024, TextureFormat.RGBA32);
 		redImage = Image.createRenderTarget(1024, 1024, TextureFormat.RGBA32);
 		
 		images = new Vector<Image>(4);
-		for (i in 0...4) {
-			images[i] = Image.createRenderTarget(1024, 1024, TextureFormat.RGBA32, true, 1);
+		for (i in 0...numImages) {
+			//images[i] = Image.createRenderTarget(1024, 1024, TextureFormat.RGBA32, true, 1);
+			images[i] = Image.createRenderTarget(1024, 1024, TextureFormat.RGBA32);
 		}
 		
 	}
@@ -120,47 +126,61 @@ class BlocksFromHeaven extends Game {
 	// the primary time warp surface.
 	function TanAngleMatrixFromProjection(projection: Matrix4): Matrix4
 	{
+		
 		// A projection matrix goes from a view point to NDC, or -1 to 1 space.
 		// Scale and bias to convert that to a 0 to 1 space.
 
 		var proj: Matrix4 = Matrix4.empty();
-		for (x in 0...4) {
-			for (y in 0...4) {
-				proj.set(x, y, projection.get(x, y));
-			}
-		}
-
-		for ( i in 2...4 )
-		{
-			proj.set(i, 0, 0.0);
-			proj.set(i, 1, 0.0);
-			proj.set(i, 2, -1.0);
-			proj.set(i, 3, 0.0);
-		}
-		var result: Matrix4 = Matrix4.translation(0.5, 0.5, 0.0);
-		result = result.multmat(Matrix4.scale(0.5, 0.5, 1.0));
-		result.multmat(proj);
 		
-		return result;
+		for (x in 0...4) for (y in 0...4) {
+			proj.set(x, y, projection.get(x, y));
+		}
+		
+		for (i in 2...4) {
+			proj.set(i, 0, 0);
+			proj.set(i, 1, 0);
+			proj.set(i, 2, -1);
+			proj.set(i, 3, 0);
+		}
+	
+		var t: Matrix4 = Matrix4.translation(0.5, 0.5, 0);
+		var s: Matrix4 = Matrix4.scale(0.5, 0.5, 1);
+		
+		return s.multmat(t);
+	}
+	
+	function renderIt(target: Image, v: Matrix4): Matrix4 {
+		var m: Matrix4 = Matrix4.identity();
+		
+		var p: Matrix4 = Matrix4.perspectiveProjection(degreesToRadians(90), 1, 0.1, 200);
+		
+		
+		
+		
+		var vm: Matrix4 = v.multmat(m);
+		var pvm: Matrix4 = p.multmat(vm);
+		
+		pvm = v.multmat(p);
+		
+		
+		var g: Graphics = target.g4;
+		
+		g.begin();
+		g.clear(Color.Green);		
+		globe.render(g, pvm);
+		
+		
+		g.flush();
+		g.end();
+		
+		return p;
 	}
 	
 	
-	
-	override public function render(framebuffer: Framebuffer): Void {
-		
-		
-		
-		
-		
-		var now: Float = VrInterface.instance.GetTimeInSeconds();
-		var rawDelta: Float = now - prev;
-		prev = now;
-		
-		var clampedPrediction = Math.min(0.1, rawDelta * 2.0);
-		
-		var state: SensorState = VrInterface.instance.GetPredictedSensorState(now + clampedPrediction);
-
+	public function getViewMatrix(state: SensorState): Matrix4 {
 		var orientation: Quaternion = state.Predicted.Pose.Orientation;
+		
+		trace("Orientation: " + orientation.x + " " + orientation.y + " " + orientation.z + " " + orientation.w);
 
 		var EyeYaw: Float;
 		var EyePitch: Float;
@@ -172,34 +192,35 @@ class BlocksFromHeaven extends Game {
 		EyePitch = eulerAngles.y;
 		EyeRoll = eulerAngles.z;
 		
+		trace("Angles: EyeYaw:" + EyeYaw + " EyePitch " + EyePitch + " EyeRoll " + EyeRoll);
+		
 		var rollPitchYaw: Matrix4 = Matrix4.rotationY(EyeYaw).multmat(Matrix4.rotationX(EyePitch).multmat(Matrix4.rotationZ(EyeRoll)));
+		
+		return rollPitchYaw;
+	}
 
-		 
-		var projection: Matrix4 = Matrix4.perspectiveProjection(degreesToRadians(65), 1.0, 0.1, 200);
+	
+	override public function render(framebuffer: Framebuffer): Void {
+		var now: Float = VrInterface.instance.GetTimeInSeconds();
+		var rawDelta: Float = now - prev;
+		prev = now;
+		
+		var clampedPrediction = Math.min(0.1, rawDelta * 2.0);
+		var state: SensorState = VrInterface.instance.GetPredictedSensorState(now + clampedPrediction);
+	
+
+
 		
 		
 		
-		
+	
 		
 		
 		var curImage: Image = nextImage();
-		
-		curImage.g4.begin();
-		curImage.g4.clear(Color.Yellow, 0.0);		
+		var p:Matrix4 = renderIt(curImage, getViewMatrix(state));
 		
 		
-		var m: Matrix4 = Matrix4.identity();
-		var v: Matrix4 = Matrix4.lookAt(new Vector3(4, 4, 3), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
-		var p: Matrix4 = Matrix4.perspectiveProjection(degreesToRadians(90), 1, 0.1, 200);
 		
-		var mvp: Matrix4 = p.multmat(v.multmat(m));
-		
-		globe.render(curImage.g4, mvp);
-		
-		curImage.g4.end();
-		
-		
-		// TODO: Why doesn't the depth buffer work?
 		
 		redImage.g4.begin();
 		redImage.g4.clear(Color.Red);
@@ -208,25 +229,25 @@ class BlocksFromHeaven extends Game {
 		
 		
 		var parms: TimeWarpParms = new TimeWarpParms();
-		var image: TimeWarpImage = new TimeWarpImage();
-		image.Image = curImage;
-		image.Pose = state.Predicted;
 		
-		var redTWImage: TimeWarpImage = new TimeWarpImage();
-		redTWImage.Pose = state.Predicted;
-		redTWImage.Image = redImage;
+		var leftTimeWarpImage: TimeWarpImage = new TimeWarpImage();
+		leftTimeWarpImage.Image = curImage;
+		leftTimeWarpImage.Pose = state.Predicted;
 		
-		parms.LeftImage = image;
-		parms.RightImage = redTWImage;
+		var rightTimeWarpImage: TimeWarpImage = new TimeWarpImage();
+		rightTimeWarpImage.Image = curImage;
+		rightTimeWarpImage.Pose = state.Predicted;
+		
+		
+		parms.LeftImage = leftTimeWarpImage;
+		parms.RightImage = rightTimeWarpImage;
 		
 		// TODO: Port the code over
-		image.TexCoordsFromTanAngles = TanAngleMatrixFromProjection(p);
-		redTWImage.TexCoordsFromTanAngles = Matrix4.identity();
+		leftTimeWarpImage.TexCoordsFromTanAngles = TanAngleMatrixFromProjection(p);
+		rightTimeWarpImage.TexCoordsFromTanAngles = TanAngleMatrixFromProjection(p);
 		
-		
+
 		VrInterface.instance.WarpSwap(parms);
-		
-		
 	}
 	
 	private var left = false;

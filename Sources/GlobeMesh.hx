@@ -28,6 +28,21 @@ class GlobeMesh
 	private var fs: FragmentShader;
 	private var vs: VertexShader;
 	
+	public var texture: Image;
+	
+	private function setVertex(a: Array<Float>, index: Int, pos: Vector3, uv: Vector2, color: Vector4) {
+		var base: Int = index * 9;
+		a[base + 0] = pos.x;
+		a[base + 1] = pos.y;
+		a[base + 2] = pos.z;
+		base += 3;
+		a[base + 0] = uv.x;
+		a[base + 1] = uv.y;
+		base += 2;
+		for (i in 0...4) {
+			a[base + i] = color.get(i);
+		}
+	}
 	
 	// TODO: Function is only translated from OVR source code
 	public function new(uScale: Float, vScale: Float)
@@ -107,8 +122,9 @@ class GlobeMesh
 				{
 					color[index].set(i, 1.0);
 				}*/
-				color[index].set_x(0.0);
-				color[index].set_y(0.0);
+				
+				color[index].set_x(1.0);
+				color[index].set_y(1.0);
 				color[index].set_z(1.0);
 				color[index].set_w(1.0);
 			}
@@ -160,37 +176,9 @@ class GlobeMesh
 		
 		/*vb = new VertexBuffer(3, structure, Usage.StaticUsage);
 		var verts: Array<Float> = vb.lock();
-		verts[0] = 0.0;
-		verts[1] = 1.0;
-		verts[2] = 0.0;
-		verts[3] = 0.0;
-		verts[4] = 0.0;
-		verts[5] = 1.0;
-		verts[6] = 0.0;
-		verts[7] = 0.0;
-		verts[8] = 1.0;
-		
-		verts[9] = -1.0;
-		verts[10] = -1.0;
-		verts[11] = 0.0;
-		verts[12] = 0.0;
-		verts[13] = 0.0;
-		verts[14] = 0.0;
-		verts[15] = 1.0;
-		verts[16] = 0.0;
-		verts[17] = 1.0;
-		
-		verts[18] = 1.0;
-		verts[19] = -1.0;
-		verts[20] = 0.0;
-		verts[21] = 0.0;
-		verts[22] = 0.0;
-		verts[23] = 0.0;
-		verts[24] = 0.0;
-		verts[25] = 1.0;
-		verts[26] = 1.0;
-		
-		
+		setVertex(verts, 0, new Vector3(-1, 1, 0), new Vector2(0, 1), new Vector4(0, 0, 1, 1));
+		setVertex(verts, 1, new Vector3(-1, -1, 0), new Vector2(1, 1), new Vector4(0, 0, 1, 1));
+		setVertex(verts, 2, new Vector3(0, 1, 0), new Vector2(0, 0), new Vector4(0, 0, 1, 1));
 		
 		vb.unlock();
 		
@@ -204,8 +192,6 @@ class GlobeMesh
 		ib.unlock(); 
 		
 		*/
-		
-		
 		// Create the program
 		program = new Program();
 		
@@ -219,17 +205,30 @@ class GlobeMesh
 	}
 	
 	public function render(g4: Graphics, mvp: Matrix4) {
-		//g4.setDepthMode(false, CompareMode.Always);
+		//g4.setDepthMode(false, CompareMode.LessEqual);
 		g4.setCullMode(CullMode.None);
 		//g4.setBlendingMode(BlendingOperation.SourceAlpha, BlendingOperation.InverseSourceAlpha);
 		//g4.setScissor(new kha.Rectangle(0, 0, 1024, 1024));
-		g4.setVertexBuffer(vb);
-		g4.setIndexBuffer(ib);
-		g4.setProgram(program);
+		
+		
+		
+		
 		var mvpLoc: ConstantLocation = program.getConstantLocation("Mvpm");
+		g4.setProgram(program);
+		g4.setIndexBuffer(ib);
+		g4.setVertexBuffer(vb);
 		g4.setMatrix(mvpLoc, mvp);
+		
+		var textureUnit: TextureUnit = program.getTextureUnit("tex");
+		g4.setTexture(textureUnit, texture);
+		
 		g4.drawIndexedVertices();
 		
+		
+		
+		
+		
+		//g4.setDepthMode(false, CompareMode.Always);
 		
 		
 		

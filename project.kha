@@ -2,10 +2,17 @@
   "format": 1,
   "game": {
     "name": "BlocksFromHeaven",
-    "width": 272,
-    "height": 480
+    "width": 1024,
+    "height": 1024
   },
   "assets": [
+    {
+      "id": "b7b896f7-f1a4-4325-b4f6-bab297093261",
+      "type": "image",
+      "file": "panorama.png",
+      "name": "panorama",
+      "scale": 1.0
+    },
     {
       "id": "3bae0898-e8e2-4ee9-859f-966f4e04e6dd",
       "type": "image",
@@ -103,7 +110,7 @@
       "file": "blocks",
       "name": "blocks",
       "scale": 1.0
-    },
+    }, 
     {
       "id": "975284e4-4e9a-45ab-bf63-45cf113ee05c",
       "type": "blob",
@@ -131,7 +138,8 @@
         "14c9e920-c394-40ee-b2a1-d6a07350cff0",
         "c59ca7c8-152b-4d70-a4bf-732a7e102ede",
         "f2b8b181-887b-4a61-8454-f916afe730ab",
-        "114ab1ca-49f9-4616-8d02-1018402ca59d"
+        "114ab1ca-49f9-4616-8d02-1018402ca59d",
+        "b7b896f7-f1a4-4325-b4f6-bab297093261"
       ]
     }
   ]
