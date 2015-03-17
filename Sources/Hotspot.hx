@@ -11,8 +11,10 @@ class Hotspot
 
 	public var image: Image;
 	
+	// The center is defined in uv coordinates of the image
 	public var center: Vector2;
 	
+	// The radius is defined based on the u-axis
 	public var radius: Float;
 	
 	public var id: String;
@@ -21,38 +23,58 @@ class Hotspot
 	
 	public var onUse: String;
 	
+	private function isInsideCircle(c: Vector2, r: Float, v: Vector2): Bool {
+		return ( v.sub(c).length < r);
+	}
+	
+	private function getCoordsInImage(v: Vector2): Vector2 {
+		return new Vector2(v.x * image.width, v.y * image.height);
+	}
+	
+	// TODO: Re-implement using properties
+	var vInImage: Vector2;
+	var centerInImage: Vector2;
+	var rInImage: Float; 
 	
 	// Returns true if the vector is inside the circle of this hotspot
 	public function isOver(v: Vector2): Bool {
-		if ( (v - center).length < radius) return true;
+		// Do the calculations with the right aspect ratio
+		
+		
+		vInImage = getCoordsInImage(v);
+		centerInImage = getCoordsInImage(center);
+		rInImage = radius * image.width;
+		
+		if (isInsideCircle(centerInImage, rInImage, vInImage)) return true;
+		
 		
 		// We need to check if the circle touches one of the sides
 		var adjust: Vector2 = new Vector2();
-		if (v.x - radius < 0) {
-			// Might be over the left side
+		if (vInImage.x - rInImage < 0) {
+			// Might be ovInImageer the left side
 			adjust.x = -image.width;
-		} else if (v.x + radius > image.width)
-			// Might be over the right side
+		} else if (vInImage.x + rInImage > image.width)
+			// Might be ovInImageer the right side
 			adjust.x = image.width;
-		if (v.y - radius < 0) {
-			// Might be over the top
+		if (vInImage.y - rInImage < 0) {
+			// Might be ovInImageer the top
 			adjust.y = -image.height;
-		} else if (v.y + radius > image.height) {
+		} else if (vInImage.y + rInImage > image.height) {
 			// Might be below the bottom
 			adjust.y = image.height;
 		} 
-		if (isOverNoBounds(v - adjust)) return true;
+		if (isOverNoBounds(vInImage.sub(adjust))) return true;
 		return false;
 	}
 	
 	private function isOverNoBounds(v: Vector2): Bool {
-		if ( (v - center).length < radius) return true;
+		if ( v.sub(centerInImage).length < rInImage) return true;
 		return false;
 	}
 	
 	public function new() 
 	{
-		
+		center = new Vector2();
 	}
 	
 }

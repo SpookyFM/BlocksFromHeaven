@@ -14,6 +14,13 @@
       "scale": 1.0
     },
     {
+      "id": "8fc245d0-7d4a-401f-8e16-86c5a7d9c733",
+      "type": "image",
+      "file": "overlay.png",
+      "name": "overlay",
+      "scale": 1.0
+    },
+    {
       "id": "14c9e920-c394-40ee-b2a1-d6a07350cff0",
       "type": "sound",
       "file": "klack",
@@ -55,7 +62,8 @@
       "name": "blocks",
       "neighbours": [],
       "assets": [
-        "b7b896f7-f1a4-4325-b4f6-bab297093261"
+        "b7b896f7-f1a4-4325-b4f6-bab297093261",
+        "8fc245d0-7d4a-401f-8e16-86c5a7d9c733"
       ]
     }
   ]

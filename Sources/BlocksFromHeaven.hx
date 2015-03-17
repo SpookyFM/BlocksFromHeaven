@@ -16,6 +16,7 @@ import kha.Loader;
 import kha.LoadingScreen;
 import kha.math.Quaternion;
 import kha.math.Random;
+import kha.math.Vector2;
 import kha.math.Vector3;
 import kha.math.Vector4;
 import kha.Scaler;
@@ -44,6 +45,11 @@ class BlocksFromHeaven extends Game {
 	private var currentImage: Int = 0;
 	
 	private var prev: Float = 0.0;
+	
+	private var hotspot: Hotspot;
+	
+	private var background: Image;
+	private var overlay: Image;
 
 	public function new() {
 		super("BlocksFromHeaven", false);
@@ -69,6 +75,16 @@ class BlocksFromHeaven extends Game {
 			images[i] = Image.createRenderTarget(1024, 1024, TextureFormat.RGBA32);
 		}
 		
+		background = Loader.the.getImage("panorama");
+		overlay = Loader.the.getImage("overlay");
+		
+		hotspot = new Hotspot();
+		hotspot.center.x = 3055.0 / background.width;
+		hotspot.center.y = (background.height - 1268.0) / background.height;
+		hotspot.radius = (186 / 2) / background.width;
+		hotspot.center.x += hotspot.radius;
+		hotspot.center.y -= hotspot.radius;
+		hotspot.image = background;
 	}
 	
 	private function nextImage(): Image {
@@ -110,20 +126,21 @@ class BlocksFromHeaven extends Game {
 	}
 	
 	function renderIt(target: Image, v: Matrix4): Matrix4 {
-		var m: Matrix4 = Matrix4.identity();
+		// Rotate 90 degrees: The globe mesh starts out rotated
+		var m: Matrix4 = Matrix4.rotationY(-Math.PI / 2.0);
 		var p: Matrix4 = Matrix4.perspectiveProjection(degreesToRadians(90), 1, 0.1, 200);
 		
 		var vm: Matrix4 = v.multmat(m);
-		var pvm: Matrix4 = p.multmat(vm);
+		var mvp: Matrix4 = p.multmat(vm);
 		
-		pvm = v.multmat(p);
+		mvp = m.multmat(v.multmat(p));
 		
 		
 		var g: Graphics = target.g4;
 		
 		g.begin();
 		g.clear(Color.Green);		
-		globe.render(g, pvm);
+		globe.render(g, mvp);
 		
 		
 		g.flush();
@@ -148,11 +165,48 @@ class BlocksFromHeaven extends Game {
 		EyePitch = eulerAngles.y;
 		EyeRoll = eulerAngles.z;
 		
-		trace("Angles: EyeYaw:" + EyeYaw + " EyePitch " + EyePitch + " EyeRoll " + EyeRoll);
+		// trace("Angles: EyeYaw:" + EyeYaw + " EyePitch " + EyePitch + " EyeRoll " + EyeRoll);
 		
 		var rollPitchYaw: Matrix4 = Matrix4.rotationY(EyeYaw).multmat(Matrix4.rotationX(EyePitch).multmat(Matrix4.rotationZ(EyeRoll)));
 		
 		return rollPitchYaw;
+	}
+	
+	public function getViewCenter(orientation: Quaternion): Vector2 {
+		var eulerAngles: Vector3 = orientation.getEulerAngles(Quaternion.AXIS_Y, Quaternion.AXIS_X, Quaternion.AXIS_Z);
+
+		// Yaw is mapped to u
+		// yaw of 0 is straight ahead: middle of the image
+		var u: Float = eulerAngles.x + Math.PI;
+		if (u < 0.0) {
+			u = u + Math.floor(Math.abs((u / (2 * Math.PI)))) * 2 * Math.PI;
+		}
+		if (u > Math.PI * 2) {
+			u = u - Math.floor(Math.abs((u / (2 * Math.PI)))) * 2 * Math.PI;
+		}
+		
+		u = 1 - (u / (Math.PI * 2));
+		
+		
+		
+		// Pitch is handled similarly - but only goes from -90 to 90
+		var v: Float = eulerAngles.y;
+		
+		if (v < -Math.PI) {
+			v = v + (Math.floor(Math.abs((v / Math.PI)) - 1)) * Math.PI;
+		}
+		
+		if (v > Math.PI) {
+			v = v - (Math.floor(Math.abs((v / Math.PI)) - 1)) * Math.PI;
+		}
+		
+		
+		v = v / Math.PI + 0.5;
+		
+		
+		
+		
+		return new Vector2(u, v);
 	}
 
 	
@@ -164,6 +218,17 @@ class BlocksFromHeaven extends Game {
 		var clampedPrediction = Math.min(0.1, rawDelta * 2.0);
 		var state: SensorState = VrInterface.instance.GetPredictedSensorState(now + clampedPrediction);
 	
+		
+		var imageLocation: Vector2 = getViewCenter(state.Predicted.Pose.Orientation);
+		// trace("Location in image: " + imageLocation.x + " " + imageLocation.y);
+		
+		//trace("Location: " + imageLocation.x * background.width + " " + (imageLocation.y ) * background.height);
+		
+		if (hotspot.isOver(imageLocation)) {
+			trace("Is over hotspot");
+		} else {
+			trace("Not over hotspot");
+		}
 		
 		
 		var curImage: Image = nextImage();
@@ -182,6 +247,13 @@ class BlocksFromHeaven extends Game {
 		
 		parms.LeftImage = leftTimeWarpImage;
 		parms.RightImage = rightTimeWarpImage;
+		
+		var overlayTimeWarpImage: TimeWarpImage = new TimeWarpImage();
+		overlayTimeWarpImage.Image = overlay;
+		overlayTimeWarpImage.Pose = state.Predicted;
+		overlayTimeWarpImage.TexCoordsFromTanAngles = p;
+		
+		parms.LeftOverlay = parms.RightOverlay = overlayTimeWarpImage;
 		
 		// TODO: Fix the version in Haxe
 		leftTimeWarpImage.TexCoordsFromTanAngles = p;
