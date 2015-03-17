@@ -14,8 +14,11 @@ class Scene
 	
 	public var onEnter: String;
 	
+	public var hotspots: Array<Hotspot>;
+	
 	public function new() 
 	{
+		hotspots = new Array<Hotspot>();
 		
 	}
 	

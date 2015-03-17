@@ -12,6 +12,7 @@ import kha.Game;
 import kha.graphics4.CompareMode;
 import kha.graphics4.CullMode;
 import kha.Image;
+import kha.Key;
 import kha.Loader;
 import kha.LoadingScreen;
 import kha.math.Quaternion;
@@ -52,7 +53,9 @@ class BlocksFromHeaven extends Game {
 	private var background: Image;
 	private var overlay: Image;
 
+	private var game: TestGame;
 	
+	private var transition: Transition;
 	
 	public function new() {
 		super("BlocksFromHeaven", false);
@@ -82,18 +85,19 @@ class BlocksFromHeaven extends Game {
 		background = Loader.the.getImage("panorama");
 		overlay = Loader.the.getImage("overlay");
 		
-		hotspot = new Hotspot();
-		hotspot.center.x = 3055.0 / background.width;
-		hotspot.center.y = (background.height - 1268.0) / background.height;
-		hotspot.radius = (186 / 2) / background.width;
-		hotspot.center.x += hotspot.radius;
-		hotspot.center.y -= hotspot.radius;
-		hotspot.image = background;
 		
-		hotspot.onExamine = "game.PlaySound(\"klack\");";
 		
 		fade = new FadeMesh();
 		fade.fade(Color.fromFloats(0, 0, 0, 0), Color.fromFloats(0, 0, 0, 1), 3.0);
+		
+		game = new TestGame();
+		transition = new Transition();
+		transition.game = game;
+		transition.fade = fade;
+		transition.globe = globe;
+		
+		Commands.game = game;
+		Commands.transition = transition;
 	}
 	
 	private function nextImage(): Image {
@@ -230,7 +234,18 @@ class BlocksFromHeaven extends Game {
 		
 		var imageLocation: Vector2 = getViewCenter(state.Predicted.Pose.Orientation);
 
-		hotspot.handleGaze(imageLocation);
+		
+		
+		for (hotspot in game.currentScene.hotspots) {
+			hotspot.handleGaze(imageLocation);
+			
+			if (keypress) {
+				if (hotspot.isOver(imageLocation)) {
+					Interpreter.the.interpret(hotspot.onUse);
+				}
+				keypress = false;
+			}
+		}
 		
 		
 		var curImage: Image = nextImage();
@@ -269,8 +284,20 @@ class BlocksFromHeaven extends Game {
 	
 	
 	override public function update(): Void {		
-	
+		transition.update();
 	}
+	
+	private var keypress: Bool = false;
+	
+	override public function keyDown(key:Key, char:String):Void 
+	{
+		super.keyDown(key, char);
+		if (char == " ") {
+			keypress = true;
+		}
+	}
+	
+	
 	
 	override public function buttonDown(button: Button): Void {
 		
@@ -283,6 +310,11 @@ class BlocksFromHeaven extends Game {
 	override public function mouseDown(x: Int, y: Int): Void {
 		super.mouseDown(x, y);
 		
+		#if ANDROID
+			// TODO: Need to differentiate between the two buttons
+			// On Android, mouse down means a touch of the touchpad
+			keypress = true;
+		#end
 	}
 	
 	override public function mouseUp(x: Int, y: Int): Void {

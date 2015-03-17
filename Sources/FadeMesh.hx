@@ -46,6 +46,10 @@ class FadeMesh
 		startTime = Sys.time();
 	}
 	
+	public function isFinished(): Bool {
+		return Sys.time() > startTime + duration;
+	}
+	
 	private function setVertex(a: Array<Float>, index: Int, pos: Vector3, uv: Vector2, color: Vector4) {
 		var base: Int = index * 9;
 		a[base + 0] = pos.x;

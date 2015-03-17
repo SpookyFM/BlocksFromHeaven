@@ -40,6 +40,7 @@ class Hotspot
 	public function isOver(v: Vector2): Bool {
 		// Do the calculations with the right aspect ratio
 		
+		trace("Location in image: " + v.x * image.width + " " + v.y * image.height);
 		
 		vInImage = getCoordsInImage(v);
 		centerInImage = getCoordsInImage(center);
@@ -69,9 +70,9 @@ class Hotspot
 	
 	
 	public function handleGaze(v: Vector2) {
-		if (isOver(v)) {
+		/* if (isOver(v)) {
 			Interpreter.the.interpret(onExamine);
-		}
+		} */
 	}
 	
 	

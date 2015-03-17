@@ -3,6 +3,8 @@ package;
 import kha.Loader;
 import kha.Sound;
 
+import kha.Color;
+
 /**
  * ...
  * @author Florian Mehm
@@ -11,6 +13,8 @@ class Commands
 {
 
 	public static var game: TestGame;
+	
+	public static var transition: Transition;
 	
 		
 	public function Speak(text: String, soundFile: String): Void {
@@ -24,8 +28,12 @@ class Commands
 	}
 	
 	
-	public function ChangeToScene(scene: String): Void {
-		game.currentScene = game.scenes[scene];
+	public function ChangeScene(scene: String): Void {
+		
+		var current: Scene = game.currentScene;
+		var to: Scene = game.scenes[scene];
+		transition.start(current, to, 3.0, Color.White);
+		trace("Transition from: " + current.id + " to " + to.id);
 		// .interpret(game.currentScene.onEnter);
 	}
 	
