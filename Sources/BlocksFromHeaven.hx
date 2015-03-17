@@ -180,7 +180,7 @@ class BlocksFromHeaven extends Game {
 	public function getViewMatrix(state: SensorState): Matrix4 {
 		var orientation: Quaternion = state.Predicted.Pose.Orientation;
 		
-		trace("Orientation: " + orientation.x + " " + orientation.y + " " + orientation.z + " " + orientation.w);
+		//trace("Orientation: " + orientation.x + " " + orientation.y + " " + orientation.z + " " + orientation.w);
 
 		var EyeYaw: Float;
 		var EyePitch: Float;
