@@ -39,6 +39,7 @@ class BlocksFromHeaven extends Game {
 	
 	
 	private var globe: GlobeMesh;
+	private var fade: FadeMesh;
 	
 	private var images: Vector<Image>;
 	private var numImages: Int = 4;
@@ -85,6 +86,9 @@ class BlocksFromHeaven extends Game {
 		hotspot.center.x += hotspot.radius;
 		hotspot.center.y -= hotspot.radius;
 		hotspot.image = background;
+		
+		fade = new FadeMesh();
+		fade.fade(Color.fromFloats(0, 0, 0, 0), Color.fromFloats(0, 0, 0, 1), 3.0);
 	}
 	
 	private function nextImage(): Image {
@@ -233,6 +237,9 @@ class BlocksFromHeaven extends Game {
 		
 		var curImage: Image = nextImage();
 		var p:Matrix4 = renderIt(curImage, getViewMatrix(state));
+		
+		// Render the fade texture
+		fade.render(curImage.g4);
 		
 		var parms: TimeWarpParms = new TimeWarpParms();
 		
