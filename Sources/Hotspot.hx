@@ -67,10 +67,23 @@ class Hotspot
 		return false;
 	}
 	
+	
+	public function handleGaze(v: Vector2) {
+		if (isOver(v)) {
+			Interpreter.the.interpret(onExamine);
+		}
+	}
+	
+	
+	
+	
 	private function isOverNoBounds(v: Vector2): Bool {
 		if ( v.sub(centerInImage).length < rInImage) return true;
 		return false;
 	}
+	
+	
+	
 	
 	public function new() 
 	{

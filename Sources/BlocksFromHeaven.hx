@@ -52,6 +52,8 @@ class BlocksFromHeaven extends Game {
 	private var background: Image;
 	private var overlay: Image;
 
+	
+	
 	public function new() {
 		super("BlocksFromHeaven", false);
 	}
@@ -59,6 +61,7 @@ class BlocksFromHeaven extends Game {
 	override public function init(): Void {
 		Configuration.setScreen(new LoadingScreen());
 		Loader.the.loadRoom("blocks", loadingFinished);
+		Interpreter.init();
 	}
 	
 	
@@ -86,6 +89,8 @@ class BlocksFromHeaven extends Game {
 		hotspot.center.x += hotspot.radius;
 		hotspot.center.y -= hotspot.radius;
 		hotspot.image = background;
+		
+		hotspot.onExamine = "game.PlaySound(\"klack\");";
 		
 		fade = new FadeMesh();
 		fade.fade(Color.fromFloats(0, 0, 0, 0), Color.fromFloats(0, 0, 0, 1), 3.0);
@@ -224,15 +229,8 @@ class BlocksFromHeaven extends Game {
 	
 		
 		var imageLocation: Vector2 = getViewCenter(state.Predicted.Pose.Orientation);
-		// trace("Location in image: " + imageLocation.x + " " + imageLocation.y);
-		
-		//trace("Location: " + imageLocation.x * background.width + " " + (imageLocation.y ) * background.height);
-		
-		if (hotspot.isOver(imageLocation)) {
-			trace("Is over hotspot");
-		} else {
-			trace("Not over hotspot");
-		}
+
+		hotspot.handleGaze(imageLocation);
 		
 		
 		var curImage: Image = nextImage();

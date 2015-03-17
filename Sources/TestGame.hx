@@ -39,7 +39,7 @@ class TestGame
 		startScene.id = "START";
 		
 		// Load images
-		startScene.background = new Image();
+		startScene.background;//
 		addScene(startScene);
 		
 		
