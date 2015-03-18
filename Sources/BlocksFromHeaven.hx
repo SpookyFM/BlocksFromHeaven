@@ -35,6 +35,7 @@ import kha.graphics4.Usage;
 import kha.math.Matrix4;
 
 import GlobeMesh;
+import UIElement;
 
 class BlocksFromHeaven extends Game {
 	
@@ -56,6 +57,8 @@ class BlocksFromHeaven extends Game {
 	private var game: TestGame;
 	
 	private var transition: Transition;
+	
+	private var uiElement: UIElement;
 	
 	public function new() {
 		super("BlocksFromHeaven", false);
@@ -98,6 +101,11 @@ class BlocksFromHeaven extends Game {
 		
 		Commands.game = game;
 		Commands.transition = transition;
+	
+		uiElement = new UIElement();
+		uiElement.SetPosition(game.startScene.hotspots[0].getLonLat(), 10);
+		
+		uiElement.Texture = Loader.the.getImage("arrow_forward");
 	}
 	
 	private function nextImage(): Image {
@@ -178,7 +186,7 @@ class BlocksFromHeaven extends Game {
 		EyePitch = eulerAngles.y;
 		EyeRoll = eulerAngles.z;
 		
-		// trace("Angles: EyeYaw:" + EyeYaw + " EyePitch " + EyePitch + " EyeRoll " + EyeRoll);
+		trace("Angles: EyeYaw:" + EyeYaw + " EyePitch " + EyePitch + " EyeRoll " + EyeRoll);
 		
 		var rollPitchYaw: Matrix4 = Matrix4.rotationY(EyeYaw).multmat(Matrix4.rotationX(EyePitch).multmat(Matrix4.rotationZ(EyeRoll)));
 		
@@ -250,9 +258,13 @@ class BlocksFromHeaven extends Game {
 		
 		var curImage: Image = nextImage();
 		var p:Matrix4 = renderIt(curImage, getViewMatrix(state));
+		var vp: Matrix4 = getViewMatrix(state).multmat(p);
 		
 		// Render the fade texture
 		fade.render(curImage.g4);
+		
+		// Render the GUI element
+		uiElement.render(curImage.g4, vp);
 		
 		var parms: TimeWarpParms = new TimeWarpParms();
 		

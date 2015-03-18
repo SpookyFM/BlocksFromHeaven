@@ -75,6 +75,15 @@ class Hotspot
 		} */
 	}
 	
+	public function getLonLat(): Vector2 {
+		var result: Vector2 = new Vector2();
+		result.x = center.x * Math.PI * 2;
+		result.y = (center.y - 0.5) * Math.PI;
+	
+		
+		return result;
+	}
+	
 	
 	
 	
