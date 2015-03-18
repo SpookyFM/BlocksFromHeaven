@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="New Game">
+  <StartScene Name="Test">
+    <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\panorama.png</BackgroundImage>
+    <Hotspots>
+      <Hotspot Name="New hotspot">
+        <Shape xsi:type="CircleShape">
+          <Center X="3148" Y="1361" />
+          <Radius>93</Radius>
+        </Shape>
+        <OnExamine />
+        <OnUse />
+      </Hotspot>
+    </Hotspots>
+  </StartScene>
+  <Scenes>
+    <Scene Name="Test">
+      <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\panorama.png</BackgroundImage>
+      <Hotspots>
+        <Hotspot Name="New hotspot">
+          <Shape xsi:type="CircleShape">
+            <Center X="3148" Y="1361" />
+            <Radius>93</Radius>
+          </Shape>
+          <OnExamine />
+          <OnUse />
+        </Hotspot>
+      </Hotspots>
+    </Scene>
+    <Scene Name="New scene">
+      <Hotspots />
+    </Scene>
+  </Scenes>
+</Game>

@@ -13,6 +13,8 @@ class TestGame
 	
 	public var startScene: Scene;
 	
+	public var name: String;
+	
 	public var currentScene: Scene;
 	
 	public var scenes: Map<String, Scene>;

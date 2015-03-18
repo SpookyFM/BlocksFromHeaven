@@ -40,7 +40,7 @@ class Hotspot
 	public function isOver(v: Vector2): Bool {
 		// Do the calculations with the right aspect ratio
 		
-		trace("Location in image: " + v.x * image.width + " " + v.y * image.height);
+		// trace("Location in image: " + v.x * image.width + " " + v.y * image.height);
 		
 		vInImage = getCoordsInImage(v);
 		centerInImage = getCoordsInImage(center);

@@ -36,6 +36,8 @@ import kha.math.Matrix4;
 
 import GlobeMesh;
 import UIElement;
+import Ray;
+import GameReader;
 
 class BlocksFromHeaven extends Game {
 	
@@ -104,6 +106,7 @@ class BlocksFromHeaven extends Game {
 	
 		uiElement = new UIElement();
 		uiElement.SetPosition(game.startScene.hotspots[0].getLonLat(), 5);
+		uiElement.Offset = new Vector2(0, 2);
 		uiElement.startAnimating();
 		
 		uiElement.Texture = Loader.the.getImage("arrow_forward");
@@ -187,7 +190,7 @@ class BlocksFromHeaven extends Game {
 		EyePitch = eulerAngles.y;
 		EyeRoll = eulerAngles.z;
 		
-		trace("Angles: EyeYaw:" + EyeYaw + " EyePitch " + EyePitch + " EyeRoll " + EyeRoll);
+		//trace("Angles: EyeYaw:" + EyeYaw + " EyePitch " + EyePitch + " EyeRoll " + EyeRoll);
 		
 		var rollPitchYaw: Matrix4 = Matrix4.rotationY(EyeYaw).multmat(Matrix4.rotationX(EyePitch).multmat(Matrix4.rotationZ(EyeRoll)));
 		
@@ -230,6 +233,14 @@ class BlocksFromHeaven extends Game {
 		
 		return new Vector2(u, v);
 	}
+	
+	public function getCameraRay(worldMatrix: Matrix4): Ray {
+		var r: Ray = new Ray();
+		r.direction = worldMatrix.multvec(new Vector4(0, 0, -1, 0));
+		r.origin = new Vector4(0, 0, 0, 1);
+		
+		return r;
+	}
 
 	
 	override public function render(framebuffer: Framebuffer): Void {
@@ -268,6 +279,14 @@ class BlocksFromHeaven extends Game {
 		
 		// Render the GUI element
 		uiElement.render(curImage.g4, vp);
+		
+		var ray: Ray = getCameraRay(getViewMatrix(state));
+		if (ray.intersects(uiElement.quad)) {
+			uiElement.Texture = Loader.the.getImage("arrow_forward_active");
+		} else {
+			uiElement.Texture = Loader.the.getImage("arrow_forward");
+		}
+		
 		
 		var parms: TimeWarpParms = new TimeWarpParms();
 		

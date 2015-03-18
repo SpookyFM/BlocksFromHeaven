@@ -28,6 +28,13 @@
       "scale": 1.0
     },
     {
+      "id": "0ce88778-34a9-4825-8e6f-2c03f0a46e1b",
+      "type": "image",
+      "file": "arrow_forward_active.png",
+      "name": "arrow_forward_active",
+      "scale": 1.0
+    },
+    {
       "id": "8fc245d0-7d4a-401f-8e16-86c5a7d9c733",
       "type": "image",
       "file": "overlay.png",
@@ -80,7 +87,8 @@
         "8fc245d0-7d4a-401f-8e16-86c5a7d9c733",
         "14c9e920-c394-40ee-b2a1-d6a07350cff0",
         "70a60b4d-8de2-41cc-b5d7-de0ba2d07936",
-        "066e0af5-47d2-4e81-91f4-2180302da10d"
+        "066e0af5-47d2-4e81-91f4-2180302da10d",
+        "0ce88778-34a9-4825-8e6f-2c03f0a46e1b"
       ]
     }
   ]

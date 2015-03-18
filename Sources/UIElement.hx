@@ -10,6 +10,8 @@ import kha.math.Vector4;
 
 import kha.Loader;
 
+import Quad;
+
 /**
  * ...
  * @author Florian Mehm
@@ -21,8 +23,12 @@ class UIElement extends MeshBase
 	public var Rotation: Quaternion;
 	public var Distance: Float;
 	
+	public var Offset: Vector2;
+	
 	
 	public var Texture: Image;
+	
+	public var quad: Quad;
 	
 	// Set the position of the Mesh to be infront of the specified location in the background image
 	// viewPosition is the position in the image
@@ -37,7 +43,7 @@ class UIElement extends MeshBase
 		var EyePitch: Float = Position.y;
 		var EyeRoll: Float = 0;
 		
-		trace("EyeYaw: " + EyeYaw + " EyePitch: " + EyePitch);
+		// trace("EyeYaw: " + EyeYaw + " EyePitch: " + EyePitch);
 		
 		var rollPitchYaw: Matrix4 = Matrix4.rotationY(EyeYaw).multmat(Matrix4.rotationX(EyePitch).multmat(Matrix4.rotationZ(EyeRoll)));
 		
@@ -84,7 +90,7 @@ class UIElement extends MeshBase
 	var m: Matrix4;
 	public function render(g: Graphics, vp: Matrix4) {
 		// Build a model matrix that translates this object to the right spot.
-		// For now, just translate it back to see if everything works.
+		// For now, just translate it back to see if everything works. 
 
 		
 		var v: Matrix4 = getViewMatrix();
@@ -92,6 +98,21 @@ class UIElement extends MeshBase
 		
 		var mvp: Matrix4 = m.multmat(v.multmat(vp));
 		
+		// Update the quad
+		var worldMatrix: Matrix4 = m.multmat(v);
+		quad.worldMatrix = worldMatrix;
+
+		
+		for (i in 0...4) {
+			// trace("Matrix: " + worldMatrix.get(0, i) + " " + worldMatrix.get(1, i) + " " + worldMatrix.get(2, i) + " " + worldMatrix.get(3, i));
+		}
+		
+		quad.center = quad.worldMatrix.transpose().multvec(new Vector4(0, 0, 0, 1));
+		// TODO: Handle it correctly!
+		quad.normal = quad.worldMatrix.transpose().multvec(new Vector4(0, 0, 1, 0));
+		quad.extents = new Vector4(1, 1, 0, 0);
+		
+		//trace("Center: " + quad.center.x + " " + quad.center.y + " " + quad.center.z + " " + quad.center.w);
 		
 		g.setCullMode(CullMode.None);
 		
@@ -113,17 +134,27 @@ class UIElement extends MeshBase
 	private var moveDuration: Float;
 	private var moveDistance: Float;
 	
+	private var frequency: Float;
+	private var rotationDuration: Float;
+	
+	private var animationDone: Bool = false;
+	
 	public function startAnimating() {
 		startTime = Sys.time();
 		moveDuration = 2;
 		moveDistance = 4;
+		frequency = 2;
+		rotationDuration = 6;
 	}
 	
 	// The update function should update the model matrix
 	public function update() {
+		//updateRotation();
+		//return;
+		
 		var time: Float = Sys.time();
 		var t: Float = time - startTime;
-		t = t % moveDuration;
+		t = (t % moveDuration) / moveDuration;
 		
 		// Turn the arrow around so it points into the screen somewhat
 		var rotAmount: Float = -70 * Math.PI / 180.0;
@@ -143,9 +174,43 @@ class UIElement extends MeshBase
 	}
 	
 	
+	public function updateRotation() {
+		// Move the control on a plane, around the center with the length of offset
+		
+		var time: Float = Sys.time();
+		
+		if (time > startTime + rotationDuration) animationDone = true;
+		
+		var t: Float = time - startTime;
+		
+		var rotAmount: Float = (t / frequency) * 2 * Math.PI;
+		
+		var offset3: Vector3 = new Vector3(Offset.x, Offset.y, 0);
+		
+		// Scale offset so that it looks like the individual items come out of the image
+		var scale: Float = (t % rotationDuration) / rotationDuration;
+		offset3 = offset3.mult(scale);
+	
+		
+		var mOffset: Matrix4 = Matrix4.translation(offset3.x, offset3.y, 0);
+		
+		
+	
+		
+		
+		var mRot: Matrix4 = Matrix4.rotationZ(rotAmount);
+		var mRotT: Matrix4 = mRot.transpose();
+		
+		var mScale: Matrix4 = Matrix4.scale(scale, scale, scale);
+		
+		m = mScale.multmat(mRotT.multmat(mOffset.multmat(mRot)).multmat(Matrix4.translation(0, 0, -Distance)));
+	}
+	
+	
 	public function new() 
 	{
 		super();
+		quad = new Quad();
 	}
 	
 }
