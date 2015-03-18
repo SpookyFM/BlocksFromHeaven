@@ -103,7 +103,8 @@ class BlocksFromHeaven extends Game {
 		Commands.transition = transition;
 	
 		uiElement = new UIElement();
-		uiElement.SetPosition(game.startScene.hotspots[0].getLonLat(), 10);
+		uiElement.SetPosition(game.startScene.hotspots[0].getLonLat(), 5);
+		uiElement.startAnimating();
 		
 		uiElement.Texture = Loader.the.getImage("arrow_forward");
 	}
@@ -262,6 +263,8 @@ class BlocksFromHeaven extends Game {
 		
 		// Render the fade texture
 		fade.render(curImage.g4);
+		
+		uiElement.update();
 		
 		// Render the GUI element
 		uiElement.render(curImage.g4, vp);

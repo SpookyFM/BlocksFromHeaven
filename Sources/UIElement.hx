@@ -54,10 +54,10 @@ class UIElement extends MeshBase
 		vb = new VertexBuffer(vertexCount, structure, Usage.StaticUsage);
 		var verts: Array<Float> = vb.lock();
 
-		setVertex(verts, 0, new Vector3(-1, -1, 0), new Vector2(0, 0), new Vector4(1, 1, 1, 1));
-		setVertex(verts, 1, new Vector3(-1, 1, 0), new Vector2(0, 1), new Vector4(1, 1, 1, 1));
-		setVertex(verts, 2, new Vector3(1, -1, 0), new Vector2(1, 0), new Vector4(1, 1, 1, 1));
-		setVertex(verts, 3, new Vector3(1, 1, 0), new Vector2(1, 1), new Vector4(1, 1, 1, 1));
+		setVertex(verts, 0, new Vector3(1, 1, 0), new Vector2(0, 0), new Vector4(1, 1, 1, 1));
+		setVertex(verts, 1, new Vector3(1, -1, 0), new Vector2(0, 1), new Vector4(1, 1, 1, 1));
+		setVertex(verts, 2, new Vector3(-1, 1, 0), new Vector2(1, 0), new Vector4(1, 1, 1, 1));
+		setVertex(verts, 3, new Vector3(-1, -1, 0), new Vector2(1, 1), new Vector4(1, 1, 1, 1));
 		
 		vb.unlock();
 		
@@ -81,18 +81,16 @@ class UIElement extends MeshBase
 		program.link(structure);
 	}
 	
+	var m: Matrix4;
 	public function render(g: Graphics, vp: Matrix4) {
 		// Build a model matrix that translates this object to the right spot.
 		// For now, just translate it back to see if everything works.
-		
-		var m: Matrix4 = Matrix4.translation(0, 0, -Distance);
+
 		
 		var v: Matrix4 = getViewMatrix();
 		v = v.transpose();
 		
 		var mvp: Matrix4 = m.multmat(v.multmat(vp));
-		
-		
 		
 		
 		g.setCullMode(CullMode.None);
@@ -108,6 +106,40 @@ class UIElement extends MeshBase
 		g.setTexture(textureUnit, Texture);
 		
 		g.drawIndexedVertices();
+	}
+	
+	
+	private var startTime: Float;
+	private var moveDuration: Float;
+	private var moveDistance: Float;
+	
+	public function startAnimating() {
+		startTime = Sys.time();
+		moveDuration = 2;
+		moveDistance = 4;
+	}
+	
+	// The update function should update the model matrix
+	public function update() {
+		var time: Float = Sys.time();
+		var t: Float = time - startTime;
+		t = t % moveDuration;
+		
+		// Turn the arrow around so it points into the screen somewhat
+		var rotAmount: Float = -70 * Math.PI / 180.0;
+		var rot: Matrix4 = Matrix4.rotationX(-rotAmount);
+		var rotT: Matrix4 = rot.transpose();
+		
+		// Move it forward the right amount
+		var transAmount: Float = moveDistance * t;
+		var trans: Matrix4 = Matrix4.translation(0, t, 0);
+		
+		// Now move it into the screen the specified distance
+		var matT: Matrix4 = Matrix4.translation(0, 0, -Distance);
+		
+		
+		
+		m = trans.multmat(rot.multmat(matT));
 	}
 	
 	
