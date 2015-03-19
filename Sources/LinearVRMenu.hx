@@ -13,6 +13,22 @@ class LinearVRMenu
 	// Where does the menu start?
 	public var Position: Vector4;
 	
+	
+	// How many items should be visible without needing scrolling?
+	public var MaxNumItems: Int;
+	
+	// How many items are in the menu?
+	public var NumItems: Int;
+	
+	// What is the index of the currently leftmost item?
+	public var CurrentIndex: Int;a
+	
+	public function ScrollLeft() {
+		
+	}
+	
+	public function ScrollRight();
+	
 	public var SelectedItem: UIElement;
 	
 	// This class needs to 

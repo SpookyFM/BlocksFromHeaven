@@ -53,24 +53,27 @@ class TestGame
 		startScene = new Scene();
 		startScene.id = "START";
 		startScene.onEnter = "game.PlayMusic(\"intro\");";
-		currentScene = startScene;
-		
-		// Load images
-		startScene.background = Loader.the.getImage("panorama");
+		startScene.onLeave = "game.StopMusic(\"intro\");";
+		startScene.background = Loader.the.getImage("start");
 		addScene(startScene);
 		
 		
-		var hotspot1: Hotspot = getHotspot(startScene, new Vector2(3148, 1361), 186 / 2);
-		hotspot1.onUse = "game.ChangeScene(\"SECOND\");";
+		var hotspot1: Hotspot = getHotspot(startScene, new Vector2(2082, 987), 144/2 );
+		hotspot1.onGaze = "game.ShowExit();";
+		hotspot1.onUse = "game.ChangeScene(\"conservatory\");";
 		startScene.hotspots.push(hotspot1);
 		
 		
 		var secondScene: Scene = new Scene();
-		secondScene.id = "SECOND";
-		secondScene.background = Loader.the.getImage("panorama2");
+		secondScene.id = "conservatory";
+		secondScene.onEnter = "game.PlayMusic(\"ambience_inside\");";
+		secondScene.onLeave = "game.StopMusic(\"ambience_inside\");";
+		secondScene.background = Loader.the.getImage("conservatory");
 		
-		var hotspot2: Hotspot = getHotspot(secondScene, new Vector2(1765, 973), 195 / 2);
-		hotspot2.onUse = "game.ChangeScene(\"START\");";
+		
+		var hotspot2: Hotspot = getHotspot(secondScene, new Vector2(2074, 1006), 524 / 2);
+		hotspot2.onGaze = "game.ShowExit();";
+		hotspot2.onUse = "game.ChangeScene(\"pool\");";
 		secondScene.hotspots.push(hotspot2);
 		
 		addScene(secondScene);
@@ -78,7 +81,23 @@ class TestGame
 		
 		
 		
+		var thirdScene: Scene = new Scene();
+		thirdScene.id = "pool";
+		thirdScene.onEnter = "game.PlayMusic(\"ambience_outside\");";
+		thirdScene.onLeave = "game.StopMusic(\"ambience_outside\");";
+		thirdScene.background = Loader.the.getImage("pool");
+		addScene(thirdScene);
 		
+		
+		var hotspot3: Hotspot = getHotspot(thirdScene, new Vector2(251, 1012), 260/2 );
+		hotspot3.onGaze = "game.ShowExit();";
+		hotspot3.onUse = "game.ChangeScene(\"conservatory\");";
+		startScene.hotspots.push(hotspot1);
+		
+		
+		
+		
+		currentScene = startScene;
 		
 		var item: InventoryItem = new InventoryItem();
 		item.id = "ITEM";

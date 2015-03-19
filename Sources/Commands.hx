@@ -1,5 +1,7 @@
 package;
 
+
+
 import kha.Loader;
 import kha.Music;
 import kha.Sound;
@@ -31,6 +33,20 @@ class Commands
 	public function PlayMusic(musicFile: String, ?loop: Bool = false): Void {
 		var m: Music = Loader.the.getMusic(musicFile);
 		m.play(loop);
+	}
+	
+	public function FadeOutMusic(musicFile: String): Void {
+		// TODO: Check out the scheduler!
+	}
+	
+	public function StopMusic(musicFile: String): Void {
+		var m: Music = Loader.the.getMusic(musicFile);
+		m.stop();
+	}
+	
+	// Display the exit icon over the hotspot
+	public function ShowExit(): Void {
+		BlocksFromHeaven.instance.showExit(Hotspot.current);
 	}
 	
 	

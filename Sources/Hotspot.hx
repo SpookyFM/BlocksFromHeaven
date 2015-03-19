@@ -23,6 +23,13 @@ class Hotspot
 	
 	public var onUse: String;
 	
+	// What should happen when we look at this hotspot for a longer time?
+	public var onGaze: String;
+	
+	public var onClick: String;
+	
+	public static var current: Hotspot;
+	
 	private function isInsideCircle(c: Vector2, r: Float, v: Vector2): Bool {
 		return ( v.sub(c).length < r);
 	}
@@ -69,11 +76,43 @@ class Hotspot
 	}
 	
 	
+	public var IsGazeOver: Bool;
+	
+	public var GazeStartTime: Float;
+	
+	public var GazeExecuted: Bool;
+	
+	
+	// TODO: Look into kha timers
 	public function handleGaze(v: Vector2) {
+		if (isOver(v)) {
+			if (!IsGazeOver) {
+				GazeStartTime = Sys.time();
+				IsGazeOver = true;
+				BlocksFromHeaven.instance.gazeActive = true;
+				current = this;
+			} else {
+				if (!GazeExecuted) {
+					var duration: Float = Sys.time() - GazeStartTime;
+					if (duration > 1.0) {
+						// After one second, call our gaze function
+						GazeExecuted = true;
+						Interpreter.the.interpret(onGaze);
+					}
+				}
+			}
+			
+		} else {
+			IsGazeOver = false;
+			GazeExecuted = false;
+		}
+		
 		/* if (isOver(v)) {
 			Interpreter.the.interpret(onExamine);
 		} */
 	}
+	
+	
 	
 	public function getLonLat(): Vector2 {
 		var result: Vector2 = new Vector2();

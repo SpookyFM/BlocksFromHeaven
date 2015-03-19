@@ -51,43 +51,60 @@ class BlocksFromHeaven extends Game {
 	
 	private var prev: Float = 0.0;
 	
-	private var hotspot: Hotspot;
+
 	
-	private var background: Image;
+
 	private var overlay: Image;
 
 	private var game: TestGame;
 	
 	private var transition: Transition;
 	
-	private var uiElement: UIElement;
+	public var uiElements: Array<UIElement>;
+	
+	public static var instance: BlocksFromHeaven;
+	
+	public var gazeActive: Bool;
 	
 	public function new() {
 		super("BlocksFromHeaven", false);
 	}
 	
 	override public function init(): Void {
+		instance = this;
 		Configuration.setScreen(new LoadingScreen());
 		Interpreter.init();
+		uiElements = new Array<UIElement>();
 		Loader.the.loadRoom("blocks", loadingFinished);
+		
 	}
 	
-	
+	// Show an exit symbol over the specified exit
+	public function showExit(hotspot: Hotspot) {
+		// TODO: Quick hack 
+		uiElements.splice(0, uiElements.length);
+		
+		var exitSymbol: UIElement = new UIElement();
+		exitSymbol.SetPosition(hotspot.getLonLat(), 5);
+		exitSymbol.Offset = new Vector2(0, 0);
+		exitSymbol.Texture = Loader.the.getImage("arrow_forward");
+		exitSymbol.startAnimating();
+		uiElements.push(exitSymbol);
+	}
 	
 	
 	
 	private function loadingFinished(): Void {
 		Configuration.setScreen(this);
 
-		globe = new GlobeMesh(1, 1);
-		globe.texture = Loader.the.getImage("panorama");
+		
 		
 		images = new Vector<Image>(4);
 		for (i in 0...numImages) {
 			images[i] = Image.createRenderTarget(1024, 1024, TextureFormat.RGBA32);
 		}
 		
-		background = Loader.the.getImage("panorama");
+	
 		overlay = Loader.the.getImage("overlay");
 		
 		
@@ -96,25 +113,28 @@ class BlocksFromHeaven extends Game {
 		fade.fade(Color.fromFloats(0, 0, 0, 0), Color.fromFloats(0, 0, 0, 1), 3.0);
 		
 		game = new TestGame();
+		
+		globe = new GlobeMesh(1, 1);
+		globe.texture = game.startScene.background;
+		
 		transition = new Transition();
 		transition.game = game;
 		transition.fade = fade;
 		transition.globe = globe;
 		
+			
+		
+		
+		
 		Commands.game = game;
 		Commands.transition = transition;
 	
-		uiElement = new UIElement();
-		uiElement.SetPosition(game.startScene.hotspots[0].getLonLat(), 5);
-		uiElement.Offset = new Vector2(0, 2);
-		uiElement.startAnimating();
 		
-		uiElement.Texture = Loader.the.getImage("arrow_forward");
 		
 		Interpreter.the.interpret(game.startScene.onEnter);
 		
 		// Let's blur the start image
-		var blur: BlurFilter = new BlurFilter();
+		/*var blur: BlurFilter = new BlurFilter();
 		
 		var blurred: Image = Image.createRenderTarget(4096, 2048, TextureFormat.RGBA32);
 		
@@ -128,7 +148,7 @@ class BlocksFromHeaven extends Game {
 		
 		game.startScene.background = blurred;
 		
-		globe.texture = blurred;
+		globe.texture = blurred; */
 		
 		
 	}
@@ -293,20 +313,25 @@ class BlocksFromHeaven extends Game {
 		var p:Matrix4 = renderIt(curImage, getViewMatrix(state));
 		var vp: Matrix4 = getViewMatrix(state).multmat(p);
 		
+		
+		
+		for (uiElement in uiElements) {
+			uiElement.update();
+				
+			// Render the GUI element
+			uiElement.render(curImage.g4, vp);
+			
+		}
+		
 		// Render the fade texture
 		fade.render(curImage.g4);
 		
-		uiElement.update();
-		
-		// Render the GUI element
-		uiElement.render(curImage.g4, vp);
-		
-		var ray: Ray = getCameraRay(getViewMatrix(state));
+		/* var ray: Ray = getCameraRay(getViewMatrix(state));
 		if (ray.intersects(uiElement.quad)) {
 			uiElement.Texture = Loader.the.getImage("arrow_forward_active");
 		} else {
 			uiElement.Texture = Loader.the.getImage("arrow_forward");
-		}
+		} */
 		
 		
 		var parms: TimeWarpParms = new TimeWarpParms();
@@ -322,6 +347,12 @@ class BlocksFromHeaven extends Game {
 		
 		parms.LeftImage = leftTimeWarpImage;
 		parms.RightImage = rightTimeWarpImage;
+		
+		if (gazeActive) {
+			overlay = Loader.the.getImage("overlay_active");
+		} else {
+			overlay = Loader.the.getImage("overlay");
+		}
 		
 		var overlayTimeWarpImage: TimeWarpImage = new TimeWarpImage();
 		overlayTimeWarpImage.Image = overlay;

@@ -14,6 +14,8 @@ class Scene
 	
 	public var onEnter: String;
 	
+	public var onLeave: String;
+	
 	public var hotspots: Array<Hotspot>;
 	
 	public function new() 

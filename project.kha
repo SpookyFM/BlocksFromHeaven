@@ -9,15 +9,22 @@
     {
       "id": "b7b896f7-f1a4-4325-b4f6-bab297093261",
       "type": "image",
-      "file": "panorama.png",
-      "name": "panorama",
+      "file": "start.png",
+      "name": "start",
       "scale": 1.0
     },
     {
       "id": "70a60b4d-8de2-41cc-b5d7-de0ba2d07936",
       "type": "image",
-      "file": "panorama2.png",
-      "name": "panorama2",
+      "file": "conservatory.png",
+      "name": "conservatory",
+      "scale": 1.0
+    },
+    {
+      "id": "7a2011f0-96ba-48f0-85b5-481481330868",
+      "type": "image",
+      "file": "pool.png",
+      "name": "pool",
       "scale": 1.0
     },
     {
@@ -82,7 +89,21 @@
       "file": "intro",
       "name": "intro",
       "scale": 1.0
+    },
+    {
+      "id": "cafbdbeb-4e5b-4961-8ebf-d63b71be2b04",
+      "type": "music",
+      "file": "ambience_inside",
+      "name": "ambience_inside",
+      "scale": 1.0
     },  
+    {
+      "id": "8715c951-8ba9-4cd9-8f0e-4301d3c54e9e",
+      "type": "music",
+      "file": "ambience_outside",
+      "name": "ambience_outside",
+      "scale": 1.0
+    },    
     
     {
       "id": "975284e4-4e9a-45ab-bf63-45cf113ee05c",
@@ -105,7 +126,10 @@
         "066e0af5-47d2-4e81-91f4-2180302da10d",
         "0ce88778-34a9-4825-8e6f-2c03f0a46e1b",
         "03388f91-c391-466a-8993-c15caa341d4b",
-        "70bbd3f1-3661-4bda-90e5-e75af740e4cf"
+        "70bbd3f1-3661-4bda-90e5-e75af740e4cf",
+        "8715c951-8ba9-4cd9-8f0e-4301d3c54e9e",
+        "cafbdbeb-4e5b-4961-8ebf-d63b71be2b04",
+        "7a2011f0-96ba-48f0-85b5-481481330868"
       ]
     }
   ]

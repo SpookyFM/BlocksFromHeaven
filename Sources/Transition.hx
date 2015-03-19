@@ -34,7 +34,10 @@ class Transition
 		
 		startTime = Sys.time();
 		
-		fade.fade(color, Color.fromFloats(0, 0, 0, 0), fadeDuration);
+		var startColor: Color = color;
+		startColor.A = 0;
+		
+		fade.fade(color, startColor, fadeDuration);
 		
 		finished = false;
 		active = true;
@@ -50,9 +53,24 @@ class Transition
 				// Switch out the image
 				globe.texture = endScene.background;
 				// Start a new fade in
-				fade.fade(Color.fromFloats(0, 0, 0, 0), fadeColor, fadeDuration);
+				var startColor: Color = fadeColor;
+				startColor.A = 0;
+				fade.fade(startColor, fadeColor, fadeDuration);
+				
+				// Remove all UI elements
+				BlocksFromHeaven.instance.uiElements.splice(0, BlocksFromHeaven.instance.uiElements.length); 
+				
+				// Reset the active hotspot
+				Hotspot.current = null;
+				BlocksFromHeaven.instance.gazeActive = false;
+				
+				// Execute the two commands
+				Interpreter.the.interpret(game.currentScene.onLeave);
+				
 				
 				game.currentScene = endScene;
+				Interpreter.the.interpret(game.currentScene.onEnter);
+				
 				startSceneLeft = true;
 			}
 		} else {

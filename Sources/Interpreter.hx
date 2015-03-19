@@ -1,5 +1,6 @@
 package;
 
+import hscript.Expr;
 import hscript.Parser;
 import hscript.Interp;
 
@@ -17,8 +18,12 @@ class Interpreter
 	private static var commands: Commands;
 	
 	public function interpret(s: String) {
-		var program = parser.parseString(s);
-		trace(interp.execute(program));
+		try {
+			var program = parser.parseString(s);
+			interp.execute(program);
+		} catch (error: Error) {
+			trace("Interpreter error: " + error.getName());
+		}
 	}
 	
 	private function new() {
