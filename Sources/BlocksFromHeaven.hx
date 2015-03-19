@@ -112,6 +112,25 @@ class BlocksFromHeaven extends Game {
 		uiElement.Texture = Loader.the.getImage("arrow_forward");
 		
 		Interpreter.the.interpret(game.startScene.onEnter);
+		
+		// Let's blur the start image
+		var blur: BlurFilter = new BlurFilter();
+		
+		var blurred: Image = Image.createRenderTarget(4096, 2048, TextureFormat.RGBA32);
+		
+		blurred.g4.begin();
+		
+		blur.texture = game.startScene.background;
+		
+		blur.render(blurred.g4);
+		
+		blurred.g4.end();
+		
+		game.startScene.background = blurred;
+		
+		globe.texture = blurred;
+		
+		
 	}
 	
 	private function nextImage(): Image {
