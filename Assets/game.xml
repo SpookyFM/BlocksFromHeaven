@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="New Game">
-  <StartScene Name="Test">
-    <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\panorama.png</BackgroundImage>
+<Game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Steamquest">
+  <StartScene Name="Start screen">
+    <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\start.png</BackgroundImage>
+    <OnEnter>game.PlayMusic("intro");</OnEnter>
     <Hotspots>
-      <Hotspot Name="New hotspot">
+      <Hotspot Name="Start playing">
         <Shape xsi:type="CircleShape">
-          <Center X="3148" Y="1361" />
-          <Radius>93</Radius>
+          <Center X="2031.0752" Y="946.8367" />
+          <Radius>100</Radius>
         </Shape>
-        <OnExamine />
-        <OnUse />
       </Hotspot>
     </Hotspots>
   </StartScene>
   <Scenes>
-    <Scene Name="Test">
-      <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\panorama.png</BackgroundImage>
+    <Scene Name="Start screen">
+      <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\start.png</BackgroundImage>
+      <OnEnter>game.PlayMusic("intro");</OnEnter>
       <Hotspots>
-        <Hotspot Name="New hotspot">
+        <Hotspot Name="Start playing">
           <Shape xsi:type="CircleShape">
-            <Center X="3148" Y="1361" />
-            <Radius>93</Radius>
+            <Center X="2031.0752" Y="946.8367" />
+            <Radius>100</Radius>
           </Shape>
-          <OnExamine />
-          <OnUse />
         </Hotspot>
       </Hotspots>
     </Scene>
-    <Scene Name="New scene">
+    <Scene Name="Beginning">
+      <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\panorama.png</BackgroundImage>
       <Hotspots />
     </Scene>
   </Scenes>

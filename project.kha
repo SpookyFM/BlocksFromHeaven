@@ -42,6 +42,13 @@
       "scale": 1.0
     },
     {
+      "id": "70bbd3f1-3661-4bda-90e5-e75af740e4cf",
+      "type": "image",
+      "file": "overlay_active.png",
+      "name": "overlay_active",
+      "scale": 1.0
+    },
+    {
       "id": "14c9e920-c394-40ee-b2a1-d6a07350cff0",
       "type": "sound",
       "file": "klack",
@@ -68,7 +75,15 @@
       "file": "blocks",
       "name": "blocks",
       "scale": 1.0
-    }, 
+    },
+    {
+      "id": "03388f91-c391-466a-8993-c15caa341d4b",
+      "type": "music",
+      "file": "intro",
+      "name": "intro",
+      "scale": 1.0
+    },  
+    
     {
       "id": "975284e4-4e9a-45ab-bf63-45cf113ee05c",
       "type": "blob",
@@ -88,7 +103,9 @@
         "14c9e920-c394-40ee-b2a1-d6a07350cff0",
         "70a60b4d-8de2-41cc-b5d7-de0ba2d07936",
         "066e0af5-47d2-4e81-91f4-2180302da10d",
-        "0ce88778-34a9-4825-8e6f-2c03f0a46e1b"
+        "0ce88778-34a9-4825-8e6f-2c03f0a46e1b",
+        "03388f91-c391-466a-8993-c15caa341d4b",
+        "70bbd3f1-3661-4bda-90e5-e75af740e4cf"
       ]
     }
   ]

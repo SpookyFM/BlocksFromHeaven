@@ -52,6 +52,7 @@ class TestGame
 		
 		startScene = new Scene();
 		startScene.id = "START";
+		startScene.onEnter = "game.PlayMusic(\"intro\");";
 		currentScene = startScene;
 		
 		// Load images

@@ -1,6 +1,7 @@
 package;
 
 import kha.Loader;
+import kha.Music;
 import kha.Sound;
 
 import kha.Color;
@@ -25,6 +26,11 @@ class Commands
 	public function PlaySound(soundFile: String): Void {
 		var s: Sound = Loader.the.getSound(soundFile);
 		s.play();
+	}
+	
+	public function PlayMusic(musicFile: String, ?loop: Bool = false): Void {
+		var m: Music = Loader.the.getMusic(musicFile);
+		m.play(loop);
 	}
 	
 	

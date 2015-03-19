@@ -68,8 +68,8 @@ class BlocksFromHeaven extends Game {
 	
 	override public function init(): Void {
 		Configuration.setScreen(new LoadingScreen());
-		Loader.the.loadRoom("blocks", loadingFinished);
 		Interpreter.init();
+		Loader.the.loadRoom("blocks", loadingFinished);
 	}
 	
 	
@@ -110,6 +110,8 @@ class BlocksFromHeaven extends Game {
 		uiElement.startAnimating();
 		
 		uiElement.Texture = Loader.the.getImage("arrow_forward");
+		
+		Interpreter.the.interpret(game.startScene.onEnter);
 	}
 	
 	private function nextImage(): Image {
