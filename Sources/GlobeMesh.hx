@@ -30,6 +30,16 @@ class GlobeMesh
 	
 	public var texture: Image;
 	
+	public var blurredTexture: Image;
+	
+	private var animationStart: Float;
+	
+	private var animationDuration: Float;
+	
+	private var animationDirection: Float;
+	
+	var t: Float;
+	
 	private function setVertex(a: Array<Float>, index: Int, pos: Vector3, uv: Vector2, color: Vector4) {
 		var base: Int = index * 9;
 		a[base + 0] = pos.x;
@@ -47,6 +57,12 @@ class GlobeMesh
 	// TODO: Function is only translated from OVR source code
 	public function new(uScale: Float, vScale: Float)
 	{
+		
+		// In the beginning, we don't want any blur
+		animationDirection = 1;
+		animationStart = 0;
+		animationDuration = 1;
+		
 		structure = new VertexStructure();
 		structure.add("Position", VertexData.Float3);
 		structure.add("TexCoord", VertexData.Float2);
@@ -180,10 +196,33 @@ class GlobeMesh
 		program = new Program();
 		
 		vs = new VertexShader(Loader.the.getShader("vertexShader.vert"));
-		fs = new FragmentShader(Loader.the.getShader("fragmentShader.frag"));
+		fs = new FragmentShader(Loader.the.getShader("fragmentShader_blend.frag"));
 		program.setVertexShader(vs);
 		program.setFragmentShader(fs);
 		program.link(structure);
+		
+		
+	}
+	
+	public function startAnimating(direction: Float, duration: Float) {
+		animationStart = Sys.time();
+		animationDirection = direction;
+		animationDuration = duration;
+	}
+	
+	public function update(): Void {
+		var time: Float = Sys.time();
+		var delta: Float = time - animationStart;
+		
+		
+		// For the other way, go from 0 to 1
+		t = delta / animationDuration;
+		
+		if (t > 1) t = 1;
+		
+		if (animationDirection < 0) {
+			t = 1 - t;
+		}
 		
 		
 	}
@@ -197,12 +236,19 @@ class GlobeMesh
 		g4.setVertexBuffer(vb);
 		g4.setMatrix(mvpLoc, mvp);
 		
+		var tLoc: ConstantLocation = program.getConstantLocation("t");
+		g4.setFloat(tLoc, t);
+		
 		var textureUnit: TextureUnit = program.getTextureUnit("tex");
 		g4.setTexture(textureUnit, texture);
 		
+		var tex2: TextureUnit = program.getTextureUnit("tex2");
+		g4.setTexture(tex2, blurredTexture);
+		
 		g4.drawIndexedVertices();
-
 	}
 	
+	
+
 	
 }

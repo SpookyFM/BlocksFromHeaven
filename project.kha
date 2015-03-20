@@ -42,6 +42,13 @@
       "scale": 1.0
     },
     {
+      "id": "2d5d0e71-672e-4e54-870c-ee21a40ce7c3",
+      "type": "image",
+      "file": "use.png",
+      "name": "use",
+      "scale": 1.0
+    },
+    {
       "id": "8fc245d0-7d4a-401f-8e16-86c5a7d9c733",
       "type": "image",
       "file": "overlay.png",
@@ -129,7 +136,9 @@
         "70bbd3f1-3661-4bda-90e5-e75af740e4cf",
         "8715c951-8ba9-4cd9-8f0e-4301d3c54e9e",
         "cafbdbeb-4e5b-4961-8ebf-d63b71be2b04",
-        "7a2011f0-96ba-48f0-85b5-481481330868"
+        "7a2011f0-96ba-48f0-85b5-481481330868",
+        "2d5d0e71-672e-4e54-870c-ee21a40ce7c3"
+        
       ]
     }
   ]

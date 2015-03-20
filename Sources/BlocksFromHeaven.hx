@@ -40,6 +40,7 @@ import UIElement;
 import Ray;
 import GameReader;
 import VignetteMesh;
+import OverlayMesh;
 
 class BlocksFromHeaven extends Game {
 	
@@ -48,15 +49,17 @@ class BlocksFromHeaven extends Game {
 	private var fade: FadeMesh;
 	
 	private var images: Vector<Image>;
-	private var numImages: Int = 4;
+	private var imagesR: Vector<Image>;
+	private var numImages: Int = 3;
 	private var currentImage: Int = 0;
+	private var currentImageR: Int = 0;
 	
 	private var prev: Float = 0.0;
 	
 	private var vignette: VignetteMesh;
 	
-
-	private var overlay: Image;
+	private var ipd: Float = 0.065;
+	
 
 	private var game: TestGame;
 	
@@ -65,6 +68,8 @@ class BlocksFromHeaven extends Game {
 	public var uiElements: Array<UIElement>;
 	
 	public static var instance: BlocksFromHeaven;
+	
+	public var overlay: OverlayMesh;
 	
 	public var blurredBackground: Bool;
 	
@@ -81,8 +86,6 @@ class BlocksFromHeaven extends Game {
 		uiElements = new Array<UIElement>();
 		Loader.the.loadRoom("blocks", loadingFinished);
 		Mouse.get(0).notify(mouseDownEvent, null, null, null);
-		
-		
 	}
 	
 	// Show an exit symbol over the specified exit
@@ -90,14 +93,21 @@ class BlocksFromHeaven extends Game {
 		// TODO: Quick hack 
 		uiElements.splice(0, uiElements.length);
 		
+		
 		var exitSymbol: UIElement = new UIElement();
-		exitSymbol.SetPosition(hotspot.getLonLat(), 5);
+		exitSymbol.SetPosition(hotspot.getUILonLat(), 5);
 		exitSymbol.Offset = new Vector2(0, 0);
 		exitSymbol.Texture = Loader.the.getImage("arrow_forward");
 		exitSymbol.startAnimating();
+		exitSymbol.isExit = true;
 		uiElements.push(exitSymbol);
 	}
 	
+	
+	public function hideUI(hotspot: Hotspot) {
+		// TODO: Quick hack for demo
+		uiElements.splice(0, uiElements.length);
+	}
 	
 	
 	private function loadingFinished(): Void {
@@ -105,13 +115,15 @@ class BlocksFromHeaven extends Game {
 
 		
 		
-		images = new Vector<Image>(4);
+		images = new Vector<Image>(3);
+		imagesR = new Vector<Image>(3);
 		for (i in 0...numImages) {
 			images[i] = Image.createRenderTarget(1024, 1024, TextureFormat.RGBA32);
+			imagesR[i] = Image.createRenderTarget(1024, 1024, TextureFormat.RGBA32);
 		}
 		
-	
-		overlay = Loader.the.getImage("overlay");
+		overlay = new OverlayMesh();
+		overlay.Texture = Loader.the.getImage("overlay");
 		
 		
 		
@@ -122,6 +134,9 @@ class BlocksFromHeaven extends Game {
 		
 		globe = new GlobeMesh(1, 1);
 		globe.texture = game.startScene.background;
+		globe.blurredTexture = game.startScene.blurredBackground;
+		
+		
 		
 		transition = new Transition();
 		transition.game = game;
@@ -150,6 +165,12 @@ class BlocksFromHeaven extends Game {
 		currentImage++;
 		if (currentImage == numImages) currentImage = 0;
 		return images[currentImage];
+	}
+	
+	private function nextImageR(): Image {
+		currentImageR++;
+		if (currentImageR == numImages) currentImageR = 0;
+		return images[currentImageR];
 	}
 	
 	
@@ -198,7 +219,8 @@ class BlocksFromHeaven extends Game {
 		var g: Graphics = target.g4;
 		
 		g.begin();
-		g.clear(Color.Green);		
+		g.clear(Color.Green);
+		globe.update();
 		globe.render(g, mvp);
 		
 		
@@ -209,7 +231,7 @@ class BlocksFromHeaven extends Game {
 	}
 	
 	
-	public function getViewMatrix(state: SensorState): Matrix4 {
+	public function getViewMatrix(state: SensorState, ?eye: Int = 0): Matrix4 {
 		var orientation: Quaternion = state.Predicted.Pose.Orientation;
 		
 		//trace("Orientation: " + orientation.x + " " + orientation.y + " " + orientation.z + " " + orientation.w);
@@ -228,7 +250,12 @@ class BlocksFromHeaven extends Game {
 		
 		var rollPitchYaw: Matrix4 = Matrix4.rotationY(EyeYaw).multmat(Matrix4.rotationX(EyePitch).multmat(Matrix4.rotationZ(EyeRoll)));
 		
-		return rollPitchYaw;
+		var eyeOffset: Float = ipd * 0.5;
+		if (eye == 0) eyeOffset = eyeOffset * -1;
+		
+		var translation: Matrix4 = Matrix4.translation(eyeOffset, 0, 0);
+		
+		return rollPitchYaw.multmat(translation);
 	}
 	
 	public function getViewCenter(orientation: Quaternion): Vector2 {
@@ -301,64 +328,75 @@ class BlocksFromHeaven extends Game {
 			}
 		}
 		
+		var parms: TimeWarpParms = new TimeWarpParms();
+		var leftTimeWarpImage: TimeWarpImage = new TimeWarpImage();
+		var rightTimeWarpImage: TimeWarpImage = new TimeWarpImage();
 		
-		var curImage: Image = nextImage();
-		var p:Matrix4 = renderIt(curImage, getViewMatrix(state));
-		var vp: Matrix4 = getViewMatrix(state).multmat(p);
+		for (eye in 0...2) {
 		
-		
-		
-		for (uiElement in uiElements) {
-			uiElement.update();
-				
-			// Render the GUI element
-			uiElement.render(curImage.g4, vp);
+			var curImage: Image;
+			if (eye == 0) {
+				curImage =  nextImage();
+			} else {
+				curImage = nextImageR();
+			}
+			var p:Matrix4 = renderIt(curImage, getViewMatrix(state, eye));
+			var vp: Matrix4 = getViewMatrix(state, eye).multmat(p);
 			
+			
+			
+			for (uiElement in uiElements) {
+				uiElement.update();
+					
+				// Render the GUI element
+				uiElement.render(curImage.g4, vp);
+				
+			}
+			
+			// Render the fade texture
+			fade.render(curImage.g4);
+			
+			/* var ray: Ray = getCameraRay(getViewMatrix(state));
+			if (ray.intersects(uiElement.quad)) {
+				uiElement.Texture = Loader.the.getImage("arrow_forward_active");
+			} else {
+				uiElement.Texture = Loader.the.getImage("arrow_forward");
+			} */
+			
+			if (gazeActive) {
+				 overlay.Texture = Loader.the.getImage("overlay_active");
+			} else {
+				overlay.Texture = Loader.the.getImage("overlay");
+			}
+			
+			
+			// Overlay the... overlay
+			overlay.render(curImage.g4);
+			
+			// Build a vignette around the texture
+			vignette.render(curImage.g4);
+			
+			if (eye == 0) {
+				leftTimeWarpImage.Image = curImage;
+				// TODO: Fix the version in Haxe
+				leftTimeWarpImage.TexCoordsFromTanAngles = p;
+			} else {
+				rightTimeWarpImage.Image = curImage;
+				rightTimeWarpImage.TexCoordsFromTanAngles = p;		
+			}
+		
 		}
 		
-		// Render the fade texture
-		fade.render(curImage.g4);
 		
-		/* var ray: Ray = getCameraRay(getViewMatrix(state));
-		if (ray.intersects(uiElement.quad)) {
-			uiElement.Texture = Loader.the.getImage("arrow_forward_active");
-		} else {
-			uiElement.Texture = Loader.the.getImage("arrow_forward");
-		} */
 		
-		// Build a vignette around the texture
-		vignette.render(curImage.g4);
 		
-		var parms: TimeWarpParms = new TimeWarpParms();
-		
-		var leftTimeWarpImage: TimeWarpImage = new TimeWarpImage();
-		leftTimeWarpImage.Image = curImage;
 		leftTimeWarpImage.Pose = state.Predicted;
-		
-		var rightTimeWarpImage: TimeWarpImage = new TimeWarpImage();
-		rightTimeWarpImage.Image = curImage;
 		rightTimeWarpImage.Pose = state.Predicted;
 		
 		
 		parms.LeftImage = leftTimeWarpImage;
 		parms.RightImage = rightTimeWarpImage;
 		
-		if (gazeActive) {
-			overlay = Loader.the.getImage("overlay_active");
-		} else {
-			overlay = Loader.the.getImage("overlay");
-		}
-		
-		var overlayTimeWarpImage: TimeWarpImage = new TimeWarpImage();
-		overlayTimeWarpImage.Image = overlay;
-		overlayTimeWarpImage.Pose = state.Predicted;
-		overlayTimeWarpImage.TexCoordsFromTanAngles = p;
-		
-		parms.LeftOverlay = parms.RightOverlay = overlayTimeWarpImage;
-		
-		// TODO: Fix the version in Haxe
-		leftTimeWarpImage.TexCoordsFromTanAngles = p;
-		rightTimeWarpImage.TexCoordsFromTanAngles = p;		
 
 		VrInterface.instance.WarpSwap(parms);
 	}
@@ -392,12 +430,11 @@ class BlocksFromHeaven extends Game {
 		if (button == 1) {
 			// Switch between blurred and unblurred
 			if (blurredBackground) {
-				globe.texture = game.currentScene.background;
-				blurredBackground = false;
+				globe.startAnimating(1, 1);
 			} else {
-				globe.texture = game.currentScene.blurredBackground;
-				blurredBackground = true;
+				globe.startAnimating(-1, 1);
 			}
+			blurredBackground = !blurredBackground;
 		}
 		#if ANDROID
 			if (button == 0) {

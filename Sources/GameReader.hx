@@ -35,7 +35,7 @@ class GameReader
 		// scene.background = sceneElement.node.BackgroundImage.innerData;
 		for (hotspotElement in sceneElement.node.Hotspots.nodes.Hotspot) {
 			var hotspot: Hotspot = ParseHotspot(hotspotElement);
-			scene.hotspots.push(hotspot);
+			scene.hotspots[hotspot.id] = hotspot;
 		}
 		
 		return scene;

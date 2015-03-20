@@ -139,6 +139,8 @@ class UIElement extends MeshBase
 	
 	private var animationDone: Bool = false;
 	
+	public var isExit: Bool;
+	
 	public function startAnimating() {
 		startTime = Sys.time();
 		moveDuration = 2;
@@ -149,8 +151,10 @@ class UIElement extends MeshBase
 	
 	// The update function should update the model matrix
 	public function update() {
-		//updateRotation();
-		//return;
+		if (!isExit) {
+			updateUse();
+			return;
+		}
 		
 		var time: Float = Sys.time();
 		var t: Float = time - startTime;
@@ -172,6 +176,14 @@ class UIElement extends MeshBase
 		
 		m = trans.multmat(rot.multmat(matT));
 	}
+	
+	public function updateUse() {
+		
+		// Now move it into the screen the specified distance
+		m = Matrix4.translation(0, 0, -Distance);
+	}
+	
+	
 	
 	
 	public function updateRotation() {

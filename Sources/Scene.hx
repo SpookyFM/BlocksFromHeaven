@@ -25,11 +25,11 @@ class Scene
 	
 	public var onLeave: String;
 	
-	public var hotspots: Array<Hotspot>;
+	public var hotspots: Map<String, Hotspot>;
 	
 	public function new() 
 	{
-		hotspots = new Array<Hotspot>();
+		hotspots = new Map<String, Hotspot>();
 		
 	}
 	

@@ -8,6 +8,8 @@ import kha.Sound;
 
 import kha.Color;
 
+import kha.math.Vector2;
+
 /**
  * ...
  * @author Florian Mehm
@@ -37,6 +39,32 @@ class Commands
 	
 	public function FadeOutMusic(musicFile: String): Void {
 		// TODO: Check out the scheduler!
+	}
+	
+	public function ChangeBackground(name: String): Void {
+		game.currentScene.setBackground(Loader.the.getImage(name));
+	}
+	
+	public function EnableHotspot(name: String): Void {
+		game.currentScene.hotspots[name].enabled = true;
+	}
+	
+	public function DisableHotspot(name: String): Void {
+		game.currentScene.hotspots[name].enabled = false;
+		
+		BlocksFromHeaven.instance.uiElements.splice(0, BlocksFromHeaven.instance.uiElements.length);
+	}
+	
+	public function ShowUse(): Void {
+		// Show the "use" icon
+		BlocksFromHeaven.instance.uiElements.splice(0, BlocksFromHeaven.instance.uiElements.length);
+		
+		var useSymbol: UIElement = new UIElement();
+		useSymbol.SetPosition(Hotspot.current.getUILonLat(), 5);
+		useSymbol.Offset = new Vector2(0, 0);
+		useSymbol.Texture = Loader.the.getImage("use");
+		// useSymbol.startAnimating();
+		BlocksFromHeaven.instance.uiElements.push(useSymbol);
 	}
 	
 	public function StopMusic(musicFile: String): Void {

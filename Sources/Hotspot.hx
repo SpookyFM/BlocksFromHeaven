@@ -14,6 +14,9 @@ class Hotspot
 	// The center is defined in uv coordinates of the image
 	public var center: Vector2;
 	
+	// The position where the UI element should be displayed
+	public var uiCenter: Vector2;
+	
 	// The radius is defined based on the u-axis
 	public var radius: Float;
 	
@@ -29,6 +32,8 @@ class Hotspot
 	public var onClick: String;
 	
 	public static var current: Hotspot;
+	
+	public var enabled: Bool;
 	
 	private function isInsideCircle(c: Vector2, r: Float, v: Vector2): Bool {
 		return ( v.sub(c).length < r);
@@ -82,11 +87,15 @@ class Hotspot
 	
 	public var GazeExecuted: Bool;
 	
+	public var GazeLostTime: Float;
 	
+	public var GazeLostExecuted: Bool;
 	
 	
 	// TODO: Look into kha timers
 	public function handleGaze(v: Vector2) {
+		if (!enabled) return;
+		
 		if (isOver(v)) {
 			if (!IsGazeOver) {
 				GazeStartTime = Sys.time();
@@ -105,8 +114,24 @@ class Hotspot
 			}
 			
 		} else {
-			IsGazeOver = false;
-			GazeExecuted = false;
+			if (IsGazeOver) {
+				GazeLostTime = Sys.time();
+				IsGazeOver = false;
+				GazeExecuted = false;
+				GazeLostExecuted = false;
+				BlocksFromHeaven.instance.gazeActive = false;
+			}
+			
+			var duration: Float = Sys.time() - GazeLostTime;
+			if (duration > 0.5) {
+				if (!GazeLostExecuted) {
+					trace("Gaze lost - removing ui elements");
+					BlocksFromHeaven.instance.hideUI(this);
+					GazeLostExecuted = true;
+				}
+			}
+			
+			
 		}
 		
 		/* if (isOver(v)) {
@@ -125,6 +150,14 @@ class Hotspot
 		return result;
 	}
 	
+	public function getUILonLat(): Vector2 {
+		var result: Vector2 = new Vector2();
+		result.x = uiCenter.x * Math.PI * 2;
+		result.y = (uiCenter.y - 0.5) * Math.PI;
+	
+		
+		return result;
+	}
 	
 	
 	
@@ -139,6 +172,8 @@ class Hotspot
 	public function new() 
 	{
 		center = new Vector2();
+		uiCenter = new Vector2();
+		enabled = true;
 	}
 	
 }

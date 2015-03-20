@@ -35,8 +35,8 @@ class TestGame
 		hotspot.center.x = center.x / scene.background.width;
 		hotspot.center.y = (scene.background.height - center.y) / scene.background.height;
 		hotspot.radius = radius / scene.background.width;
-		//hotspot.center.x += hotspot.radius * 0.5;
-		//hotspot.center.y -= hotspot.radius * 0.5;
+		
+		
 		
 		return hotspot;
 	}
@@ -58,10 +58,17 @@ class TestGame
 		addScene(startScene);
 		
 		
-		var hotspot1: Hotspot = getHotspot(startScene, new Vector2(2082, 987), 144/2 );
-		hotspot1.onGaze = "game.ShowExit();";
+		var hotspot1: Hotspot = getHotspot(startScene, new Vector2(2082, 987), 144 / 2 );
+		hotspot1.id = "startPlaying";
+		//hotspot1.onGaze = "game.ShowExit();";
+		hotspot1.onGaze = "game.ShowUse();";
 		hotspot1.onUse = "game.ChangeScene(\"conservatory\");";
-		startScene.hotspots.push(hotspot1);
+		
+		hotspot1.uiCenter.x = hotspot1.center.x;
+		hotspot1.uiCenter.y = hotspot1.center.y - 0.05;
+		
+		
+		startScene.hotspots[hotspot1.id] = hotspot1;
 		
 		
 		var secondScene: Scene = new Scene();
@@ -72,9 +79,11 @@ class TestGame
 		
 		
 		var hotspot2: Hotspot = getHotspot(secondScene, new Vector2(2074, 1006), 524 / 2);
+		hotspot2.id = "hotspot2";
+		hotspot2.uiCenter = hotspot2.center;
 		hotspot2.onGaze = "game.ShowExit();";
 		hotspot2.onUse = "game.ChangeScene(\"pool\");";
-		secondScene.hotspots.push(hotspot2);
+		secondScene.hotspots[hotspot2.id] = hotspot2;
 		
 		addScene(secondScene);
 		
@@ -89,10 +98,12 @@ class TestGame
 		addScene(thirdScene);
 		
 		
-		var hotspot3: Hotspot = getHotspot(thirdScene, new Vector2(251, 1012), 260/2 );
+		var hotspot3: Hotspot = getHotspot(thirdScene, new Vector2(251, 1012), 260 / 2 );
+		hotspot3.id = "hotspot3";
+		hotspot3.uiCenter = hotspot3.center;
 		hotspot3.onGaze = "game.ShowExit();";
 		hotspot3.onUse = "game.ChangeScene(\"conservatory\");";
-		startScene.hotspots.push(hotspot1);
+		thirdScene.hotspots[hotspot3.id] = hotspot3;
 		
 		
 		
