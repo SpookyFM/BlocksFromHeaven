@@ -1,4 +1,5 @@
 package;
+import kha.graphics4.TextureFormat;
 import kha.Image;
 
 /**
@@ -9,6 +10,14 @@ class Scene
 {
 
 	public var background: Image;
+	
+	public var blurredBackground: Image;
+	
+	public function setBackground(image: Image) {
+		// Blur the image and save the result
+		background = image;
+		blurredBackground = Blur.BlurImage(background, TextureFormat.RGBA32);
+	}
 	
 	public var id: String;
 	

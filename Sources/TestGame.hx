@@ -54,7 +54,7 @@ class TestGame
 		startScene.id = "START";
 		startScene.onEnter = "game.PlayMusic(\"intro\");";
 		startScene.onLeave = "game.StopMusic(\"intro\");";
-		startScene.background = Loader.the.getImage("start");
+		startScene.setBackground(Loader.the.getImage("start"));
 		addScene(startScene);
 		
 		
@@ -68,7 +68,7 @@ class TestGame
 		secondScene.id = "conservatory";
 		secondScene.onEnter = "game.PlayMusic(\"ambience_inside\");";
 		secondScene.onLeave = "game.StopMusic(\"ambience_inside\");";
-		secondScene.background = Loader.the.getImage("conservatory");
+		secondScene.setBackground(Loader.the.getImage("conservatory"));
 		
 		
 		var hotspot2: Hotspot = getHotspot(secondScene, new Vector2(2074, 1006), 524 / 2);
@@ -85,7 +85,7 @@ class TestGame
 		thirdScene.id = "pool";
 		thirdScene.onEnter = "game.PlayMusic(\"ambience_outside\");";
 		thirdScene.onLeave = "game.StopMusic(\"ambience_outside\");";
-		thirdScene.background = Loader.the.getImage("pool");
+		thirdScene.setBackground(Loader.the.getImage("pool"));
 		addScene(thirdScene);
 		
 		

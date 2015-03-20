@@ -83,6 +83,8 @@ class Hotspot
 	public var GazeExecuted: Bool;
 	
 	
+	
+	
 	// TODO: Look into kha timers
 	public function handleGaze(v: Vector2) {
 		if (isOver(v)) {

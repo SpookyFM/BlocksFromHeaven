@@ -174,24 +174,8 @@ class GlobeMesh
 		ib.unlock();
 		
 		
-		/*vb = new VertexBuffer(3, structure, Usage.StaticUsage);
-		var verts: Array<Float> = vb.lock();
-		setVertex(verts, 0, new Vector3(-1, 1, 0), new Vector2(0, 1), new Vector4(0, 0, 1, 1));
-		setVertex(verts, 1, new Vector3(-1, -1, 0), new Vector2(1, 1), new Vector4(0, 0, 1, 1));
-		setVertex(verts, 2, new Vector3(0, 1, 0), new Vector2(0, 0), new Vector4(0, 0, 1, 1));
 		
-		vb.unlock();
 		
-		ib = new IndexBuffer(3, Usage.StaticUsage);
-		var indices: Array<Int> = ib.lock();
-		
-		indices[0] = 0;
-		indices[1] = 1;
-		indices[2] = 2;
-		
-		ib.unlock(); 
-		
-		*/
 		// Create the program
 		program = new Program();
 		
@@ -205,14 +189,8 @@ class GlobeMesh
 	}
 	
 	public function render(g4: Graphics, mvp: Matrix4) {
-		//g4.setDepthMode(false, CompareMode.LessEqual);
 		g4.setCullMode(CullMode.None);
-		//g4.setBlendingMode(BlendingOperation.SourceAlpha, BlendingOperation.InverseSourceAlpha);
-		//g4.setScissor(new kha.Rectangle(0, 0, 1024, 1024));
-		
-		
-		
-		
+
 		var mvpLoc: ConstantLocation = program.getConstantLocation("Mvpm");
 		g4.setProgram(program);
 		g4.setIndexBuffer(ib);
@@ -223,18 +201,7 @@ class GlobeMesh
 		g4.setTexture(textureUnit, texture);
 		
 		g4.drawIndexedVertices();
-		
-		
-		
-		
-		
-		//g4.setDepthMode(false, CompareMode.Always);
-		
-		
-		
-		
-		
-		
+
 	}
 	
 	

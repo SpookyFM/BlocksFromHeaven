@@ -46,12 +46,18 @@ class MeshBase
 		
 	}
 	
-	public function new() 
-	{
+	private function buildStructure() {
 		structure = new VertexStructure();
 		structure.add("Position", VertexData.Float3);
 		structure.add("TexCoord", VertexData.Float2);
 		structure.add("VertexColor", VertexData.Float4);
+	}
+	
+	
+	
+	public function new() 
+	{
+		buildStructure();
 		
 		buildGeometry();
 	}

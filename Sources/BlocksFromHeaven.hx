@@ -12,6 +12,7 @@ import kha.Game;
 import kha.graphics4.CompareMode;
 import kha.graphics4.CullMode;
 import kha.Image;
+import kha.input.Mouse;
 import kha.Key;
 import kha.Loader;
 import kha.LoadingScreen;
@@ -38,6 +39,7 @@ import GlobeMesh;
 import UIElement;
 import Ray;
 import GameReader;
+import VignetteMesh;
 
 class BlocksFromHeaven extends Game {
 	
@@ -51,7 +53,7 @@ class BlocksFromHeaven extends Game {
 	
 	private var prev: Float = 0.0;
 	
-
+	private var vignette: VignetteMesh;
 	
 
 	private var overlay: Image;
@@ -63,6 +65,8 @@ class BlocksFromHeaven extends Game {
 	public var uiElements: Array<UIElement>;
 	
 	public static var instance: BlocksFromHeaven;
+	
+	public var blurredBackground: Bool;
 	
 	public var gazeActive: Bool;
 	
@@ -76,6 +80,8 @@ class BlocksFromHeaven extends Game {
 		Interpreter.init();
 		uiElements = new Array<UIElement>();
 		Loader.the.loadRoom("blocks", loadingFinished);
+		Mouse.get(0).notify(mouseDownEvent, null, null, null);
+		
 		
 	}
 	
@@ -133,22 +139,9 @@ class BlocksFromHeaven extends Game {
 		
 		Interpreter.the.interpret(game.startScene.onEnter);
 		
-		// Let's blur the start image
-		/*var blur: BlurFilter = new BlurFilter();
+		vignette = new VignetteMesh(0.01);
 		
-		var blurred: Image = Image.createRenderTarget(4096, 2048, TextureFormat.RGBA32);
 		
-		blurred.g4.begin();
-		
-		blur.texture = game.startScene.background;
-		
-		blur.render(blurred.g4);
-		
-		blurred.g4.end();
-		
-		game.startScene.background = blurred;
-		
-		globe.texture = blurred; */
 		
 		
 	}
@@ -333,6 +326,8 @@ class BlocksFromHeaven extends Game {
 			uiElement.Texture = Loader.the.getImage("arrow_forward");
 		} */
 		
+		// Build a vignette around the texture
+		vignette.render(curImage.g4);
 		
 		var parms: TimeWarpParms = new TimeWarpParms();
 		
@@ -393,23 +388,22 @@ class BlocksFromHeaven extends Game {
 		
 	}
 	
-	override public function mouseDown(x: Int, y: Int): Void {
-		super.mouseDown(x, y);
-		
+	public function mouseDownEvent(button: Int, x: Int, y: Int): Void {
+		if (button == 1) {
+			// Switch between blurred and unblurred
+			if (blurredBackground) {
+				globe.texture = game.currentScene.background;
+				blurredBackground = false;
+			} else {
+				globe.texture = game.currentScene.blurredBackground;
+				blurredBackground = true;
+			}
+		}
 		#if ANDROID
-			// TODO: Need to differentiate between the two buttons
-			// On Android, mouse down means a touch of the touchpad
-			keypress = true;
+			if (button == 0) {
+				keypress = true;
+			}
 		#end
 	}
 	
-	override public function mouseUp(x: Int, y: Int): Void {
-		super.mouseUp(x, y);
-		
-	}
-	
-	override public function mouseMove(x: Int, y: Int): Void {
-		super.mouseMove(x, y);
-		
-	}
 }
