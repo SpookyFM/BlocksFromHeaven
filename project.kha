@@ -16,8 +16,15 @@
     {
       "id": "70a60b4d-8de2-41cc-b5d7-de0ba2d07936",
       "type": "image",
-      "file": "conservatory.png",
-      "name": "conservatory",
+      "file": "conservatory_open.png",
+      "name": "conservatory_open",
+      "scale": 1.0
+    },
+    {
+      "id": "4d01d738-cad7-4e3e-a73a-a2e53eda68a2",
+      "type": "image",
+      "file": "conservatory_closed.png",
+      "name": "conservatory_closed",
       "scale": 1.0
     },
     {
@@ -84,6 +91,20 @@
       "scale": 1.0
     },
     {
+      "id": "abcc00e1-e1bd-4244-bd60-a22f9bd29fb7",
+      "type": "sound",
+      "file": "door_open",
+      "name": "door_open",
+      "scale": 1.0
+    },
+    {
+      "id": "477f0680-315f-4a56-8ea8-04632b04ae27",
+      "type": "sound",
+      "file": "steps",
+      "name": "steps",
+      "scale": 1.0
+    },
+    {
       "id": "114ab1ca-49f9-4616-8d02-1018402ca59d",
       "type": "music",
       "file": "blocks",
@@ -137,7 +158,10 @@
         "8715c951-8ba9-4cd9-8f0e-4301d3c54e9e",
         "cafbdbeb-4e5b-4961-8ebf-d63b71be2b04",
         "7a2011f0-96ba-48f0-85b5-481481330868",
-        "2d5d0e71-672e-4e54-870c-ee21a40ce7c3"
+        "2d5d0e71-672e-4e54-870c-ee21a40ce7c3",
+        "abcc00e1-e1bd-4244-bd60-a22f9bd29fb7",
+        "477f0680-315f-4a56-8ea8-04632b04ae27",
+        "4d01d738-cad7-4e3e-a73a-a2e53eda68a2"
         
       ]
     }

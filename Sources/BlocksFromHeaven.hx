@@ -45,12 +45,12 @@ import OverlayMesh;
 class BlocksFromHeaven extends Game {
 	
 	
-	private var globe: GlobeMesh;
+	public var globe: GlobeMesh;
 	private var fade: FadeMesh;
 	
 	private var images: Vector<Image>;
 	private var imagesR: Vector<Image>;
-	private var numImages: Int = 3;
+	private var numImages: Int = 4;
 	private var currentImage: Int = 0;
 	private var currentImageR: Int = 0;
 	
@@ -85,7 +85,7 @@ class BlocksFromHeaven extends Game {
 		Interpreter.init();
 		uiElements = new Array<UIElement>();
 		Loader.the.loadRoom("blocks", loadingFinished);
-		Mouse.get(0).notify(mouseDownEvent, null, null, null);
+		Mouse.get(0).notify(mouseDownEvent, mouseUpEvent, null, null);
 	}
 	
 	// Show an exit symbol over the specified exit
@@ -115,8 +115,8 @@ class BlocksFromHeaven extends Game {
 
 		
 		
-		images = new Vector<Image>(3);
-		imagesR = new Vector<Image>(3);
+		images = new Vector<Image>(4);
+		imagesR = new Vector<Image>(4);
 		for (i in 0...numImages) {
 			images[i] = Image.createRenderTarget(1024, 1024, TextureFormat.RGBA32);
 			imagesR[i] = Image.createRenderTarget(1024, 1024, TextureFormat.RGBA32);
@@ -170,7 +170,7 @@ class BlocksFromHeaven extends Game {
 	private function nextImageR(): Image {
 		currentImageR++;
 		if (currentImageR == numImages) currentImageR = 0;
-		return images[currentImageR];
+		return imagesR[currentImageR];
 	}
 	
 	
@@ -319,13 +319,13 @@ class BlocksFromHeaven extends Game {
 		
 		for (hotspot in game.currentScene.hotspots) {
 			hotspot.handleGaze(imageLocation);
-			
-			if (keypress) {
-				if (hotspot.isOver(imageLocation)) {
-					Interpreter.the.interpret(hotspot.onUse);
-				}
-				keypress = false;
+		}
+		
+		if (keypress) {
+			if (gazeActive) {
+				Interpreter.the.interpret(Hotspot.current.onUse);
 			}
+			keypress = false;
 		}
 		
 		var parms: TimeWarpParms = new TimeWarpParms();
@@ -426,8 +426,12 @@ class BlocksFromHeaven extends Game {
 		
 	}
 	
-	public function mouseDownEvent(button: Int, x: Int, y: Int): Void {
-		if (button == 1) {
+	private var lastMouseDown: Float;
+	
+	public function mouseUpEvent(button: Int, x: Int, y: Int): Void {
+		var duration: Float = Sys.time() - lastMouseDown;
+		// TODO: Quick hack since the mapping of GearVR's second button doesn't seem to work
+		if (duration > 1) {
 			// Switch between blurred and unblurred
 			if (blurredBackground) {
 				globe.startAnimating(1, 1);
@@ -435,12 +439,16 @@ class BlocksFromHeaven extends Game {
 				globe.startAnimating(-1, 1);
 			}
 			blurredBackground = !blurredBackground;
-		}
+		} else {
 		#if ANDROID
-			if (button == 0) {
-				keypress = true;
-			}
+			keypress = true;
 		#end
+		}
+	}
+	
+	
+	public function mouseDownEvent(button: Int, x: Int, y: Int): Void {
+		lastMouseDown = Sys.time();
 	}
 	
 }

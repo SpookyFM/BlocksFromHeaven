@@ -52,6 +52,7 @@ class Transition
 			if (fade.isFinished()) {
 				// Switch out the image
 				globe.texture = endScene.background;
+				globe.blurredTexture = endScene.blurredBackground;
 				// Start a new fade in
 				var startColor: Color = fadeColor;
 				startColor.A = 0;

@@ -43,6 +43,8 @@ class Commands
 	
 	public function ChangeBackground(name: String): Void {
 		game.currentScene.setBackground(Loader.the.getImage(name));
+		BlocksFromHeaven.instance.globe.texture = game.currentScene.background;
+		BlocksFromHeaven.instance.globe.blurredTexture = game.currentScene.blurredBackground;
 	}
 	
 	public function EnableHotspot(name: String): Void {
