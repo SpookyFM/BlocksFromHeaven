@@ -246,9 +246,9 @@ class BlocksFromHeaven extends Game {
 		EyePitch = eulerAngles.y;
 		EyeRoll = eulerAngles.z;
 		
-		//trace("Angles: EyeYaw:" + EyeYaw + " EyePitch " + EyePitch + " EyeRoll " + EyeRoll);
+		trace("Angles: EyeYaw:" + EyeYaw + " EyePitch " + EyePitch + " EyeRoll " + EyeRoll);
 		
-		var rollPitchYaw: Matrix4 = Matrix4.rotationY(EyeYaw).multmat(Matrix4.rotationX(EyePitch).multmat(Matrix4.rotationZ(EyeRoll)));
+		var rollPitchYaw: Matrix4 = Matrix4.rotationY(EyeYaw).multmat(Matrix4.rotationX(EyePitch).multmat(Matrix4.rotationZ(-EyeRoll)));
 		
 		var eyeOffset: Float = ipd * 0.5;
 		if (eye == 0) eyeOffset = eyeOffset * -1;
@@ -371,10 +371,10 @@ class BlocksFromHeaven extends Game {
 			
 			
 			// Overlay the... overlay
-			overlay.render(curImage.g4);
+			// overlay.render(curImage.g4);
 			
 			// Build a vignette around the texture
-			vignette.render(curImage.g4);
+			// vignette.render(curImage.g4);
 			
 			if (eye == 0) {
 				leftTimeWarpImage.Image = curImage;
