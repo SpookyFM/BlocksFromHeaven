@@ -28,6 +28,10 @@ class UIElement extends MeshBase
 	
 	public var Texture: Image;
 	
+	public var ActiveTexture: Image;
+	
+	public var InactiveTexture: Image;
+	
 	public var quad: Quad;
 	
 	// Set the position of the Mesh to be infront of the specified location in the background image

@@ -101,6 +101,9 @@ class BlocksFromHeaven extends Game {
 		exitSymbol.SetPosition(hotspot.getUILonLat(), 5);
 		exitSymbol.Offset = new Vector2(0, 0);
 		exitSymbol.Texture = Loader.the.getImage("arrow_forward");
+		exitSymbol.ActiveTexture = Loader.the.getImage("arrow_forward_active");
+		exitSymbol.InactiveTexture = Loader.the.getImage("arrow_forward");
+		
 		exitSymbol.startAnimating();
 		exitSymbol.isExit = true;
 		uiElements.push(exitSymbol);
@@ -366,9 +369,9 @@ class BlocksFromHeaven extends Game {
 				
 				var ray: Ray = getCameraRay(getViewMatrix(state));
 				if (ray.intersects(uiElement.quad)) {
-					uiElement.Texture = Loader.the.getImage("arrow_forward_active");
+					uiElement.Texture = uiElement.ActiveTexture;
 				} else {
-					uiElement.Texture = Loader.the.getImage("arrow_forward");
+					uiElement.Texture = uiElement.InactiveTexture;
 				} 
 			
 				
@@ -442,7 +445,7 @@ class BlocksFromHeaven extends Game {
 	public function mouseUpEvent(button: Int, x: Int, y: Int): Void {
 		var duration: Float = Sys.time() - lastMouseDown;
 		// TODO: Quick hack since the mapping of GearVR's second button doesn't seem to work
-		if (duration > 1) {
+		/* if (duration > 1) {
 			// Switch between blurred and unblurred
 			if (blurredBackground) {
 				globe.startAnimating(1, 1);
@@ -450,11 +453,11 @@ class BlocksFromHeaven extends Game {
 				globe.startAnimating(-1, 1);
 			}
 			blurredBackground = !blurredBackground;
-		} else {
+		} else { */
 		#if ANDROID
 			keypress = true;
 		#end
-		}
+		// }
 	}
 	
 	

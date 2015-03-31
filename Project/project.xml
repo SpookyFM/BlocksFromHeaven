@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Steamquest">
-  <StartScene Name="Start Screen">
-    <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\start.png</BackgroundImage>
-    <OnEnter>game.PlayMusic("intro");</OnEnter>
+  <StartScene Name="Conservatory 1">
+    <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\conservatory.png</BackgroundImage>
+    <OnEnter>game.PlaySound("ambience_inside", true);
+game.PlayMusic("peaceful");</OnEnter>
     <Hotspots>
-      <Hotspot Name="Play">
+      <Hotspot Name="Rope" IsEnabled="true">
         <Shape xsi:type="CircleShape">
-          <Center X="2046.80139" Y="952.737366" />
-          <Radius>68.18638</Radius>
+          <Center X="2886.45459" Y="952.508057" />
+          <Radius>164.428879</Radius>
         </Shape>
         <OnExamine />
-        <OnGaze>game.ShowExit();</OnGaze>
-        <OnUse>game.FadeOutMusic("intro");
-game.ChangeScene("Conservatory 1");</OnUse>
+        <OnGaze>game.ShowUse();</OnGaze>
+        <OnUse>game.PlaySound("bell");
+game.SetVariable("Bertram_called", true);
+game.EnableHotspot("Bertram");
+game.ChangeBackground("Conservatory 1", "conservatory1_bertram");</OnUse>
+      </Hotspot>
+      <Hotspot Name="Bertram" IsEnabled="false">
+        <Shape xsi:type="CircleShape">
+          <Center X="1205.35632" Y="1086.69666" />
+          <Radius>133.981613</Radius>
+        </Shape>
+        <OnExamine />
+        <OnGaze>game.ShowTalkTo();</OnGaze>
+        <OnUse />
       </Hotspot>
     </Hotspots>
   </StartScene>
@@ -21,7 +33,7 @@ game.ChangeScene("Conservatory 1");</OnUse>
       <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\start.png</BackgroundImage>
       <OnEnter>game.PlayMusic("intro");</OnEnter>
       <Hotspots>
-        <Hotspot Name="Play">
+        <Hotspot Name="Play" IsEnabled="false">
           <Shape xsi:type="CircleShape">
             <Center X="2046.80139" Y="952.737366" />
             <Radius>68.18638</Radius>
@@ -35,7 +47,31 @@ game.ChangeScene("Conservatory 1");</OnUse>
     </Scene>
     <Scene Name="Conservatory 1">
       <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\conservatory.png</BackgroundImage>
-      <Hotspots />
+      <OnEnter>game.PlaySound("ambience_inside", true);
+game.PlayMusic("peaceful");</OnEnter>
+      <Hotspots>
+        <Hotspot Name="Rope" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="2886.45459" Y="952.508057" />
+            <Radius>164.428879</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowUse();</OnGaze>
+          <OnUse>game.PlaySound("bell");
+game.SetVariable("Bertram_called", true);
+game.EnableHotspot("Bertram");
+game.ChangeBackground("Conservatory 1", "conservatory1_bertram");</OnUse>
+        </Hotspot>
+        <Hotspot Name="Bertram" IsEnabled="false">
+          <Shape xsi:type="CircleShape">
+            <Center X="1205.35632" Y="1086.69666" />
+            <Radius>133.981613</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowTalkTo();</OnGaze>
+          <OnUse />
+        </Hotspot>
+      </Hotspots>
     </Scene>
   </Scenes>
   <Assets>
@@ -92,6 +128,48 @@ game.ChangeScene("Conservatory 1");</OnUse>
       <Type>image</Type>
       <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\gazeCursor_cutoff.png</File>
       <Name>gazeCursor_cutoff</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\ambience_inside.wav</File>
+      <Name>ambience_inside</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>music</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\peaceful.wav</File>
+      <Name>peaceful</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\use_active.png</File>
+      <Name>use_active</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\bell.wav</File>
+      <Name>bell</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\conservatory1_bertram.png</File>
+      <Name>conservatory1_bertram</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\talk.png</File>
+      <Name>talk</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\talk_active.png</File>
+      <Name>talk_active</Name>
     </Asset>
   </Assets>
 </Game>

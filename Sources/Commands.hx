@@ -2,6 +2,7 @@ package;
 
 
 
+import kha.Image;
 import kha.Loader;
 import kha.Music;
 import kha.Sound;
@@ -58,13 +59,25 @@ class Commands
 		
 		
 		Scheduler.addBreakableFrameTask(task, 0);
-		
 	}
 	
-	public function ChangeBackground(name: String): Void {
-		game.currentScene.setBackground(Loader.the.getImage(name));
-		BlocksFromHeaven.instance.globe.texture = game.currentScene.background;
-		BlocksFromHeaven.instance.globe.blurredTexture = game.currentScene.blurredBackground;
+
+	
+	public function ChangeBackground(scene: String, newBG: String) {
+		var s: Scene = game.scenes[scene];
+		var image: Image = Loader.the.getImage(newBG);
+		s.background = image;
+		if (s == game.currentScene) {
+			BlocksFromHeaven.instance.globe.texture = s.background;
+		}
+	}
+	
+	public function ChangeBackgroundFade(newBG: String) {
+		// TODO: Changes the background of the current scene and uses a fade
+	}
+	
+	public function ChangeBackgroundBlend(newBG: String) {
+		// TODO: Changes the background of the current scene and blends between the two images
 	}
 	
 	public function EnableHotspot(name: String): Void {
@@ -78,6 +91,7 @@ class Commands
 	}
 	
 	public function ShowUse(): Void {
+		trace("Showing the use icon");
 		// Show the "use" icon
 		BlocksFromHeaven.instance.uiElements.splice(0, BlocksFromHeaven.instance.uiElements.length);
 		
@@ -85,6 +99,8 @@ class Commands
 		useSymbol.SetPosition(Hotspot.current.getUILonLat(), 5);
 		useSymbol.Offset = new Vector2(0, 0);
 		useSymbol.Texture = Loader.the.getImage("use");
+		useSymbol.InactiveTexture = useSymbol.Texture;
+		useSymbol.ActiveTexture = Loader.the.getImage("use_active");
 		// useSymbol.startAnimating();
 		BlocksFromHeaven.instance.uiElements.push(useSymbol);
 	}
@@ -109,13 +125,19 @@ class Commands
 		// .interpret(game.currentScene.onEnter);
 	}
 	
+	
+	
 	public function SetVariable(name: String, value: Dynamic): Void {
+		trace("Setting " + name + " to value " + value);
 		game.variables[name] = value;
 	}
 	
 	public function GetVariable(name: String): Dynamic {
 		return game.variables[name];
 	}
+	
+	
+
 	
 	public function GiveInventoryItem(name: String) {
 		var item: InventoryItem = game.allItems[name];

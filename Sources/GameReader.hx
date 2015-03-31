@@ -24,12 +24,20 @@ class GameReader
 			}
 		}
 		
+		private static var bgWidth: Float = 4096;
+		private static var bgHeight: Float = 2048;
+		
 	private function createHotspot(scene: Scene, center: Vector2, radius: Float): Hotspot {
 		var hotspot = new Hotspot();
 		hotspot.image = scene.background;
-		hotspot.center.x = center.x / scene.background.width;
-		hotspot.center.y = (scene.background.height - center.y) / scene.background.height;
-		hotspot.radius = radius / scene.background.width;
+		// hotspot.center.x = center.x / scene.background.width;
+		hotspot.center.x = center.x / bgWidth;
+		
+		// hotspot.center.y = (scene.background.height - center.y) / scene.background.height;
+		hotspot.center.y = (bgHeight - center.y) / bgHeight;
+		
+		// hotspot.radius = radius / scene.background.width;
+		hotspot.radius = radius / bgWidth;
 		
 		hotspot.uiCenter.x = hotspot.center.x;
 		hotspot.uiCenter.y = hotspot.center.y;
@@ -45,12 +53,20 @@ class GameReader
 		var hotspot: Hotspot = createHotspot(scene, new Vector2(x, y), radius);
 		
 		hotspot.id = hotspotElement.att.Name;
+		var enabled: String = hotspotElement.att.IsEnabled;
+		if (enabled.toLowerCase() == "true") {
+			hotspot.enabled = true;
+		}
 		trace("Parse hotspot:" + hotspot.id);
 		
-		hotspot.onGaze = GetString(hotspotElement.node.OnGaze);
+		if (hotspotElement.hasNode.OnGaze)
+			hotspot.onGaze = GetString(hotspotElement.node.OnGaze);
 		trace("OnGaze: " + hotspot.onGaze);
-		hotspot.onExamine = GetString(hotspotElement.node.OnExamine);
-		hotspot.onUse = GetString(hotspotElement.node.OnUse);
+		if (hotspotElement.hasNode.OnExamine)
+			hotspot.onExamine = GetString(hotspotElement.node.OnExamine);
+		if (hotspotElement.hasNode.OnUse)
+			hotspot.onUse = GetString(hotspotElement.node.OnUse);
+		
 		
 		return hotspot;
 	}
