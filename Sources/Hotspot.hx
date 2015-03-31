@@ -105,7 +105,14 @@ class Hotspot
 			} else {
 				if (!GazeExecuted) {
 					var duration: Float = Sys.time() - GazeStartTime;
+					// Set the gaze cursor's active state
+					var gazeCursor: GazeCursor = BlocksFromHeaven.instance.gazeCursor;
+					var t: Float = duration;
+					t = Math.min(t, 1.0);
+					gazeCursor.active = t;
+					
 					if (duration > 1.0) {
+						
 						// After one second, call our gaze function
 						GazeExecuted = true;
 						Interpreter.the.interpret(onGaze);

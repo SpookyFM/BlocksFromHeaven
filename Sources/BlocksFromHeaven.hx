@@ -40,8 +40,8 @@ import UIElement;
 import Ray;
 import GameReader;
 import VignetteMesh;
-import OverlayMesh;
 import GameReader;
+import GazeCursor;
 
 class BlocksFromHeaven extends Game {
 	
@@ -70,7 +70,8 @@ class BlocksFromHeaven extends Game {
 	
 	public static var instance: BlocksFromHeaven;
 	
-	public var overlay: OverlayMesh;
+	
+	public var gazeCursor: GazeCursor;
 	
 	public var blurredBackground: Bool;
 	
@@ -91,6 +92,7 @@ class BlocksFromHeaven extends Game {
 	
 	// Show an exit symbol over the specified exit
 	public function showExit(hotspot: Hotspot) {
+		trace("Showing an exit");
 		// TODO: Quick hack 
 		uiElements.splice(0, uiElements.length);
 		
@@ -123,8 +125,15 @@ class BlocksFromHeaven extends Game {
 			imagesR[i] = Image.createRenderTarget(1024, 1024, TextureFormat.RGBA32);
 		}
 		
-		overlay = new OverlayMesh();
-		overlay.Texture = Loader.the.getImage("overlay");
+		gazeCursor = new GazeCursor();
+		gazeCursor.activeImage = Loader.the.getImage("gazeCursor_active");
+		gazeCursor.inactiveImage = Loader.the.getImage("gazeCursor_inactive");
+		gazeCursor.cutoffImage = Loader.the.getImage("gazeCursor_cutoff");
+		gazeCursor.depth = 2.0;
+		gazeCursor.scale = 0.05;
+		
+		
+		
 		
 		
 		
@@ -351,31 +360,29 @@ class BlocksFromHeaven extends Game {
 			
 			for (uiElement in uiElements) {
 				uiElement.update();
-					
+
 				// Render the GUI element
 				uiElement.render(curImage.g4, vp);
+				
+				var ray: Ray = getCameraRay(getViewMatrix(state));
+				if (ray.intersects(uiElement.quad)) {
+					uiElement.Texture = Loader.the.getImage("arrow_forward_active");
+				} else {
+					uiElement.Texture = Loader.the.getImage("arrow_forward");
+				} 
+			
 				
 			}
 			
 			// Render the fade texture
 			fade.render(curImage.g4);
 			
-			/* var ray: Ray = getCameraRay(getViewMatrix(state));
-			if (ray.intersects(uiElement.quad)) {
-				uiElement.Texture = Loader.the.getImage("arrow_forward_active");
-			} else {
-				uiElement.Texture = Loader.the.getImage("arrow_forward");
-			} */
-			
-			if (gazeActive) {
-				 overlay.Texture = Loader.the.getImage("overlay_active");
-			} else {
-				overlay.Texture = Loader.the.getImage("overlay");
-			}
 			
 			
-			// Overlay the... overlay
-			// overlay.render(curImage.g4);
+			
+			if (!gazeActive) gazeCursor.active = 0;
+			
+			gazeCursor.render(curImage.g4, p);
 			
 			// Build a vignette around the texture
 			// vignette.render(curImage.g4);

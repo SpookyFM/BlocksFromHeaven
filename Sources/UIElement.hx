@@ -103,9 +103,9 @@ class UIElement extends MeshBase
 		quad.worldMatrix = worldMatrix;
 
 		
-		for (i in 0...4) {
+		//for (i in 0...4) {
 			// trace("Matrix: " + worldMatrix.get(0, i) + " " + worldMatrix.get(1, i) + " " + worldMatrix.get(2, i) + " " + worldMatrix.get(3, i));
-		}
+		//}
 		
 		quad.center = quad.worldMatrix.transpose().multvec(new Vector4(0, 0, 0, 1));
 		// TODO: Handle it correctly!

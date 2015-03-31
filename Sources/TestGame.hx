@@ -29,17 +29,7 @@ class TestGame
 		scenes[scene.id] = scene;
 	}
 	
-	private function getHotspot(scene: Scene, center: Vector2, radius: Float): Hotspot {
-		var hotspot = new Hotspot();
-		hotspot.image = scene.background;
-		hotspot.center.x = center.x / scene.background.width;
-		hotspot.center.y = (scene.background.height - center.y) / scene.background.height;
-		hotspot.radius = radius / scene.background.width;
-		
-		
-		
-		return hotspot;
-	}
+	
 		
 	
 	public function new() 

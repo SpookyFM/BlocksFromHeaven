@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Steamquest">
   <StartScene Name="Start Screen">
-    <BackgroundImage>start</BackgroundImage>
+    <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\start.png</BackgroundImage>
     <OnEnter>game.PlayMusic("intro");</OnEnter>
     <Hotspots>
       <Hotspot Name="Play">
@@ -17,7 +17,7 @@
   </StartScene>
   <Scenes>
     <Scene Name="Start Screen">
-      <BackgroundImage>start</BackgroundImage>
+      <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\start.png</BackgroundImage>
       <OnEnter>game.PlayMusic("intro");</OnEnter>
       <Hotspots>
         <Hotspot Name="Play">
@@ -32,7 +32,7 @@
       </Hotspots>
     </Scene>
     <Scene Name="Conservatory 1">
-      <BackgroundImage>conservatory</BackgroundImage>
+      <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\conservatory.png</BackgroundImage>
       <Hotspots />
     </Scene>
   </Scenes>
