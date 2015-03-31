@@ -33,7 +33,7 @@ class Ray
 		var intersectionInPlane: Vector4 = quad.worldMatrix.inverse().transpose().multvec(intersection);
 		
 		
-		trace("Intersection point: " + intersectionInPlane.x + " " + intersectionInPlane.y + " " + intersectionInPlane.z + " " + intersectionInPlane.w);
+		// trace("Intersection point: " + intersectionInPlane.x + " " + intersectionInPlane.y + " " + intersectionInPlane.z + " " + intersectionInPlane.w);
 		
 		
 		return (Math.abs(intersectionInPlane.x) < 1.0 && Math.abs(intersectionInPlane.y) < 1.0);

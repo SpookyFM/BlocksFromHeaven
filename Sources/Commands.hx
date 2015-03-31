@@ -10,6 +10,8 @@ import kha.Color;
 
 import kha.math.Vector2;
 
+import kha.Scheduler;
+
 /**
  * ...
  * @author Florian Mehm
@@ -38,7 +40,25 @@ class Commands
 	}
 	
 	public function FadeOutMusic(musicFile: String): Void {
-		// TODO: Check out the scheduler!
+		var m: Music = Loader.the.getMusic(musicFile);
+		var start: Float = Sys.time();
+		var end: Float = start + 1.0;
+		
+		
+		var task = function(): Bool { 
+			var v: Float = Sys.time() - start / (end - start);
+			v = 1.0 - v;
+			if (v <= 0) m.stop();
+			
+			// TODO: Kore does not handle the volume...
+			m.setVolume(v);
+		
+			return v > 0;
+		};
+		
+		
+		Scheduler.addBreakableFrameTask(task, 0);
+		
 	}
 	
 	public function ChangeBackground(name: String): Void {
