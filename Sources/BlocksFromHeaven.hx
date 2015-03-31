@@ -41,6 +41,7 @@ import Ray;
 import GameReader;
 import VignetteMesh;
 import OverlayMesh;
+import GameReader;
 
 class BlocksFromHeaven extends Game {
 	
@@ -130,7 +131,10 @@ class BlocksFromHeaven extends Game {
 		fade = new FadeMesh();
 		fade.fade(Color.fromFloats(0, 0, 0, 0), Color.fromFloats(0, 0, 0, 1), 3.0);
 		
-		game = new TestGame();
+		var reader: GameReader= new GameReader();
+		game = reader.Read();
+		
+		//game = new TestGame();
 		
 		globe = new GlobeMesh(1, 1);
 		globe.texture = game.startScene.background;
@@ -246,7 +250,7 @@ class BlocksFromHeaven extends Game {
 		EyePitch = eulerAngles.y;
 		EyeRoll = eulerAngles.z;
 		
-		trace("Angles: EyeYaw:" + EyeYaw + " EyePitch " + EyePitch + " EyeRoll " + EyeRoll);
+		// trace("Angles: EyeYaw:" + EyeYaw + " EyePitch " + EyePitch + " EyeRoll " + EyeRoll);
 		
 		var rollPitchYaw: Matrix4 = Matrix4.rotationY(EyeYaw).multmat(Matrix4.rotationX(EyePitch).multmat(Matrix4.rotationZ(-EyeRoll)));
 		

@@ -1,33 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Steamquest">
-  <StartScene Name="Start screen">
-    <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\start.png</BackgroundImage>
+  <StartScene Name="Start Screen">
+    <BackgroundImage>start</BackgroundImage>
     <OnEnter>game.PlayMusic("intro");</OnEnter>
-    <Hotspots>
-      <Hotspot Name="Start playing">
-        <Shape xsi:type="CircleShape">
-          <Center X="2031.0752" Y="946.8367" />
-          <Radius>100</Radius>
-        </Shape>
-      </Hotspot>
-    </Hotspots>
+    <Hotspots />
   </StartScene>
   <Scenes>
-    <Scene Name="Start screen">
-      <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\start.png</BackgroundImage>
+    <Scene Name="Start Screen">
+      <BackgroundImage>start</BackgroundImage>
       <OnEnter>game.PlayMusic("intro");</OnEnter>
-      <Hotspots>
-        <Hotspot Name="Start playing">
-          <Shape xsi:type="CircleShape">
-            <Center X="2031.0752" Y="946.8367" />
-            <Radius>100</Radius>
-          </Shape>
-        </Hotspot>
-      </Hotspots>
-    </Scene>
-    <Scene Name="Beginning">
-      <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\panorama.png</BackgroundImage>
       <Hotspots />
     </Scene>
   </Scenes>
+  <Assets>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\arrow_forward.png</File>
+      <Name>arrow_forward</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\arrow_forward_active.png</File>
+      <Name>arrow_forward_active</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\use.png</File>
+      <Name>use</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\overlay.png</File>
+      <Name>overlay</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\overlay_active.png</File>
+      <Name>overlay_active</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>music</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\intro.mp3</File>
+      <Name>intro</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>blob</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\oculussig_46abd844</File>
+      <Name>oculussig_46abd844</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>blob</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\game.xml</File>
+      <Name>game.xml</Name>
+    </Asset>
+  </Assets>
 </Game>

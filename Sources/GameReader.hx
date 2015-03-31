@@ -30,6 +30,10 @@ class GameReader
 	private function ParseScene(sceneElement: Fast): Scene {
 		var scene: Scene = new Scene();
 		scene.id = sceneElement.att.Name;
+		scene.background = Loader.the.getImage(sceneElement.node.BackgroundImage.innerData);
+		scene.onEnter = sceneElement.node.OnEnter.innerData;
+		trace("Parse scene: " + scene.id);
+		trace("OnEnter: " + scene.onEnter);
 		// scene.onEnter = sceneElement.att.
 		// TODO: Save the reference and only load when needed
 		// scene.background = sceneElement.node.BackgroundImage.innerData;
@@ -49,16 +53,20 @@ class GameReader
 		
 		var game: TestGame = new TestGame();
 		game.name = fast.att.Name;
+		trace("Game name: " + game.name);
 		
 		var startSceneName: String = fast.node.StartScene.att.Name;
 
-		for (sceneElement in fast.nodes.scenes) {
+		for (sceneElement in fast.node.Scenes.nodes.Scene) {
 			var scene: Scene = ParseScene(sceneElement);
 			game.scenes[scene.id] = scene;
 			if (startSceneName == scene.id) {
 				game.startScene = scene;
 			}
 		}
+		
+		// Bring the game into the started state
+		game.currentScene = game.startScene;
 		
 		return game;
 	}

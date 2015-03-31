@@ -50,7 +50,7 @@ class TestGame
 		allItems = new Map<String, InventoryItem>();
 		
 		
-		startScene = new Scene();
+		/* startScene = new Scene();
 		startScene.id = "START";
 		startScene.onEnter = "game.PlayMusic(\"intro\");";
 		startScene.onLeave = "game.StopMusic(\"intro\");";
@@ -120,6 +120,7 @@ class TestGame
 		
 		
 		currentScene = startScene;
+		*/
 		
 		
 		var item: InventoryItem = new InventoryItem();
