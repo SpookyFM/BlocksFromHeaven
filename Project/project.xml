@@ -25,6 +25,8 @@ game.ChangeBackground("Conservatory 1", "conservatory1_bertram");</OnUse>
         <OnExamine />
         <OnGaze>game.ShowTalkTo();</OnGaze>
         <OnUse />
+        <OnTalkTo>game.PlaySound("conversation_bertram");
+game.SetVariable("talked_to_bertram", true);</OnTalkTo>
       </Hotspot>
     </Hotspots>
   </StartScene>
@@ -70,6 +72,8 @@ game.ChangeBackground("Conservatory 1", "conservatory1_bertram");</OnUse>
           <OnExamine />
           <OnGaze>game.ShowTalkTo();</OnGaze>
           <OnUse />
+          <OnTalkTo>game.PlaySound("conversation_bertram");
+game.SetVariable("talked_to_bertram", true);</OnTalkTo>
         </Hotspot>
       </Hotspots>
     </Scene>
@@ -170,6 +174,12 @@ game.ChangeBackground("Conservatory 1", "conservatory1_bertram");</OnUse>
       <Type>image</Type>
       <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\talk_active.png</File>
       <Name>talk_active</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\conversation_bertram.wav</File>
+      <Name>conversation_bertram</Name>
     </Asset>
   </Assets>
 </Game>

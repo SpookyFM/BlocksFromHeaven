@@ -13,6 +13,8 @@ import kha.math.Vector2;
 
 import kha.Scheduler;
 
+import ActionType;
+
 /**
  * ...
  * @author Florian Mehm
@@ -103,6 +105,24 @@ class Commands
 		useSymbol.ActiveTexture = Loader.the.getImage("use_active");
 		// useSymbol.startAnimating();
 		BlocksFromHeaven.instance.uiElements.push(useSymbol);
+		BlocksFromHeaven.instance.currentAction = ActionType.Use;
+	}
+	
+	
+	public function ShowTalkTo(): Void {
+		trace("Showing the talk to icon");
+		// Show the "use" icon
+		BlocksFromHeaven.instance.uiElements.splice(0, BlocksFromHeaven.instance.uiElements.length);
+		
+		var talkSymbol: UIElement = new UIElement();
+		talkSymbol.SetPosition(Hotspot.current.getUILonLat(), 5);
+		talkSymbol.Offset = new Vector2(0, 0);
+		talkSymbol.Texture = Loader.the.getImage("talk");
+		talkSymbol.InactiveTexture = talkSymbol.Texture;
+		talkSymbol.ActiveTexture = Loader.the.getImage("talk_active");
+		// useSymbol.startAnimating();
+		BlocksFromHeaven.instance.uiElements.push(talkSymbol);
+		BlocksFromHeaven.instance.currentAction = ActionType.TalkTo;
 	}
 	
 	public function StopMusic(musicFile: String): Void {

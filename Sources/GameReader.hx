@@ -66,6 +66,9 @@ class GameReader
 			hotspot.onExamine = GetString(hotspotElement.node.OnExamine);
 		if (hotspotElement.hasNode.OnUse)
 			hotspot.onUse = GetString(hotspotElement.node.OnUse);
+		if (hotspotElement.hasNode.OnTalkTo) {
+			hotspot.onTalkTo = GetString(hotspotElement.node.OnTalkTo);
+		}
 		
 		
 		return hotspot;

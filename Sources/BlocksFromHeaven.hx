@@ -42,6 +42,8 @@ import GameReader;
 import VignetteMesh;
 import GameReader;
 import GazeCursor;
+import ActionType;
+
 
 class BlocksFromHeaven extends Game {
 	
@@ -77,6 +79,10 @@ class BlocksFromHeaven extends Game {
 	
 	public var gazeActive: Bool;
 	
+	// TODO: Change to another system once several actions can be active at the same time
+	public var currentAction: ActionType;
+	
+	
 	public function new() {
 		super("BlocksFromHeaven", false);
 	}
@@ -107,6 +113,7 @@ class BlocksFromHeaven extends Game {
 		exitSymbol.startAnimating();
 		exitSymbol.isExit = true;
 		uiElements.push(exitSymbol);
+		currentAction = ActionType.Use;
 	}
 	
 	
@@ -339,7 +346,11 @@ class BlocksFromHeaven extends Game {
 		
 		if (keypress) {
 			if (gazeActive) {
-				Interpreter.the.interpret(Hotspot.current.onUse);
+				if (currentAction == ActionType.Use) {
+					Interpreter.the.interpret(Hotspot.current.onUse);
+				} else if (currentAction == ActionType.TalkTo) {
+					Interpreter.the.interpret(Hotspot.current.onTalkTo);
+				}
 			}
 			keypress = false;
 		}

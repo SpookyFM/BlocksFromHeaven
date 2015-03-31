@@ -31,6 +31,8 @@ class Hotspot
 	
 	public var onClick: String;
 	
+	public var onTalkTo: String;
+	
 	public static var current: Hotspot;
 	
 	public var enabled: Bool;
