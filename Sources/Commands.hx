@@ -2,6 +2,7 @@ package;
 
 
 
+
 import kha.Image;
 import kha.Loader;
 import kha.Music;
@@ -140,9 +141,29 @@ class Commands
 		BlocksFromHeaven.instance.currentAction = ActionType.Examine;
 	}
 	
+	public function ShowLook(): Void {
+		trace("Showing the look icon");
+		BlocksFromHeaven.instance.uiElements.splice(0, BlocksFromHeaven.instance.uiElements.length);
+		
+		var lookSymbol: UIElement = new UIElement();
+		lookSymbol.SetPosition(Hotspot.current.getUILonLat(), 5);
+		lookSymbol.Offset = new Vector2(0, 0);
+		lookSymbol.Texture = Loader.the.getImage("look");
+		lookSymbol.InactiveTexture = lookSymbol.Texture;
+		lookSymbol.ActiveTexture = Loader.the.getImage("look_active");
+		// useSymbol.startAnimating();
+		BlocksFromHeaven.instance.uiElements.push(lookSymbol);
+		BlocksFromHeaven.instance.currentAction = ActionType.Look;
+	}
+	
 	public function StopMusic(musicFile: String): Void {
 		var m: Music = Loader.the.getMusic(musicFile);
 		m.stop();
+	}
+	
+	public function StopSound(soundFile: String): Void {
+		var s: Sound = Loader.the.getSound(soundFile);
+		// TODO: Not stoppable
 	}
 	
 	// Display the exit icon over the hotspot

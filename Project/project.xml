@@ -1,41 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Steamquest">
-  <StartScene Name="Conservatory 1">
-    <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\conservatory.png</BackgroundImage>
-    <OnEnter>game.PlaySound("ambience_inside", true);
-game.PlayMusic("peaceful");</OnEnter>
+  <StartScene Name="Conservatory 2">
+    <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\conservatory2.png</BackgroundImage>
     <Hotspots>
-      <Hotspot Name="Rope" IsEnabled="true">
+      <Hotspot Name="Exit: Outside" IsEnabled="true">
         <Shape xsi:type="CircleShape">
-          <Center X="2886.45459" Y="952.508057" />
-          <Radius>164.428879</Radius>
+          <Center X="1967.96753" Y="849.6952" />
+          <Radius>352.727966</Radius>
         </Shape>
         <OnExamine />
-        <OnGaze>game.ShowUse();</OnGaze>
-        <OnUse>game.PlaySound("bell");
-game.SetVariable("Bertram_called", true);
-game.EnableHotspot("Bertram");
-game.ChangeBackground("Conservatory 1", "conservatory1_bertram");</OnUse>
+        <OnGaze>game.ShowExit();</OnGaze>
+        <OnUse>game.ChangeScene("Outside");
+game.PlaySound("ambience_outside");</OnUse>
       </Hotspot>
-      <Hotspot Name="Bertram" IsEnabled="false">
+      <Hotspot Name="Bookshelf" IsEnabled="true">
         <Shape xsi:type="CircleShape">
-          <Center X="1205.35632" Y="1086.69666" />
-          <Radius>133.981613</Radius>
+          <Center X="2579.11914" Y="1226.78723" />
+          <Radius>162.514648</Radius>
         </Shape>
-        <OnExamine />
-        <OnGaze>game.ShowTalkTo();</OnGaze>
-        <OnUse />
-        <OnTalkTo>game.PlaySound("conversation_bertram");
-game.SetVariable("talked_to_bertram", true);</OnTalkTo>
-      </Hotspot>
-      <Hotspot Name="Intercom" IsEnabled="true">
-        <Shape xsi:type="CircleShape">
-          <Center X="563.625366" Y="1116.26025" />
-          <Radius>160.150116</Radius>
-        </Shape>
-        <OnExamine>game.ChangeScene("Examine_Intercom");</OnExamine>
+        <OnExamine>game.ChangeScene("Examine_Bookshelf");</OnExamine>
         <OnGaze>game.ShowExamine();</OnGaze>
-        <OnUse />
       </Hotspot>
     </Hotspots>
   </StartScene>
@@ -93,10 +77,110 @@ game.SetVariable("talked_to_bertram", true);</OnTalkTo>
           <OnGaze>game.ShowExamine();</OnGaze>
           <OnUse />
         </Hotspot>
+        <Hotspot Name="Exit: C2" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="1889.9491" Y="895.2063" />
+            <Radius>261.289276</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowExit();</OnGaze>
+          <OnUse>game.ChangeScene("Conservatory 2");</OnUse>
+        </Hotspot>
       </Hotspots>
     </Scene>
     <Scene Name="Examine_Intercom">
       <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\intercom_1.png</BackgroundImage>
+      <OnEnter>game.SetVariable("dial", 1);</OnEnter>
+      <Hotspots>
+        <Hotspot Name="Dial" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="1990.20923" Y="1303.05261" />
+            <Radius>38.72566</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowUse();</OnGaze>
+          <OnUse>var dial = game.GetVariable("dial");
+if (dial == 1) {
+  dial = 2;
+  game.ChangeBackground("Examine_Intercom", "intercom_2");
+} else if (dial == 2) {
+  dial = 3;
+  game.ChangeBackground("Examine_Intercom", "intercom_3");
+} else {
+  dial = 1;
+  game.ChangeBackground("Examine_Intercom", "intercom_1");
+}
+game.SetVariable("dial", dial);
+game.PlaySound("klack");</OnUse>
+        </Hotspot>
+        <Hotspot Name="Lever" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="2273.53931" Y="1155.26978" />
+            <Radius>100</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowUse();</OnGaze>
+          <OnUse>var dial = game.GetVariable("dial");
+if (dial != 3) {
+  game.PlaySound("static");
+} else {
+  game.PlaySound("help");
+  game.ChangeScene("Conservatory 1");
+  game.SetVariable("father_heard", true);
+}</OnUse>
+        </Hotspot>
+      </Hotspots>
+    </Scene>
+    <Scene Name="Conservatory 2">
+      <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\conservatory2.png</BackgroundImage>
+      <Hotspots>
+        <Hotspot Name="Exit: Outside" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="1967.96753" Y="849.6952" />
+            <Radius>352.727966</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowExit();</OnGaze>
+          <OnUse>game.ChangeScene("Outside");
+game.PlaySound("ambience_outside");</OnUse>
+        </Hotspot>
+        <Hotspot Name="Bookshelf" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="2579.11914" Y="1226.78723" />
+            <Radius>162.514648</Radius>
+          </Shape>
+          <OnExamine>game.ChangeScene("Examine_Bookshelf");</OnExamine>
+          <OnGaze>game.ShowExamine();</OnGaze>
+        </Hotspot>
+      </Hotspots>
+    </Scene>
+    <Scene Name="Outside">
+      <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\outside.png</BackgroundImage>
+      <Hotspots>
+        <Hotspot Name="Gondola" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="2195.52222" Y="115.015862" />
+            <Radius>188.345749</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowLook()</OnGaze>
+          <OnUse />
+          <OnLook>game.PlaySound("commentary_basket");</OnLook>
+        </Hotspot>
+        <Hotspot Name="Exit: Conservatory 2" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="-86.5333252" Y="901.7079" />
+            <Radius>237.17511</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowExit();</OnGaze>
+          <OnUse>game.ChangeScene("Conservatory 2");
+game.PlaySound("ambience_inside");</OnUse>
+        </Hotspot>
+      </Hotspots>
+    </Scene>
+    <Scene Name="Examine_Bookshelf">
+      <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\examine_bookshelf.png</BackgroundImage>
       <Hotspots />
     </Scene>
   </Scenes>
@@ -214,6 +298,60 @@ game.SetVariable("talked_to_bertram", true);</OnTalkTo>
       <Type>image</Type>
       <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\examine_active.png</File>
       <Name>examine_active</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\intercom_2.png</File>
+      <Name>intercom_2</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\intercom_3.png</File>
+      <Name>intercom_3</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\klack.wav</File>
+      <Name>klack</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\static.wav</File>
+      <Name>static</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\help.wav</File>
+      <Name>help</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\ambience_outside.wav</File>
+      <Name>ambience_outside</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\look.png</File>
+      <Name>look</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\look_active.png</File>
+      <Name>look_active</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\commentary_basket.wav</File>
+      <Name>commentary_basket</Name>
     </Asset>
   </Assets>
 </Game>

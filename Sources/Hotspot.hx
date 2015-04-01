@@ -33,6 +33,8 @@ class Hotspot
 	
 	public var onTalkTo: String;
 	
+	public var onLook: String;
+	
 	public static var current: Hotspot;
 	
 	public var enabled: Bool;
