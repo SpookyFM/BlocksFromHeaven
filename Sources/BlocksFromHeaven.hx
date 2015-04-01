@@ -350,6 +350,8 @@ class BlocksFromHeaven extends Game {
 					Interpreter.the.interpret(Hotspot.current.onUse);
 				} else if (currentAction == ActionType.TalkTo) {
 					Interpreter.the.interpret(Hotspot.current.onTalkTo);
+				} else if (currentAction == ActionType.Examine) {
+					Interpreter.the.interpret(Hotspot.current.onExamine);
 				}
 			}
 			keypress = false;

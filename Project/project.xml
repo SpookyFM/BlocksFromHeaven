@@ -28,6 +28,15 @@ game.ChangeBackground("Conservatory 1", "conservatory1_bertram");</OnUse>
         <OnTalkTo>game.PlaySound("conversation_bertram");
 game.SetVariable("talked_to_bertram", true);</OnTalkTo>
       </Hotspot>
+      <Hotspot Name="Intercom" IsEnabled="true">
+        <Shape xsi:type="CircleShape">
+          <Center X="563.625366" Y="1116.26025" />
+          <Radius>160.150116</Radius>
+        </Shape>
+        <OnExamine>game.ChangeScene("Examine_Intercom");</OnExamine>
+        <OnGaze>game.ShowExamine();</OnGaze>
+        <OnUse />
+      </Hotspot>
     </Hotspots>
   </StartScene>
   <Scenes>
@@ -75,7 +84,20 @@ game.ChangeBackground("Conservatory 1", "conservatory1_bertram");</OnUse>
           <OnTalkTo>game.PlaySound("conversation_bertram");
 game.SetVariable("talked_to_bertram", true);</OnTalkTo>
         </Hotspot>
+        <Hotspot Name="Intercom" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="563.625366" Y="1116.26025" />
+            <Radius>160.150116</Radius>
+          </Shape>
+          <OnExamine>game.ChangeScene("Examine_Intercom");</OnExamine>
+          <OnGaze>game.ShowExamine();</OnGaze>
+          <OnUse />
+        </Hotspot>
       </Hotspots>
+    </Scene>
+    <Scene Name="Examine_Intercom">
+      <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\intercom_1.png</BackgroundImage>
+      <Hotspots />
     </Scene>
   </Scenes>
   <Assets>
@@ -180,6 +202,18 @@ game.SetVariable("talked_to_bertram", true);</OnTalkTo>
       <Type>sound</Type>
       <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\conversation_bertram.wav</File>
       <Name>conversation_bertram</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\examine.png</File>
+      <Name>examine</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\examine_active.png</File>
+      <Name>examine_active</Name>
     </Asset>
   </Assets>
 </Game>

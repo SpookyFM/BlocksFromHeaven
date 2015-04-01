@@ -125,6 +125,21 @@ class Commands
 		BlocksFromHeaven.instance.currentAction = ActionType.TalkTo;
 	}
 	
+	public function ShowExamine(): Void {
+		trace("Showing the examine icon");
+		BlocksFromHeaven.instance.uiElements.splice(0, BlocksFromHeaven.instance.uiElements.length);
+		
+		var examineSymbol: UIElement = new UIElement();
+		examineSymbol.SetPosition(Hotspot.current.getUILonLat(), 5);
+		examineSymbol.Offset = new Vector2(0, 0);
+		examineSymbol.Texture = Loader.the.getImage("examine");
+		examineSymbol.InactiveTexture = examineSymbol.Texture;
+		examineSymbol.ActiveTexture = Loader.the.getImage("examine_active");
+		// useSymbol.startAnimating();
+		BlocksFromHeaven.instance.uiElements.push(examineSymbol);
+		BlocksFromHeaven.instance.currentAction = ActionType.Examine;
+	}
+	
 	public function StopMusic(musicFile: String): Void {
 		var m: Music = Loader.the.getMusic(musicFile);
 		m.stop();
