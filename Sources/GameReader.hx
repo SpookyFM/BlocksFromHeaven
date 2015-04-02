@@ -98,6 +98,18 @@ class GameReader
 		return scene;
 	}
 	
+	private function ParseInventoryItem(itemElement: Fast): InventoryItem {
+		var item: InventoryItem = new InventoryItem();
+		item.id = itemElement.att.Name;
+		item.image = Loader.the.getImage(itemElement.node.Image.innerData);
+		item.activeImage = Loader.the.getImage(itemElement.node.ActiveImage.innerData);
+		if (itemElement.hasNode.OnExamine)
+			item.onExamine = itemElement.node.OnExamine.innerData;
+		
+		
+		return item;
+	}
+	
 	public function Read(): TestGame {
 		var blob: Blob = Loader.the.getBlob("game.xml");
 		var xml: Xml = Xml.parse(blob.toString());
@@ -117,6 +129,12 @@ class GameReader
 				game.startScene = scene;
 			}
 		}
+		
+		for (itemElement in fast.node.InventoryItems.nodes.InventoryItem) {
+			var item: InventoryItem = ParseInventoryItem(itemElement);
+			game.allItems[item.id] = item;
+		}
+		
 		
 		// Bring the game into the started state
 		game.currentScene = game.startScene;

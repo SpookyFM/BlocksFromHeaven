@@ -1,5 +1,6 @@
 package;
 
+
 import kha.graphics4.*;
 import kha.Image;
 import kha.math.Matrix4;
@@ -152,6 +153,8 @@ class UIElement extends MeshBase
 		frequency = 2;
 		rotationDuration = 6;
 	}
+	
+	public var OnClick: Void -> Void;
 	
 	// The update function should update the model matrix
 	public function update() {

@@ -26,6 +26,10 @@ class Transition
 	
 	private var active: Bool = false;
 	
+	public var toExamine: Bool = false;
+	
+	public var fromExamine: Bool = false;
+	
 	public function start(from: Scene, to: Scene, duration: Float, color: Color) {
 		startScene = from;
 		endScene = to;
@@ -53,6 +57,11 @@ class Transition
 				// Switch out the image
 				globe.texture = endScene.background;
 				globe.blurredTexture = endScene.blurredBackground;
+				
+				if (toExamine) {
+					globe.blurredTexture = endScene.background;
+				}
+				
 				// Start a new fade in
 				var startColor: Color = fadeColor;
 				startColor.A = 0;
@@ -65,9 +74,10 @@ class Transition
 				Hotspot.current = null;
 				BlocksFromHeaven.instance.gazeActive = false;
 				
-				// Execute the two commands
-				Interpreter.the.interpret(game.currentScene.onLeave);
-				
+				if (!toExamine || !fromExamine) {
+					// Execute the two commands
+					Interpreter.the.interpret(game.currentScene.onLeave);
+				}
 				
 				game.currentScene = endScene;
 				Interpreter.the.interpret(game.currentScene.onEnter);

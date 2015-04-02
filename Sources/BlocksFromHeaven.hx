@@ -43,6 +43,9 @@ import VignetteMesh;
 import GameReader;
 import GazeCursor;
 import ActionType;
+import BlurFilter;
+import LinearVRMenu;
+
 
 
 class BlocksFromHeaven extends Game {
@@ -79,8 +82,14 @@ class BlocksFromHeaven extends Game {
 	
 	public var gazeActive: Bool;
 	
+	public var inventoryActive: Bool;
+	
+	public var inventoryExamineActive: Bool;
+	
 	// TODO: Change to another system once several actions can be active at the same time
 	public var currentAction: ActionType;
+	
+	public var inventoryMenu: LinearVRMenu;
 	
 	
 	public function new() {
@@ -94,6 +103,8 @@ class BlocksFromHeaven extends Game {
 		uiElements = new Array<UIElement>();
 		Loader.the.loadRoom("blocks", loadingFinished);
 		Mouse.get(0).notify(mouseDownEvent, mouseUpEvent, null, null);
+		inventoryMenu = new LinearVRMenu();
+		inventoryMenu.Center = new Vector2(0, 0);
 	}
 	
 	// Show an exit symbol over the specified exit
@@ -114,6 +125,52 @@ class BlocksFromHeaven extends Game {
 		exitSymbol.isExit = true;
 		uiElements.push(exitSymbol);
 		currentAction = ActionType.Use;
+	}
+	
+	
+	public function showInventory() {
+		// Disable the hotspots
+		inventoryActive = true;
+		
+		
+		var filter: BlurFilter = new BlurFilter();
+		filter.texture = game.currentScene.background;
+		var image: Image = Image.createRenderTarget(game.currentScene.background.width, game.currentScene.background.height, TextureFormat.RGBA32);
+		image.g4.begin();
+		filter.render(image.g4);
+		image.g4.end();
+		globe.blurredTexture = image;
+		game.currentScene.blurredBackground = image;
+		
+		
+		// Blur the background
+		globe.startAnimating(-1, 1);
+		
+		// Remove all UI elements
+		uiElements.splice(0, uiElements.length);
+		
+		// Show the inventory items
+		for (item in game.inventory) {
+			var uiElement: UIElement = new UIElement();
+			inventoryMenu.AddItem(uiElement);
+			uiElement.InactiveTexture = item.image;
+			uiElement.ActiveTexture = item.activeImage;
+			uiElement.Texture = uiElement.InactiveTexture;
+			
+			var onClick = function() {
+				Interpreter.the.interpret(item.onExamine);
+			}
+			uiElement.OnClick = onClick;
+		}
+	}
+	
+	
+	public function hideInventory() {
+		// Enable hotspots
+		inventoryActive = false;
+		
+		// Un-blur the background
+		globe.startAnimating(1, 1);
 	}
 	
 	
@@ -339,22 +396,28 @@ class BlocksFromHeaven extends Game {
 		var imageLocation: Vector2 = getViewCenter(state.Predicted.Pose.Orientation);
 
 		
+		if (!inventoryActive) {
+			for (hotspot in game.currentScene.hotspots) {
+				hotspot.handleGaze(imageLocation);
+			}
+		} 
 		
-		for (hotspot in game.currentScene.hotspots) {
-			hotspot.handleGaze(imageLocation);
-		}
 		
 		if (keypress) {
-			if (gazeActive) {
-				if (currentAction == ActionType.Use) {
-					Interpreter.the.interpret(Hotspot.current.onUse);
-				} else if (currentAction == ActionType.TalkTo) {
-					Interpreter.the.interpret(Hotspot.current.onTalkTo);
-				} else if (currentAction == ActionType.Examine) {
-					Interpreter.the.interpret(Hotspot.current.onExamine);
-				} else if (currentAction == ActionType.Look) {
-					Interpreter.the.interpret(Hotspot.current.onLook);
+			if (!inventoryActive) {
+				if (gazeActive) {
+					if (currentAction == ActionType.Use) {
+						Interpreter.the.interpret(Hotspot.current.onUse);
+					} else if (currentAction == ActionType.TalkTo) {
+						Interpreter.the.interpret(Hotspot.current.onTalkTo);
+					} else if (currentAction == ActionType.Examine) {
+						Interpreter.the.interpret(Hotspot.current.onExamine);
+					} else if (currentAction == ActionType.Look) {
+						Interpreter.the.interpret(Hotspot.current.onLook);
+					}
 				}
+			} else {
+				inventoryMenu.HandleKeyPress();
 			}
 			keypress = false;
 		}
@@ -374,7 +437,12 @@ class BlocksFromHeaven extends Game {
 			var p:Matrix4 = renderIt(curImage, getViewMatrix(state, eye));
 			var vp: Matrix4 = getViewMatrix(state, eye).multmat(p);
 			
-			
+			if (inventoryActive) {
+				inventoryMenu.Update();
+				inventoryMenu.Render(curImage.g4, vp);
+				// TODO: Should be the other way around
+				inventoryMenu.HandleGaze(getCameraRay(getViewMatrix(state)));
+			}
 			
 			for (uiElement in uiElements) {
 				uiElement.update();
@@ -442,6 +510,15 @@ class BlocksFromHeaven extends Game {
 		super.keyDown(key, char);
 		if (char == " ") {
 			keypress = true;
+		}
+		if (char == "i") {
+			if (!inventoryActive)   {
+				if (!inventoryExamineActive) {
+					showInventory();
+				}
+			} else {
+				hideInventory();
+			}
 		}
 	}
 	

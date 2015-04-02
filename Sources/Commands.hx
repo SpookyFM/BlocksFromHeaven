@@ -172,13 +172,37 @@ class Commands
 	}
 	
 	
+	public function GetCurrentScene(): String {
+		return game.currentScene.id;
+	}
+	
 	public function ChangeScene(scene: String): Void {
 		
 		var current: Scene = game.currentScene;
 		var to: Scene = game.scenes[scene];
-		transition.start(current, to, 3.0, Color.White);
+		transition.start(current, to, 1.0, Color.White);
 		trace("Transition from: " + current.id + " to " + to.id);
 		// .interpret(game.currentScene.onEnter);
+	}
+	
+	public var LastScene: Scene;
+	
+	public function ShowExamineScene(scene: String) {
+		LastScene = game.currentScene;
+		transition.toExamine = true;
+		transition.fromExamine = false;
+		ChangeScene(scene);
+		// TODO: This is not very clean, two different interfaces to this variable with different meanings!
+		BlocksFromHeaven.instance.inventoryActive = false;
+		BlocksFromHeaven.instance.inventoryExamineActive = true;
+	}
+	
+	public function ReturnToInventory() {
+		transition.toExamine = false;
+		transition.fromExamine = true;
+		ChangeScene(LastScene.id);
+		BlocksFromHeaven.instance.inventoryActive = true;
+		BlocksFromHeaven.instance.inventoryExamineActive = false;
 	}
 	
 	
@@ -195,12 +219,13 @@ class Commands
 	
 
 	
-	public function GiveInventoryItem(name: String) {
+	public function AddInventoryItem(name: String) {
+		trace("Giving item: " + name);
 		var item: InventoryItem = game.allItems[name];
 		game.inventory.push(item);
 	}
 	
-	public function TakeInventory(name: String) {
+	public function RemoveInventoryItem(name: String) {
 		var item: InventoryItem = null;
 		for (current in game.inventory) {
 			if (current.id == name) {

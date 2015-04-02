@@ -2,6 +2,7 @@
 <Game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Steamquest">
   <StartScene Name="Conservatory 2">
     <BackgroundImage>conservatory2</BackgroundImage>
+    <OnEnter>game.AddInventoryItem("Book");</OnEnter>
     <Hotspots>
       <Hotspot Name="Exit: Outside" IsEnabled="true">
         <Shape xsi:type="CircleShape">
@@ -15,11 +16,21 @@ game.PlaySound("ambience_outside");</OnUse>
       </Hotspot>
       <Hotspot Name="Bookshelf" IsEnabled="true">
         <Shape xsi:type="CircleShape">
-          <Center X="2579.11914" Y="1226.78723" />
-          <Radius>162.514648</Radius>
+          <Center X="2598.62427" Y="1220.28564" />
+          <Radius>100.438805</Radius>
         </Shape>
         <OnExamine>game.ChangeScene("Examine_Bookshelf");</OnExamine>
         <OnGaze>game.ShowExamine();</OnGaze>
+        <OnUse />
+      </Hotspot>
+      <Hotspot Name="Light Machine" IsEnabled="true">
+        <Shape xsi:type="CircleShape">
+          <Center X="2787.169" Y="1168.273" />
+          <Radius>70.32102</Radius>
+        </Shape>
+        <OnExamine>game.ChangeScene("Examine_Light");</OnExamine>
+        <OnGaze>game.ShowExamine();</OnGaze>
+        <OnUse />
       </Hotspot>
     </Hotspots>
   </StartScene>
@@ -133,6 +144,7 @@ if (dial != 3) {
     </Scene>
     <Scene Name="Conservatory 2">
       <BackgroundImage>conservatory2</BackgroundImage>
+      <OnEnter>game.AddInventoryItem("Book");</OnEnter>
       <Hotspots>
         <Hotspot Name="Exit: Outside" IsEnabled="true">
           <Shape xsi:type="CircleShape">
@@ -146,11 +158,21 @@ game.PlaySound("ambience_outside");</OnUse>
         </Hotspot>
         <Hotspot Name="Bookshelf" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="2579.11914" Y="1226.78723" />
-            <Radius>162.514648</Radius>
+            <Center X="2598.62427" Y="1220.28564" />
+            <Radius>100.438805</Radius>
           </Shape>
           <OnExamine>game.ChangeScene("Examine_Bookshelf");</OnExamine>
           <OnGaze>game.ShowExamine();</OnGaze>
+          <OnUse />
+        </Hotspot>
+        <Hotspot Name="Light Machine" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="2787.169" Y="1168.273" />
+            <Radius>70.32102</Radius>
+          </Shape>
+          <OnExamine>game.ChangeScene("Examine_Light");</OnExamine>
+          <OnGaze>game.ShowExamine();</OnGaze>
+          <OnUse />
         </Hotspot>
       </Hotspots>
     </Scene>
@@ -181,7 +203,63 @@ game.PlaySound("ambience_inside");</OnUse>
     </Scene>
     <Scene Name="Examine_Bookshelf">
       <BackgroundImage>examine_bookshelf</BackgroundImage>
-      <Hotspots />
+      <Hotspots>
+        <Hotspot Name="Instructions" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="2006.97766" Y="1467.346" />
+            <Radius>100</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowUse();</OnGaze>
+          <OnUse>game.AddInventoryItem("Book");
+game.ChangeBackground(game.GetCurrentScene(), "examine_bookshelf_no_book");
+game.PlaySound("add_inventory");
+game.DisableHotspot("Instructions");</OnUse>
+        </Hotspot>
+        <Hotspot Name="Exit: Conservatory 2" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="1512.857" Y="927.714233" />
+            <Radius>100</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowExit();</OnGaze>
+          <OnUse>game.ChangeScene("Conservatory 2");</OnUse>
+        </Hotspot>
+      </Hotspots>
+    </Scene>
+    <Scene Name="Examine_Book">
+      <BackgroundImage>examine_book</BackgroundImage>
+      <Hotspots>
+        <Hotspot Name="Exit: Inventory" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="1499.85388" Y="940.7174" />
+            <Radius>100</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowExit();</OnGaze>
+          <OnUse>game.ReturnToInventory();</OnUse>
+        </Hotspot>
+      </Hotspots>
+    </Scene>
+    <Scene Name="Examine_Light">
+      <BackgroundImage>examine_light</BackgroundImage>
+      <Hotspots>
+        <Hotspot Name="Gems" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="2084.996" Y="1467.346" />
+            <Radius>100</Radius>
+          </Shape>
+          <OnGaze>game.ShowUse();</OnGaze>
+          <OnUse>game.AddInventoryItem("Red Gem");
+game.AddInventoryItem("Green Gem");
+game.AddInventoryItem("Blue Gem");
+game.AddInventoryItem("Yellow Gem");
+game.AddInventoryItem("Purple Gem");
+game.ChangeBackground("Examine_Light", "examine_light_no_gems");
+game.PlaySound("add_inventory");
+game.DisableHotspot("Gems");</OnUse>
+        </Hotspot>
+      </Hotspots>
     </Scene>
   </Scenes>
   <Assets>
@@ -353,5 +431,50 @@ game.PlaySound("ambience_inside");</OnUse>
       <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\commentary_basket.wav</File>
       <Name>commentary_basket</Name>
     </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\add_inventory.wav</File>
+      <Name>add_inventory</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\examine_bookshelf_no_book.png</File>
+      <Name>examine_bookshelf_no_book</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\examine_light_no_gems.png</File>
+      <Name>examine_light_no_gems</Name>
+    </Asset>
   </Assets>
+  <InventoryItems>
+    <InventoryItem Name="Book">
+      <Image>item_book</Image>
+      <ActiveImage>item_book_active</ActiveImage>
+      <OnExamine>game.ShowExamineScene("Examine_Book");</OnExamine>
+    </InventoryItem>
+    <InventoryItem Name="Red Gem">
+      <Image>item_book</Image>
+      <ActiveImage>item_book_active</ActiveImage>
+    </InventoryItem>
+    <InventoryItem Name="Blue Gem">
+      <Image>item_book</Image>
+      <ActiveImage>item_book_active</ActiveImage>
+    </InventoryItem>
+    <InventoryItem Name="Green Gem">
+      <Image>item_book</Image>
+      <ActiveImage>item_book_active</ActiveImage>
+    </InventoryItem>
+    <InventoryItem Name="Yellow Gem">
+      <Image>item_book</Image>
+      <ActiveImage>item_book_active</ActiveImage>
+    </InventoryItem>
+    <InventoryItem Name="Purple Gem">
+      <Image>item_book</Image>
+      <ActiveImage>item_book_active</ActiveImage>
+    </InventoryItem>
+  </InventoryItems>
 </Game>
