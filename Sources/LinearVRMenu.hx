@@ -84,6 +84,10 @@ class LinearVRMenu
 		}
 	}
 	
+	public function Clear() {
+		MenuItems.splice(0, MenuItems.length);
+	}
+	
 	// This class needs to 
 	// Handle opening and closing the menu
 	// Handle swipe events

@@ -91,6 +91,8 @@ class BlocksFromHeaven extends Game {
 	
 	public var inventoryMenu: LinearVRMenu;
 	
+	public var inventoryType: InventoryType = InventoryType.Examine;
+	
 	
 	public function new() {
 		super("BlocksFromHeaven", false);
@@ -128,9 +130,10 @@ class BlocksFromHeaven extends Game {
 	}
 	
 	
-	public function showInventory() {
+	public function showInventory(type: InventoryType) {
 		// Disable the hotspots
 		inventoryActive = true;
+		inventoryType = type;
 		
 		
 		var filter: BlurFilter = new BlurFilter();
@@ -149,6 +152,8 @@ class BlocksFromHeaven extends Game {
 		// Remove all UI elements
 		uiElements.splice(0, uiElements.length);
 		
+		inventoryMenu.Clear();
+		
 		// Show the inventory items
 		for (item in game.inventory) {
 			var uiElement: UIElement = new UIElement();
@@ -157,8 +162,17 @@ class BlocksFromHeaven extends Game {
 			uiElement.ActiveTexture = item.activeImage;
 			uiElement.Texture = uiElement.InactiveTexture;
 			
-			var onClick = function() {
-				Interpreter.the.interpret(item.onExamine);
+			var onClick: Void -> Void;
+			if (type == InventoryType.Examine) {
+				onClick = function() {
+					Interpreter.the.interpret(item.onExamine);
+				}
+			} else {
+				onClick = function() {
+					game.ActiveInventory = item.id;
+					hideInventory();
+					Interpreter.the.interpret(Hotspot.current.onUseInventory);
+				}
 			}
 			uiElement.OnClick = onClick;
 		}
@@ -414,6 +428,8 @@ class BlocksFromHeaven extends Game {
 						Interpreter.the.interpret(Hotspot.current.onExamine);
 					} else if (currentAction == ActionType.Look) {
 						Interpreter.the.interpret(Hotspot.current.onLook);
+					} else if (currentAction == ActionType.UseInventory) {
+						showInventory(InventoryType.Use);
 					}
 				}
 			} else {
@@ -514,7 +530,7 @@ class BlocksFromHeaven extends Game {
 		if (char == "i") {
 			if (!inventoryActive)   {
 				if (!inventoryExamineActive) {
-					showInventory();
+					showInventory(InventoryType.Examine);
 				}
 			} else {
 				hideInventory();

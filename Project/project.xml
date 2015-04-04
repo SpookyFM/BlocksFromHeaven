@@ -249,6 +249,7 @@ game.DisableHotspot("Instructions");</OnUse>
             <Center X="2084.996" Y="1467.346" />
             <Radius>100</Radius>
           </Shape>
+          <OnExamine />
           <OnGaze>game.ShowUse();</OnGaze>
           <OnUse>game.AddInventoryItem("Red Gem");
 game.AddInventoryItem("Green Gem");
@@ -258,6 +259,92 @@ game.AddInventoryItem("Purple Gem");
 game.ChangeBackground("Examine_Light", "examine_light_no_gems");
 game.PlaySound("add_inventory");
 game.DisableHotspot("Gems");</OnUse>
+        </Hotspot>
+        <Hotspot Name="Receptacle 1" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="1824.93323" Y="1343.8158" />
+            <Radius>38.32451</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowUseInventory();</OnGaze>
+          <OnUse />
+          <OnUseInventory>var image = "";
+if (game.GetActiveInventory() == "Red Gem") {
+  image = "gems_red";
+} else if (game.GetActiveInventory() == "Green Gem") {
+  image = "gems_green";
+} else if (game.GetActiveInventory() == "Blue Gem") {
+  image = "gems_blue";
+} else if (game.GetActiveInventory() == "Yellow Gem") {
+  image = "gems_yellow";
+} else if (game.GetActiveInventory() == "Purple Gem") {
+  image = "gems_purple";
+}
+game.Log("Used inventory:" + game.GetActiveInventory());
+
+game.DrawSubImage("examine_light_no_gems", image, 1834, 1303, 65, 100);
+game.PlaySound("add_inventory");
+game.RemoveInventoryItem(game.GetActiveInventory());
+game.SetVariable("gemLeft", game.GetActiveInventory());</OnUseInventory>
+        </Hotspot>
+        <Hotspot Name="Receptacle 2" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="1901.36987" Y="1349.20557" />
+            <Radius>35</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowUseInventory();</OnGaze>
+          <OnUse />
+          <OnUseInventory>var image = "";
+if (game.GetActiveInventory() == "Red Gem") {
+  image = "gems_red";
+} else if (game.GetActiveInventory() == "Green Gem") {
+  image = "gems_green";
+} else if (game.GetActiveInventory() == "Blue Gem") {
+  image = "gems_blue";
+} else if (game.GetActiveInventory() == "Yellow Gem") {
+  image = "gems_yellow";
+} else if (game.GetActiveInventory() == "Purple Gem") {
+  image = "gems_purple";
+}
+game.Log("Used inventory:" + game.GetActiveInventory());
+
+game.DrawSubImage("examine_light_no_gems", image, 1887, 1306, 65, 100);
+game.PlaySound("add_inventory");
+game.RemoveInventoryItem(game.GetActiveInventory());
+game.SetVariable("gemMiddle", game.GetActiveInventory());
+
+</OnUseInventory>
+        </Hotspot>
+        <Hotspot Name="Receptacle 3" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="1974.045" Y="1348.86267" />
+            <Radius>38.42823</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowUseInventory();</OnGaze>
+          <OnUse />
+          <OnUseInventory>var image = "";
+if (game.GetActiveInventory() == "Red Gem") {
+  image = "gems_red";
+} else if (game.GetActiveInventory() == "Green Gem") {
+  image = "gems_green";
+} else if (game.GetActiveInventory() == "Blue Gem") {
+  image = "gems_blue";
+} else if (game.GetActiveInventory() == "Yellow Gem") {
+  image = "gems_yellow";
+} else if (game.GetActiveInventory() == "Purple Gem") {
+  image = "gems_purple";
+}
+game.Log("Used inventory:" + game.GetActiveInventory());
+
+game.DrawSubImage("examine_light_no_gems", image, 1940, 1306, 65, 100);
+game.PlaySound("add_inventory");
+game.RemoveInventoryItem(game.GetActiveInventory());
+game.SetVariable("gemRight", game.GetActiveInventory());
+
+
+</OnUseInventory>
         </Hotspot>
       </Hotspots>
     </Scene>
@@ -449,6 +536,48 @@ game.DisableHotspot("Gems");</OnUse>
       <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\examine_light_no_gems.png</File>
       <Name>examine_light_no_gems</Name>
     </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\use_inventory.png</File>
+      <Name>use_inventory</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\use_inventory_active.png</File>
+      <Name>use_inventory_active</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\gems_blue.png</File>
+      <Name>gems_blue</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\gems_green.png</File>
+      <Name>gems_green</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\gems_purple.png</File>
+      <Name>gems_purple</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\gems_red.png</File>
+      <Name>gems_red</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\gems_yellow.png</File>
+      <Name>gems_yellow</Name>
+    </Asset>
   </Assets>
   <InventoryItems>
     <InventoryItem Name="Book">
@@ -457,24 +586,24 @@ game.DisableHotspot("Gems");</OnUse>
       <OnExamine>game.ShowExamineScene("Examine_Book");</OnExamine>
     </InventoryItem>
     <InventoryItem Name="Red Gem">
-      <Image>C:\khaviar\BlocksFromHeaven\Assets\Graphics\item_book.png</Image>
-      <ActiveImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\item_book_active.png</ActiveImage>
+      <Image>C:\khaviar\BlocksFromHeaven\Assets\Graphics\gem_red.png</Image>
+      <ActiveImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\gem_red_active.png</ActiveImage>
     </InventoryItem>
     <InventoryItem Name="Blue Gem">
-      <Image>C:\khaviar\BlocksFromHeaven\Assets\Graphics\item_book.png</Image>
-      <ActiveImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\item_book_active.png</ActiveImage>
+      <Image>C:\khaviar\BlocksFromHeaven\Assets\Graphics\gem_blue.png</Image>
+      <ActiveImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\gem_blue_active.png</ActiveImage>
     </InventoryItem>
     <InventoryItem Name="Green Gem">
-      <Image>C:\khaviar\BlocksFromHeaven\Assets\Graphics\item_book.png</Image>
-      <ActiveImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\item_book_active.png</ActiveImage>
+      <Image>C:\khaviar\BlocksFromHeaven\Assets\Graphics\gem_green.png</Image>
+      <ActiveImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\gem_green_active.png</ActiveImage>
     </InventoryItem>
     <InventoryItem Name="Yellow Gem">
-      <Image>C:\khaviar\BlocksFromHeaven\Assets\Graphics\item_book.png</Image>
-      <ActiveImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\item_book_active.png</ActiveImage>
+      <Image>C:\khaviar\BlocksFromHeaven\Assets\Graphics\gem_yellow.png</Image>
+      <ActiveImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\gem_yellow_active.png</ActiveImage>
     </InventoryItem>
     <InventoryItem Name="Purple Gem">
-      <Image>C:\khaviar\BlocksFromHeaven\Assets\Graphics\item_book.png</Image>
-      <ActiveImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\item_book_active.png</ActiveImage>
+      <Image>C:\khaviar\BlocksFromHeaven\Assets\Graphics\gem_purple.png</Image>
+      <ActiveImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\gem_purple_active.png</ActiveImage>
     </InventoryItem>
   </InventoryItems>
 </Game>

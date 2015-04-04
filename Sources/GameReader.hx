@@ -69,6 +69,9 @@ class GameReader
 			hotspot.onUse = GetString(hotspotElement.node.OnUse);
 		if (hotspotElement.hasNode.OnLook)
 			hotspot.onLook = GetString(hotspotElement.node.OnLook);
+		if (hotspotElement.hasNode.OnUseInventory) {
+			hotspot.onUseInventory = GetString(hotspotElement.node.OnUseInventory);
+		}
 		if (hotspotElement.hasNode.OnTalkTo) {
 			hotspot.onTalkTo = GetString(hotspotElement.node.OnTalkTo);
 		}

@@ -35,6 +35,8 @@ class Hotspot
 	
 	public var onLook: String;
 	
+	public var onUseInventory: String;
+	
 	public static var current: Hotspot;
 	
 	public var enabled: Bool;

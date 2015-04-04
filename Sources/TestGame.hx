@@ -25,6 +25,8 @@ class TestGame
 	
 	public var allItems: Map<String, InventoryItem>;
 	
+	public var ActiveInventory: String;
+	
 	public function addScene(scene: Scene): Void {
 		scenes[scene.id] = scene;
 	}

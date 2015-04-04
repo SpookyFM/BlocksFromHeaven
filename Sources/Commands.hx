@@ -15,6 +15,9 @@ import kha.math.Vector2;
 import kha.Scheduler;
 
 import ActionType;
+import SubImageDrawer;
+
+import kha.graphics4.TextureFormat;
 
 /**
  * ...
@@ -156,6 +159,25 @@ class Commands
 		BlocksFromHeaven.instance.currentAction = ActionType.Look;
 	}
 	
+	public function Log(s: String): Void {
+		trace(s);
+	}
+	
+	public function ShowUseInventory(): Void {
+		trace("Showing the use inventory icon");
+		BlocksFromHeaven.instance.uiElements.splice(0, BlocksFromHeaven.instance.uiElements.length);
+		
+		var showInventorySymbol: UIElement = new UIElement();
+		showInventorySymbol.SetPosition(Hotspot.current.getUILonLat(), 5);
+		showInventorySymbol.Offset = new Vector2(0, 0);
+		showInventorySymbol.Texture = Loader.the.getImage("use_inventory");
+		showInventorySymbol.InactiveTexture = showInventorySymbol.Texture;
+		showInventorySymbol.ActiveTexture = Loader.the.getImage("use_inventory_active");
+		// useSymbol.startAnimating();
+		BlocksFromHeaven.instance.uiElements.push(showInventorySymbol);
+		BlocksFromHeaven.instance.currentAction = ActionType.UseInventory;
+	}
+	
 	public function StopMusic(musicFile: String): Void {
 		var m: Music = Loader.the.getMusic(musicFile);
 		m.stop();
@@ -245,6 +267,43 @@ class Commands
 		}
 		return false;
 	}
+	
+	public function GetActiveInventory(): String {
+		return game.ActiveInventory;
+	}
+	
+	
+	public function DrawSubImage(base: String, top: String, x: Float, y: Float, w: Float, h: Float) {
+		
+		
+		
+		// var baseImage: Image = Loader.the.getImage(base);
+		var baseImage: Image = BlocksFromHeaven.instance.globe.texture;
+		var topImage: Image = Loader.the.getImage(top);
+		
+		var baseRenderTarget: Image = Image.createRenderTarget(4096, 2048, TextureFormat.RGBA32);
+		var drawer2: SubImageDrawer = new SubImageDrawer(0, 0, 4096, 2048);
+		drawer2.imageToDraw = baseImage;
+		
+		baseRenderTarget.g4.begin();
+		drawer2.render(baseRenderTarget.g4);
+		baseRenderTarget.g4.end();
+		
+		
+		var drawer: SubImageDrawer = new SubImageDrawer(x, y, w, h);
+		
+		
+		drawer.imageToDraw = topImage;
+		baseRenderTarget.g4.begin();
+		drawer.render(baseRenderTarget.g4);
+		baseRenderTarget.g4.end(); 
+		
+		
+		// TODO: Needs to be more general!
+		BlocksFromHeaven.instance.globe.texture = baseRenderTarget;
+		
+	}
+	
 	
 	
 	

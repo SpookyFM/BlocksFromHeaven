@@ -9,4 +9,5 @@ enum ActionType {
 	TalkTo;
 	Examine;
 	Look;
+	UseInventory;
 }
