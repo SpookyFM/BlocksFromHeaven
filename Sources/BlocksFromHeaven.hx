@@ -341,8 +341,11 @@ class BlocksFromHeaven extends Game {
 		EyeRoll = eulerAngles.z;
 		
 		// trace("Angles: EyeYaw:" + EyeYaw + " EyePitch " + EyePitch + " EyeRoll " + EyeRoll);
-		
-		var rollPitchYaw: Matrix4 = Matrix4.rotationY(EyeYaw).multmat(Matrix4.rotationX(EyePitch).multmat(Matrix4.rotationZ(-EyeRoll)));
+		#if VR_CARDBOARD
+		var rollPitchYaw: Matrix4 = Matrix4.rotationY(EyeYaw).multmat(Matrix4.rotationX(EyePitch).multmat(Matrix4.rotationZ( -EyeRoll)));
+		#else
+		var rollPitchYaw: Matrix4 = Matrix4.rotationY(EyeYaw).multmat(Matrix4.rotationX(EyePitch).multmat(Matrix4.rotationZ(EyeRoll)));
+		#end
 		
 		var eyeOffset: Float = ipd * 0.5;
 		if (eye == 0) eyeOffset = eyeOffset * -1;
@@ -477,7 +480,7 @@ class BlocksFromHeaven extends Game {
 			}
 			
 			// Render the fade texture
-			fade.render(curImage.g4);
+			// fade.render(curImage.g4);
 			
 			
 			
