@@ -1,36 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Steamquest">
-  <StartScene Name="Conservatory 2">
-    <BackgroundImage>conservatory2</BackgroundImage>
-    <OnEnter>game.AddInventoryItem("Book");</OnEnter>
+  <StartScene Name="Start Screen">
+    <BackgroundImage>start</BackgroundImage>
+    <OnEnter>game.PlayMusic("intro");</OnEnter>
     <Hotspots>
-      <Hotspot Name="Exit: Outside" IsEnabled="true">
+      <Hotspot Name="Play" IsEnabled="false">
         <Shape xsi:type="CircleShape">
-          <Center X="1967.96753" Y="849.6952" />
-          <Radius>352.727966</Radius>
+          <Center X="2046.80139" Y="952.737366" />
+          <Radius>68.18638</Radius>
         </Shape>
         <OnExamine />
         <OnGaze>game.ShowExit();</OnGaze>
-        <OnUse>game.ChangeScene("Outside");
-game.PlaySound("ambience_outside");</OnUse>
-      </Hotspot>
-      <Hotspot Name="Bookshelf" IsEnabled="true">
-        <Shape xsi:type="CircleShape">
-          <Center X="2598.62427" Y="1220.28564" />
-          <Radius>100.438805</Radius>
-        </Shape>
-        <OnExamine>game.ChangeScene("Examine_Bookshelf");</OnExamine>
-        <OnGaze>game.ShowExamine();</OnGaze>
-        <OnUse />
-      </Hotspot>
-      <Hotspot Name="Light Machine" IsEnabled="true">
-        <Shape xsi:type="CircleShape">
-          <Center X="2787.169" Y="1168.273" />
-          <Radius>70.32102</Radius>
-        </Shape>
-        <OnExamine>game.ChangeScene("Examine_Light");</OnExamine>
-        <OnGaze>game.ShowExamine();</OnGaze>
-        <OnUse />
+        <OnUse>game.FadeOutMusic("intro");
+game.ChangeScene("Conservatory 1");</OnUse>
       </Hotspot>
     </Hotspots>
   </StartScene>
@@ -199,6 +181,16 @@ game.PlaySound("ambience_outside");</OnUse>
           <OnUse>game.ChangeScene("Conservatory 2");
 game.PlaySound("ambience_inside");</OnUse>
         </Hotspot>
+        <Hotspot Name="Exit: Basket" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="2338.56128" Y="986.2285" />
+            <Radius>174.222961</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowExit();</OnGaze>
+          <OnUse>game.ChangeScene("Basket");
+</OnUse>
+        </Hotspot>
       </Hotspots>
     </Scene>
     <Scene Name="Examine_Bookshelf">
@@ -346,7 +338,70 @@ game.SetVariable("gemRight", game.GetActiveInventory());
 
 </OnUseInventory>
         </Hotspot>
+        <Hotspot Name="Lever" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="2178.84229" Y="1249.15784" />
+            <Radius>100</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowUse();</OnGaze>
+          <OnUse>var correct = true;
+if (game.GetVariable("gemLeft") == "Red Gem")
+if (game.GetVariable("gemMiddle") == "Green Gem")
+if (game.GetVariable("gemRight") == "Blue Gem")
+correct = true;
+
+if (correct == false) {
+  game.PlaySound("something_wrong");
+} else {
+  game.PlaySound("lever");
+  game.ChangeBackground("Outside", "outside_basket");
+}
+</OnUse>
+        </Hotspot>
+        <Hotspot Name="New Hotspot" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="1597.37891" Y="960.222168" />
+            <Radius>116.624542</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowExit();</OnGaze>
+          <OnUse>game.ChangeScene("Conservatory 2");</OnUse>
+        </Hotspot>
       </Hotspots>
+    </Scene>
+    <Scene Name="Basket">
+      <BackgroundImage>in_basket</BackgroundImage>
+      <Hotspots>
+        <Hotspot Name="Lever" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="2598.624" Y="1252.79358" />
+            <Radius>135.958984</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowUse();</OnGaze>
+          <OnUse>game.PlaySound("lever");
+game.ChangeScene("Laboratory");</OnUse>
+        </Hotspot>
+      </Hotspots>
+    </Scene>
+    <Scene Name="Laboratory">
+      <BackgroundImage>laboratory</BackgroundImage>
+      <Hotspots>
+        <Hotspot Name="Father" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="2241.03687" Y="1233.28931" />
+            <Radius>193.469849</Radius>
+          </Shape>
+          <OnExamine>game.ChangeScene("Outro");</OnExamine>
+          <OnGaze>game.ShowExamine();</OnGaze>
+          <OnUse />
+        </Hotspot>
+      </Hotspots>
+    </Scene>
+    <Scene Name="Outro">
+      <BackgroundImage>start</BackgroundImage>
+      <Hotspots />
     </Scene>
   </Scenes>
   <Assets>
@@ -577,6 +632,24 @@ game.SetVariable("gemRight", game.GetActiveInventory());
       <Type>image</Type>
       <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\gems_yellow.png</File>
       <Name>gems_yellow</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\something_wrong.wav</File>
+      <Name>something_wrong</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\lever.wav</File>
+      <Name>lever</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\outside_basket.png</File>
+      <Name>outside_basket</Name>
     </Asset>
   </Assets>
   <InventoryItems>
