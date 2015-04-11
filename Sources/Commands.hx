@@ -99,11 +99,10 @@ class Commands
 	public function ShowUse(): Void {
 		trace("Showing the use icon");
 		// Show the "use" icon
-		BlocksFromHeaven.instance.uiElements.splice(0, BlocksFromHeaven.instance.uiElements.length);
-		
+
 		var useSymbol: UIElement = new UIElement();
 		useSymbol.SetPosition(Hotspot.current.getUILonLat(), 5);
-		useSymbol.Offset = new Vector2(0, 0);
+		useSymbol.Offset = new Vector2(0, 1);
 		useSymbol.Texture = Loader.the.getImage("use");
 		useSymbol.InactiveTexture = useSymbol.Texture;
 		useSymbol.ActiveTexture = Loader.the.getImage("use_active");
@@ -116,11 +115,11 @@ class Commands
 	public function ShowTalkTo(): Void {
 		trace("Showing the talk to icon");
 		// Show the "use" icon
-		BlocksFromHeaven.instance.uiElements.splice(0, BlocksFromHeaven.instance.uiElements.length);
+		
 		
 		var talkSymbol: UIElement = new UIElement();
 		talkSymbol.SetPosition(Hotspot.current.getUILonLat(), 5);
-		talkSymbol.Offset = new Vector2(0, 0);
+		talkSymbol.Offset = new Vector2(1, 0.3);
 		talkSymbol.Texture = Loader.the.getImage("talk");
 		talkSymbol.InactiveTexture = talkSymbol.Texture;
 		talkSymbol.ActiveTexture = Loader.the.getImage("talk_active");
@@ -131,11 +130,11 @@ class Commands
 	
 	public function ShowExamine(): Void {
 		trace("Showing the examine icon");
-		BlocksFromHeaven.instance.uiElements.splice(0, BlocksFromHeaven.instance.uiElements.length);
+		
 		
 		var examineSymbol: UIElement = new UIElement();
 		examineSymbol.SetPosition(Hotspot.current.getUILonLat(), 5);
-		examineSymbol.Offset = new Vector2(0, 0);
+		examineSymbol.Offset = new Vector2(1, -1);
 		examineSymbol.Texture = Loader.the.getImage("examine");
 		examineSymbol.InactiveTexture = examineSymbol.Texture;
 		examineSymbol.ActiveTexture = Loader.the.getImage("examine_active");
@@ -146,11 +145,11 @@ class Commands
 	
 	public function ShowLook(): Void {
 		trace("Showing the look icon");
-		BlocksFromHeaven.instance.uiElements.splice(0, BlocksFromHeaven.instance.uiElements.length);
+		
 		
 		var lookSymbol: UIElement = new UIElement();
 		lookSymbol.SetPosition(Hotspot.current.getUILonLat(), 5);
-		lookSymbol.Offset = new Vector2(0, 0);
+		lookSymbol.Offset = new Vector2(-1, -1);
 		lookSymbol.Texture = Loader.the.getImage("look");
 		lookSymbol.InactiveTexture = lookSymbol.Texture;
 		lookSymbol.ActiveTexture = Loader.the.getImage("look_active");
@@ -165,11 +164,11 @@ class Commands
 	
 	public function ShowUseInventory(): Void {
 		trace("Showing the use inventory icon");
-		BlocksFromHeaven.instance.uiElements.splice(0, BlocksFromHeaven.instance.uiElements.length);
+		
 		
 		var showInventorySymbol: UIElement = new UIElement();
 		showInventorySymbol.SetPosition(Hotspot.current.getUILonLat(), 5);
-		showInventorySymbol.Offset = new Vector2(0, 0);
+		showInventorySymbol.Offset = new Vector2(-1, 0.3);
 		showInventorySymbol.Texture = Loader.the.getImage("use_inventory");
 		showInventorySymbol.InactiveTexture = showInventorySymbol.Texture;
 		showInventorySymbol.ActiveTexture = Loader.the.getImage("use_inventory_active");

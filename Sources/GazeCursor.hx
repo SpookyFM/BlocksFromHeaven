@@ -40,6 +40,8 @@ class GazeCursor extends FullScreenQuad
 	public function render(g4: Graphics, p: Matrix4) {
 		g4.setCullMode(CullMode.None);
 		
+		g4.setBlendingMode(BlendingOperation.SourceAlpha, BlendingOperation.InverseSourceAlpha);
+		
 		
 		g4.setProgram(program);
 		g4.setIndexBuffer(ib);

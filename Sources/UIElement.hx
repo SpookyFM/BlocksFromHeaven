@@ -172,6 +172,9 @@ class UIElement extends MeshBase
 		var rot: Matrix4 = Matrix4.rotationX(-rotAmount);
 		var rotT: Matrix4 = rot.transpose();
 		
+		// Offset
+		var mOffset: Matrix4 = Matrix4.translation(Offset.x, Offset.y, 0);
+		
 		// Move it forward the right amount
 		var transAmount: Float = moveDistance * t;
 		var trans: Matrix4 = Matrix4.translation(0, t, 0);
@@ -181,13 +184,17 @@ class UIElement extends MeshBase
 		
 		
 		
-		m = trans.multmat(rot.multmat(matT));
+		m = trans.multmat(mOffset.multmat(rot.multmat(matT)));
 	}
 	
 	public function updateUse() {
 		
 		// Now move it into the screen the specified distance
 		m = Matrix4.translation(0, 0, -Distance);
+		
+		var mOffset: Matrix4 = Matrix4.translation(Offset.x, Offset.y, 0);
+		
+		m = m.multmat(mOffset);
 	}
 	
 	

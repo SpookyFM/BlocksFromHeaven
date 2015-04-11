@@ -121,6 +121,7 @@ class Hotspot
 						
 						// After one second, call our gaze function
 						GazeExecuted = true;
+						BlocksFromHeaven.instance.clearUI();
 						Interpreter.the.interpret(onGaze);
 					}
 				}
@@ -139,7 +140,7 @@ class Hotspot
 			if (duration > 0.5) {
 				if (!GazeLostExecuted) {
 					trace("Gaze lost - removing ui elements");
-					BlocksFromHeaven.instance.hideUI(this);
+					BlocksFromHeaven.instance.clearUI();
 					GazeLostExecuted = true;
 				}
 			}

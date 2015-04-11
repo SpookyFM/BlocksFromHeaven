@@ -6,6 +6,7 @@ import haxe.Timer;
 import kha.Button;
 import kha.Color;
 import kha.Configuration;
+import kha.Font;
 import kha.graphics4.Graphics;
 import kha.Framebuffer;
 import kha.Game;
@@ -16,6 +17,7 @@ import kha.input.Mouse;
 import kha.Key;
 import kha.Loader;
 import kha.LoadingScreen;
+import kha.math.Matrix3;
 import kha.math.Quaternion;
 import kha.math.Random;
 import kha.math.Vector2;
@@ -27,6 +29,9 @@ import kha.Sound;
 import kha.vr.SensorState;
 import kha.vr.TimeWarpImage;
 import kha.vr.TimeWarpParms;
+
+import kha.Font;
+import kha.FontStyle;
 
 
 import kha.vr.VrInterface;
@@ -93,6 +98,7 @@ class BlocksFromHeaven extends Game {
 	
 	public var inventoryType: InventoryType = InventoryType.Examine;
 	
+	public var f: Font;
 	
 	public function new() {
 		super("BlocksFromHeaven", false);
@@ -107,6 +113,7 @@ class BlocksFromHeaven extends Game {
 		Mouse.get(0).notify(mouseDownEvent, mouseUpEvent, null, null);
 		inventoryMenu = new LinearVRMenu();
 		inventoryMenu.Center = new Vector2(0, 0);
+		
 	}
 	
 	// Show an exit symbol over the specified exit
@@ -188,10 +195,11 @@ class BlocksFromHeaven extends Game {
 	}
 	
 	
-	public function hideUI(hotspot: Hotspot) {
-		// TODO: Quick hack for demo
+	public function clearUI() {
 		uiElements.splice(0, uiElements.length);
 	}
+	
+	
 	
 	
 	private function loadingFinished(): Void {
@@ -202,8 +210,17 @@ class BlocksFromHeaven extends Game {
 		images = new Vector<Image>(4);
 		imagesR = new Vector<Image>(4);
 		for (i in 0...numImages) {
-			images[i] = Image.createRenderTarget(1024, 1024, TextureFormat.RGBA32);
-			imagesR[i] = Image.createRenderTarget(1024, 1024, TextureFormat.RGBA32);
+			var w: Int = 1024;
+			var h: Int = 1024;
+			
+			#if VR_RIFT
+				w = 1182;
+				h = 1464;
+			#end
+			
+			
+			images[i] = Image.createRenderTarget(w, h, TextureFormat.RGBA32);
+			imagesR[i] = Image.createRenderTarget(w, h, TextureFormat.RGBA32);
 		}
 		
 		gazeCursor = new GazeCursor();
@@ -251,8 +268,7 @@ class BlocksFromHeaven extends Game {
 		vignette = new VignetteMesh(0.01);
 		
 		
-		
-		
+		f = Loader.the.loadFont("zorus", FontStyle.Default, 18.0);
 	}
 	
 	private function nextImage(): Image {
@@ -480,7 +496,7 @@ class BlocksFromHeaven extends Game {
 			}
 			
 			// Render the fade texture
-			// fade.render(curImage.g4);
+			fade.render(curImage.g4);
 			
 			
 			
@@ -488,6 +504,13 @@ class BlocksFromHeaven extends Game {
 			if (!gazeActive) gazeCursor.active = 0;
 			
 			gazeCursor.render(curImage.g4, p);
+			
+			curImage.g2.begin(false);
+			curImage.g2.set_transformation(Matrix3.scale(1, -1));
+			curImage.g2.set_color(Color.Red);
+			curImage.g2.set_font(f);
+			//curImage.g2.drawString("Hello, world!", 512, -512);
+			curImage.g2.end();
 			
 			// Build a vignette around the texture
 			// vignette.render(curImage.g4);
