@@ -3,21 +3,22 @@
   <StartScene Name="Start Screen">
     <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\start.png</BackgroundImage>
     <BackgroundImageRight />
-    <OnEnter>game.PlayMusic("intro");</OnEnter>
+    <OnEnter>game.PlayMusic("intro");
+
+game.SetVariable("talked_to_bertram", false);
+game.SetVariable("Bertram_called", false);
+game.SetVariable("father_heard", false);
+game.SetVariable("basket_down", false);
+</OnEnter>
     <Hotspots>
-      <Hotspot Name="Play" IsEnabled="false">
+      <Hotspot Name="Play" IsEnabled="true">
         <Shape xsi:type="CircleShape">
-          <Center X="2078.191" Y="989.0521" />
+          <Center X="2072.8" Y="989.052063" />
           <Radius>68.18638</Radius>
         </Shape>
         <OnExamine />
-        <OnGaze>// game.ShowExit();
-game.ShowLook();
-game.ShowExamine();
-game.ShowUse();
-game.ShowTalkTo();
-game.ShowExamine();</OnGaze>
-        <OnUse>game.FadeOutMusic("intro");
+        <OnGaze>game.ShowExit();</OnGaze>
+        <OnUse>game.FadeOutMusic("intro", 1.0);
 game.ChangeScene("Conservatory 1");</OnUse>
       </Hotspot>
     </Hotspots>
@@ -26,21 +27,22 @@ game.ChangeScene("Conservatory 1");</OnUse>
     <Scene Name="Start Screen">
       <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\start.png</BackgroundImage>
       <BackgroundImageRight />
-      <OnEnter>game.PlayMusic("intro");</OnEnter>
+      <OnEnter>game.PlayMusic("intro");
+
+game.SetVariable("talked_to_bertram", false);
+game.SetVariable("Bertram_called", false);
+game.SetVariable("father_heard", false);
+game.SetVariable("basket_down", false);
+</OnEnter>
       <Hotspots>
-        <Hotspot Name="Play" IsEnabled="false">
+        <Hotspot Name="Play" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="2078.191" Y="989.0521" />
+            <Center X="2072.8" Y="989.052063" />
             <Radius>68.18638</Radius>
           </Shape>
           <OnExamine />
-          <OnGaze>// game.ShowExit();
-game.ShowLook();
-game.ShowExamine();
-game.ShowUse();
-game.ShowTalkTo();
-game.ShowExamine();</OnGaze>
-          <OnUse>game.FadeOutMusic("intro");
+          <OnGaze>game.ShowExit();</OnGaze>
+          <OnUse>game.FadeOutMusic("intro", 1.0);
 game.ChangeScene("Conservatory 1");</OnUse>
         </Hotspot>
       </Hotspots>
@@ -48,49 +50,114 @@ game.ChangeScene("Conservatory 1");</OnUse>
     <Scene Name="Conservatory 1">
       <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\conservatory.png</BackgroundImage>
       <BackgroundImageRight />
-      <OnEnter>game.PlaySound("ambience_inside", true);
-game.PlayMusic("peaceful");</OnEnter>
+      <OnEnter>if (game.IsFirstTime() == true) {
+
+
+game.PlayMusic("ambience_inside", true);
+game.PlaySound("C1_Prot_01");
+game.FadeInMusic("peaceful");
+}
+
+</OnEnter>
       <Hotspots>
         <Hotspot Name="Rope" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="2886.45459" Y="952.508057" />
-            <Radius>164.428879</Radius>
+            <Center X="994.750061" Y="782.7375" />
+            <Radius>127.80291</Radius>
           </Shape>
           <OnExamine />
-          <OnGaze>game.ShowUse();</OnGaze>
-          <OnUse>game.PlaySound("bell");
+          <OnGaze>game.ShowLook();
+game.ShowUse();
+</OnGaze>
+          <OnUse>if (game.GetVariable("Bertram_called") == false) {
+game.PlaySound("bell");
+game.PlaySound("C1_Bertram_01");
 game.SetVariable("Bertram_called", true);
 game.EnableHotspot("Bertram");
-game.ChangeBackground("Conservatory 1", "conservatory1_bertram");</OnUse>
+game.EnableHotspotInScene("Conservatory 2", "Bertram");
+game.ChangeBackground("Conservatory 1", "conservatory1_bertram");
+game.ChangeBackground("Conservatory 2", "conservatory2_bertram");
+} else {
+game.PlaySound("Bell_Use_Prot_01");
+}</OnUse>
+          <OnLook>game.PlaySound("Bell_Look_Prot_01");</OnLook>
         </Hotspot>
         <Hotspot Name="Bertram" IsEnabled="false">
           <Shape xsi:type="CircleShape">
-            <Center X="1205.35632" Y="1086.69666" />
+            <Center X="1434.40955" Y="1011.23969" />
             <Radius>133.981613</Radius>
           </Shape>
           <OnExamine />
           <OnGaze>game.ShowTalkTo();</OnGaze>
           <OnUse />
-          <OnTalkTo>game.PlaySound("conversation_bertram");
-game.SetVariable("talked_to_bertram", true);</OnTalkTo>
+          <OnTalkTo>if (game.GetVariable("father_heard") == true) {
+   game.PlaySound("D_Alarmed_Prot_Bertram_01");
+   game.ChangeBackground("Conservatory 1", "conservatory");
+   game.ChangeBackground("Conservatory 2", "conservatory2");
+   game.DisableHotspotInScene("Conservatory 1", "Bertram");
+   game.DisableHotspotInScene("Conservatory 2", "Bertram");
+} else 
+if (game.GetVariable("talked_to_bertram") == false) {
+game.PlaySound("D_Neutral_Prot_Bertram_01");
+game.SetVariable("talked_to_bertram", true);
+} else {
+game.PlaySound("D_Neutral_Prot_Bertram_02");
+}</OnTalkTo>
         </Hotspot>
         <Hotspot Name="Intercom" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="563.625366" Y="1116.26025" />
-            <Radius>160.150116</Radius>
+            <Center X="1094.48657" Y="1140.51123" />
+            <Radius>107.052681</Radius>
           </Shape>
-          <OnExamine>game.ChangeScene("Examine_Intercom");</OnExamine>
-          <OnGaze>game.ShowExamine();</OnGaze>
+          <OnExamine>if (game.GetVariable("Bertram_called") == true) {
+game.ChangeScene("Examine_Intercom");
+} else {
+game.PlaySound("Intercom_Use_Prot_01");
+}</OnExamine>
+          <OnGaze>game.ShowExamine();
+game.ShowLook();</OnGaze>
           <OnUse />
+          <OnLook>game.PlaySound("Intercom_Look_Prot_01");</OnLook>
         </Hotspot>
         <Hotspot Name="Exit: C2" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="1889.9491" Y="895.2063" />
-            <Radius>261.289276</Radius>
+            <Center X="1943.84253" Y="1011.07825" />
+            <Radius>343.371735</Radius>
           </Shape>
           <OnExamine />
           <OnGaze>game.ShowExit();</OnGaze>
           <OnUse>game.ChangeScene("Conservatory 2");</OnUse>
+        </Hotspot>
+        <Hotspot Name="Door Inside" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="438.042145" Y="1216.82" />
+            <Radius>275.205658</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowLook();
+game.ShowUse();</OnGaze>
+          <OnUse>game.PlaySound("DoorInside_Use_Prot_01");</OnUse>
+          <OnLook>game.PlaySound("DoorInside_Look_Prot_01");</OnLook>
+        </Hotspot>
+        <Hotspot Name="Table" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="2545.326" Y="1195.26282" />
+            <Radius>228.790985</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowLook();</OnGaze>
+          <OnUse />
+          <OnLook>game.PlaySound("Table_Look_Prot_01");</OnLook>
+        </Hotspot>
+        <Hotspot Name="Airship" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="2529.159" Y="586.2517" />
+            <Radius>192.238922</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowLook();</OnGaze>
+          <OnUse />
+          <OnLook>game.PlaySound("C1_Airship_Look_Prot_01");</OnLook>
         </Hotspot>
       </Hotspots>
     </Scene>
@@ -101,11 +168,12 @@ game.SetVariable("talked_to_bertram", true);</OnTalkTo>
       <Hotspots>
         <Hotspot Name="Dial" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="1990.20923" Y="1303.05261" />
-            <Radius>38.72566</Radius>
+            <Center X="2033.64148" Y="1303.05261" />
+            <Radius>69.79001</Radius>
           </Shape>
           <OnExamine />
-          <OnGaze>game.ShowUse();</OnGaze>
+          <OnGaze>game.ShowUse();
+game.ShowLook();</OnGaze>
           <OnUse>var dial = game.GetVariable("dial");
 if (dial == 1) {
   dial = 2;
@@ -119,11 +187,12 @@ if (dial == 1) {
 }
 game.SetVariable("dial", dial);
 game.PlaySound("klack");</OnUse>
+          <OnLook>game.PlaySound("Intercom_Dial_Look_Prot_01");</OnLook>
         </Hotspot>
         <Hotspot Name="Lever" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="2273.53931" Y="1155.26978" />
-            <Radius>100</Radius>
+            <Center X="2373.77075" Y="1168.63354" />
+            <Radius>149.64389</Radius>
           </Shape>
           <OnExamine />
           <OnGaze>game.ShowUse();</OnGaze>
@@ -131,81 +200,194 @@ game.PlaySound("klack");</OnUse>
 if (dial != 3) {
   game.PlaySound("static");
 } else {
-  game.PlaySound("help");
+  if (game.GetVariable("father_heard") == false) {
+  game.StopMusic("peaceful");
+  game.PlayMusic("Father_Help");
+  game.PlaySound("D_Father_01");
   game.ChangeScene("Conservatory 1");
   game.SetVariable("father_heard", true);
+} else {
+  game.PlaySound("static");
+}
 }</OnUse>
+        </Hotspot>
+        <Hotspot Name="Exit" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="1446.51855" Y="718.189331" />
+            <Radius>194.7757</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowExit();</OnGaze>
+          <OnUse>game.ChangeScene("Conservatory_1");</OnUse>
+        </Hotspot>
+        <Hotspot Name="Loudspeaker" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="1955.18" Y="831.473755" />
+            <Radius>100</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowLook();</OnGaze>
+          <OnUse />
+          <OnLook>game.PlaySound("Intercom_Loudspeaker_Look_Prot_01");</OnLook>
+        </Hotspot>
+        <Hotspot Name="Microphone" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="2135.729" Y="1483.59924" />
+            <Radius>68.03238</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowLook();</OnGaze>
+          <OnUse />
+          <OnLook>game.PlaySound("Intercom_Microphone_Look_Prot_01");</OnLook>
         </Hotspot>
       </Hotspots>
     </Scene>
     <Scene Name="Conservatory 2">
       <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\conservatory2.png</BackgroundImage>
       <BackgroundImageRight />
-      <OnEnter>game.AddInventoryItem("Book");</OnEnter>
+      <OnEnter>//game.AddInventoryItem("Book");
+//if (game.GetVariable("Betram_called") == true) {
+//   game.SetHotspotEnabled("Bertram", true);
+//}</OnEnter>
       <Hotspots>
         <Hotspot Name="Exit: Outside" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="1967.96753" Y="849.6952" />
-            <Radius>352.727966</Radius>
+            <Center X="2280.21533" Y="1002.82727" />
+            <Radius>178.59787</Radius>
           </Shape>
           <OnExamine />
           <OnGaze>game.ShowExit();</OnGaze>
-          <OnUse>game.ChangeScene("Outside");
-game.PlaySound("ambience_outside");</OnUse>
+          <OnUse>if (game.GetVariable("father_heard") == false) {
+game.PlaySound("C2_Outside_Use_Prot_01");
+} else {
+game.ChangeScene("Outside");
+game.PlayMusic("ambience_outside");
+}</OnUse>
         </Hotspot>
         <Hotspot Name="Bookshelf" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="2598.62427" Y="1220.28564" />
-            <Radius>100.438805</Radius>
+            <Center X="203.003357" Y="1115.19189" />
+            <Radius>287.916016</Radius>
           </Shape>
           <OnExamine>game.ChangeScene("Examine_Bookshelf");</OnExamine>
           <OnGaze>game.ShowExamine();</OnGaze>
           <OnUse />
         </Hotspot>
-        <Hotspot Name="Light Machine" IsEnabled="true">
+        <Hotspot Name="Intercom" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="2787.169" Y="1168.273" />
-            <Radius>70.32102</Radius>
+            <Center X="1946.41" Y="1160.18823" />
+            <Radius>165.7827</Radius>
           </Shape>
-          <OnExamine>game.ChangeScene("Examine_Light");</OnExamine>
-          <OnGaze>game.ShowExamine();</OnGaze>
+          <OnExamine>if (game.GetVariable("father_heard") == true) {
+game.ChangeScene("Examine_Light");
+} else {
+game.PlaySound("C2_Intercom_Use_Prot_01");
+}
+</OnExamine>
+          <OnGaze>game.ShowExamine();
+game.ShowLook();</OnGaze>
           <OnUse />
+          <OnLook>game.PlaySound("C2_Intercom_Look_Prot_01");</OnLook>
+        </Hotspot>
+        <Hotspot Name="Airship" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="2073.747" Y="543.1364" />
+            <Radius>103.901321</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowLook();</OnGaze>
+          <OnUse />
+          <OnLook>game.PlaySound("C1_Airship_Look_Prot_01");</OnLook>
+        </Hotspot>
+        <Hotspot Name="Table" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="3027.68433" Y="1173.70508" />
+            <Radius>159.247681</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowLook();</OnGaze>
+          <OnUse />
+          <OnLook>game.PlaySound("Table_Look_Prot_01");</OnLook>
+        </Hotspot>
+        <Hotspot Name="Bertram" IsEnabled="false">
+          <Shape xsi:type="CircleShape">
+            <Center X="3863.05444" Y="1100.94287" />
+            <Radius>140.269821</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowTalkTo();</OnGaze>
+          <OnUse />
+          <OnTalkTo>if (game.GetVariable("father_heard") == true) {
+   game.PlaySound("D_Alarmed_Prot_Bertram_01");
+   game.ChangeBackground("Conservatory 1", "conservatory");
+   game.ChangeBackground("Conservatory 2", "conservatory2");
+} else 
+if (game.GetVariable("talked_to_bertram") == false) {
+game.PlaySound("D_Neutral_Prot_Bertram_01");
+game.SetVariable("talked_to_bertram", true);
+} else {
+game.PlaySound("D_Neutral_Prot_Bertram_02");
+}</OnTalkTo>
+        </Hotspot>
+        <Hotspot Name="Exit: Conservatory 1" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="3456.145" Y="1135.97974" />
+            <Radius>218.504532</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowExit();</OnGaze>
+          <OnUse>game.ChangeScene("Conservatory 1");</OnUse>
         </Hotspot>
       </Hotspots>
     </Scene>
     <Scene Name="Outside">
       <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\outside.png</BackgroundImage>
       <BackgroundImageRight />
+      <OnEnter>if (game.GetVariable("basket_down") == true) {
+   game.PlayMusic("ascend");
+}</OnEnter>
       <Hotspots>
         <Hotspot Name="Gondola" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="2195.52222" Y="115.015862" />
-            <Radius>188.345749</Radius>
+            <Center X="2169.51831" Y="219.04126" />
+            <Radius>226.373917</Radius>
           </Shape>
           <OnExamine />
           <OnGaze>game.ShowLook()</OnGaze>
           <OnUse />
-          <OnLook>game.PlaySound("commentary_basket");</OnLook>
+          <OnLook>game.PlaySound("Outside_Gondola_Look_Prot_01");</OnLook>
         </Hotspot>
         <Hotspot Name="Exit: Conservatory 2" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="-86.5333252" Y="901.7079" />
-            <Radius>237.17511</Radius>
+            <Center X="18.5611877" Y="1017.58319" />
+            <Radius>139.734146</Radius>
           </Shape>
           <OnExamine />
           <OnGaze>game.ShowExit();</OnGaze>
           <OnUse>game.ChangeScene("Conservatory 2");
-game.PlaySound("ambience_inside");</OnUse>
+game.StopMusic("ambience_outside");
+game.PlayMusic("ambience_inside");</OnUse>
         </Hotspot>
         <Hotspot Name="Exit: Basket" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="2338.56128" Y="986.2285" />
-            <Radius>174.222961</Radius>
+            <Center X="2377.57373" Y="1187.78015" />
+            <Radius>187.062454</Radius>
           </Shape>
           <OnExamine />
           <OnGaze>game.ShowExit();</OnGaze>
           <OnUse>game.ChangeScene("Basket");
 </OnUse>
+        </Hotspot>
+        <Hotspot Name="Entrance" IsEnabled="true">
+          <Shape xsi:type="CircleShape">
+            <Center X="2039.48291" Y="1096.75549" />
+            <Radius>143.189148</Radius>
+          </Shape>
+          <OnExamine />
+          <OnGaze>game.ShowLook();
+game.ShowUse();</OnGaze>
+          <OnUse>game.PlaySound("Outside_Entrance_Use_Prot_01");</OnUse>
+          <OnLook>game.PlaySound("Outside_Entrance_Look_Prot_01");</OnLook>
         </Hotspot>
       </Hotspots>
     </Scene>
@@ -215,20 +397,22 @@ game.PlaySound("ambience_inside");</OnUse>
       <Hotspots>
         <Hotspot Name="Instructions" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="2006.97766" Y="1467.346" />
-            <Radius>100</Radius>
+            <Center X="2228.03125" Y="1265.79541" />
+            <Radius>177.962585</Radius>
           </Shape>
           <OnExamine />
-          <OnGaze>game.ShowUse();</OnGaze>
+          <OnGaze>game.ShowUse();
+game.ShowLook();</OnGaze>
           <OnUse>game.AddInventoryItem("Book");
 game.ChangeBackground(game.GetCurrentScene(), "examine_bookshelf_no_book");
 game.PlaySound("add_inventory");
 game.DisableHotspot("Instructions");</OnUse>
+          <OnLook>game.PlaySound("Bookshelf_Book_Look_Prot_01");</OnLook>
         </Hotspot>
         <Hotspot Name="Exit: Conservatory 2" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="1512.857" Y="927.714233" />
-            <Radius>100</Radius>
+            <Center X="1408.83167" Y="758.673" />
+            <Radius>236.676132</Radius>
           </Shape>
           <OnExamine />
           <OnGaze>game.ShowExit();</OnGaze>
@@ -239,11 +423,14 @@ game.DisableHotspot("Instructions");</OnUse>
     <Scene Name="Examine_Book">
       <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\examine_book.png</BackgroundImage>
       <BackgroundImageRight />
+      <OnEnter>if (game.IsFirstTime() == true) {
+   game.PlaySound("Book_Examine_Prot_01");
+}</OnEnter>
       <Hotspots>
         <Hotspot Name="Exit: Inventory" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="1499.85388" Y="940.7174" />
-            <Radius>100</Radius>
+            <Center X="1545.365" Y="921.212646" />
+            <Radius>234.894211</Radius>
           </Shape>
           <OnExamine />
           <OnGaze>game.ShowExit();</OnGaze>
@@ -257,11 +444,12 @@ game.DisableHotspot("Instructions");</OnUse>
       <Hotspots>
         <Hotspot Name="Gems" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="2084.996" Y="1467.346" />
-            <Radius>100</Radius>
+            <Center X="2230.51587" Y="1823.05" />
+            <Radius>137.5451</Radius>
           </Shape>
           <OnExamine />
-          <OnGaze>game.ShowUse();</OnGaze>
+          <OnGaze>game.ShowUse();
+game.ShowLook();</OnGaze>
           <OnUse>game.AddInventoryItem("Red Gem");
 game.AddInventoryItem("Green Gem");
 game.AddInventoryItem("Blue Gem");
@@ -270,15 +458,18 @@ game.AddInventoryItem("Purple Gem");
 game.ChangeBackground("Examine_Light", "examine_light_no_gems");
 game.PlaySound("add_inventory");
 game.DisableHotspot("Gems");</OnUse>
+          <OnLook>game.PlaySound("Light_Gems_Look_Prot_01")</OnLook>
         </Hotspot>
         <Hotspot Name="Receptacle 1" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="1824.93323" Y="1343.8158" />
-            <Radius>38.32451</Radius>
+            <Center X="1830.32275" Y="1613.28967" />
+            <Radius>60</Radius>
           </Shape>
           <OnExamine />
-          <OnGaze>game.ShowUseInventory();</OnGaze>
+          <OnGaze>game.ShowUseInventory();
+game.ShowLook();</OnGaze>
           <OnUse />
+          <OnLook>game.PlaySound("Light_Receptacle_Look_Prot_01");</OnLook>
           <OnUseInventory>var image = "";
 if (game.GetActiveInventory() == "Red Gem") {
   image = "gems_red";
@@ -293,20 +484,40 @@ if (game.GetActiveInventory() == "Red Gem") {
 }
 game.Log("Used inventory:" + game.GetActiveInventory());
 
-game.DrawSubImage("examine_light_no_gems", image, 1834, 1303, 65, 100);
+if (game.GetVariable("gemLeft") == "Red Gem") {
+  game.AddInventoryItem("Red Gem");
+}
+if (game.GetVariable("gemLeft") == "Green Gem") {
+  game.AddInventoryItem("Green Gem");
+}
+if (game.GetVariable("gemLeft") == "Blue Gem") {
+  game.AddInventoryItem("Blue Gem");
+}
+if (game.GetVariable("gemLeft") == "Yellow Gem") {
+  game.AddInventoryItem("Yellow Gem");
+}
+if (game.GetVariable("gemLeft") == "Purple Gem") {
+  game.AddInventoryItem("Purple Gem");
+}
+
+game.DrawSubImage("examine_light_no_gems", image, 1729, 1508, 189, 189);
 game.PlaySound("add_inventory");
 game.RemoveInventoryItem(game.GetActiveInventory());
 game.SetVariable("gemLeft", game.GetActiveInventory());</OnUseInventory>
         </Hotspot>
         <Hotspot Name="Receptacle 2" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="1901.36987" Y="1349.20557" />
-            <Radius>35</Radius>
+            <Center X="1984.90686" Y="1621.37476" />
+            <Radius>71.44097</Radius>
           </Shape>
           <OnExamine />
-          <OnGaze>game.ShowUseInventory();</OnGaze>
+          <OnGaze>game.ShowUseInventory();
+game.ShowLook();</OnGaze>
           <OnUse />
-          <OnUseInventory>var image = "";
+          <OnLook>game.PlaySound("Light_Receptacle_Look_Prot_01");</OnLook>
+          <OnUseInventory>
+
+var image = "";
 if (game.GetActiveInventory() == "Red Gem") {
   image = "gems_red";
 } else if (game.GetActiveInventory() == "Green Gem") {
@@ -320,21 +531,41 @@ if (game.GetActiveInventory() == "Red Gem") {
 }
 game.Log("Used inventory:" + game.GetActiveInventory());
 
-game.DrawSubImage("examine_light_no_gems", image, 1887, 1306, 65, 100);
+if (game.GetVariable("gemMiddle") == "Red Gem") {
+  game.AddInventoryItem("Red Gem");
+}
+if (game.GetVariable("gemMiddle") == "Green Gem") {
+  game.AddInventoryItem("Green Gem");
+}
+if (game.GetVariable("gemMiddle") == "Blue Gem") {
+  game.AddInventoryItem("Blue Gem");
+}
+if (game.GetVariable("gemMiddle") == "Yellow Gem") {
+  game.AddInventoryItem("Yellow Gem");
+}
+if (game.GetVariable("gemMiddle") == "Purple Gem") {
+  game.AddInventoryItem("Purple Gem");
+}
+
+game.DrawSubImage("examine_light_no_gems", image, 1888, 1508, 154, 189);
 game.PlaySound("add_inventory");
 game.RemoveInventoryItem(game.GetActiveInventory());
 game.SetVariable("gemMiddle", game.GetActiveInventory());
+
+
 
 </OnUseInventory>
         </Hotspot>
         <Hotspot Name="Receptacle 3" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="1974.045" Y="1348.86267" />
-            <Radius>38.42823</Radius>
+            <Center X="2149.20239" Y="1618.3363" />
+            <Radius>68.55099</Radius>
           </Shape>
           <OnExamine />
-          <OnGaze>game.ShowUseInventory();</OnGaze>
+          <OnGaze>game.ShowUseInventory();
+game.ShowLook();</OnGaze>
           <OnUse />
+          <OnLook>game.PlaySound("Light_Receptacle_Look_Prot_01");</OnLook>
           <OnUseInventory>var image = "";
 if (game.GetActiveInventory() == "Red Gem") {
   image = "gems_red";
@@ -349,39 +580,56 @@ if (game.GetActiveInventory() == "Red Gem") {
 }
 game.Log("Used inventory:" + game.GetActiveInventory());
 
-game.DrawSubImage("examine_light_no_gems", image, 1940, 1306, 65, 100);
+if (game.GetVariable("gemRight") == "Red Gem") {
+  game.AddInventoryItem("Red Gem");
+}
+if (game.GetVariable("gemRight") == "Green Gem") {
+  game.AddInventoryItem("Green Gem");
+}
+if (game.GetVariable("gemRight") == "Blue Gem") {
+  game.AddInventoryItem("Blue Gem");
+}
+if (game.GetVariable("gemRight") == "Yellow Gem") {
+  game.AddInventoryItem("Yellow Gem");
+}
+if (game.GetVariable("gemRight") == "Purple Gem") {
+  game.AddInventoryItem("Purple Gem");
+}
+
+game.DrawSubImage("examine_light_no_gems", image, 2039, 1508, 154, 189);
 game.PlaySound("add_inventory");
 game.RemoveInventoryItem(game.GetActiveInventory());
 game.SetVariable("gemRight", game.GetActiveInventory());
-
-
 </OnUseInventory>
         </Hotspot>
         <Hotspot Name="Lever" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="2178.84229" Y="1249.15784" />
+            <Center X="2407.896" Y="1553.66321" />
             <Radius>100</Radius>
           </Shape>
           <OnExamine />
-          <OnGaze>game.ShowUse();</OnGaze>
-          <OnUse>var correct = true;
-if (game.GetVariable("gemLeft") == "Red Gem")
-if (game.GetVariable("gemMiddle") == "Green Gem")
-if (game.GetVariable("gemRight") == "Blue Gem")
+          <OnGaze>game.ShowUse();
+game.ShowLook();</OnGaze>
+          <OnUse>var correct = false;
+if (game.GetVariable("gemLeft") == "Green Gem")
+if (game.GetVariable("gemMiddle") == "Yellow Gem")
+if (game.GetVariable("gemRight") == "Red Gem")
 correct = true;
 
 if (correct == false) {
-  game.PlaySound("something_wrong");
+  game.PlaySound("Light_Lever_Use_Prot_01");
 } else {
-  game.PlaySound("lever");
+  game.PlaySound("Light_Lever_Use_Prot_02");
   game.ChangeBackground("Outside", "outside_basket");
+  game.SetVariable("basket_down", true);
 }
 </OnUse>
+          <OnLook>game.PlaySound("Light_Lever_Look_Prot_01")</OnLook>
         </Hotspot>
-        <Hotspot Name="New Hotspot" IsEnabled="true">
+        <Hotspot Name="Exit: Conservatory 2" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="1597.37891" Y="960.222168" />
-            <Radius>116.624542</Radius>
+            <Center X="1594.684" Y="1100.34973" />
+            <Radius>183.777023</Radius>
           </Shape>
           <OnExamine />
           <OnGaze>game.ShowExit();</OnGaze>
@@ -395,34 +643,41 @@ if (correct == false) {
       <Hotspots>
         <Hotspot Name="Lever" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="2598.624" Y="1252.79358" />
-            <Radius>135.958984</Radius>
+            <Center X="2940.85767" Y="1468.37219" />
+            <Radius>101.931129</Radius>
           </Shape>
           <OnExamine />
-          <OnGaze>game.ShowUse();</OnGaze>
+          <OnGaze>game.ShowUse();
+game.ShowLook();</OnGaze>
           <OnUse>game.PlaySound("lever");
+game.StopMusic("ambience_outside");
 game.ChangeScene("Laboratory");</OnUse>
+          <OnLook>game.PlaySound("Basket_Lever_Look_Prot_01");</OnLook>
         </Hotspot>
       </Hotspots>
     </Scene>
     <Scene Name="Laboratory">
       <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\laboratory.png</BackgroundImage>
       <BackgroundImageRight />
+      <OnEnter>game.StopMusic("ambience_outside");</OnEnter>
       <Hotspots>
         <Hotspot Name="Father" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="2241.03687" Y="1233.28931" />
-            <Radius>193.469849</Radius>
+            <Center X="2079.35474" Y="1287.18445" />
+            <Radius>107.666267</Radius>
           </Shape>
-          <OnExamine>game.ChangeScene("Outro");</OnExamine>
+          <OnExamine>game.PlaySound("Laboratory_Father_Examine_Prot_01");
+game.ChangeScene("Outro");</OnExamine>
           <OnGaze>game.ShowExamine();</OnGaze>
           <OnUse />
         </Hotspot>
       </Hotspots>
     </Scene>
     <Scene Name="Outro">
-      <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\start.png</BackgroundImage>
+      <BackgroundImage>C:\khaviar\BlocksFromHeaven\Assets\Graphics\outro.png</BackgroundImage>
       <BackgroundImageRight />
+      <OnEnter>game.StopMusic("ascend");
+game.PlayMusic("music_outro");</OnEnter>
       <Hotspots />
     </Scene>
   </Scenes>
@@ -483,7 +738,7 @@ game.ChangeScene("Laboratory");</OnUse>
     </Asset>
     <Asset>
       <Id />
-      <Type>sound</Type>
+      <Type>music</Type>
       <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\ambience_inside.wav</File>
       <Name>ambience_inside</Name>
     </Asset>
@@ -567,13 +822,7 @@ game.ChangeScene("Laboratory");</OnUse>
     </Asset>
     <Asset>
       <Id />
-      <Type>sound</Type>
-      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\help.wav</File>
-      <Name>help</Name>
-    </Asset>
-    <Asset>
-      <Id />
-      <Type>sound</Type>
+      <Type>music</Type>
       <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\ambience_outside.wav</File>
       <Name>ambience_outside</Name>
     </Asset>
@@ -588,12 +837,6 @@ game.ChangeScene("Laboratory");</OnUse>
       <Type>image</Type>
       <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\look_active.png</File>
       <Name>look_active</Name>
-    </Asset>
-    <Asset>
-      <Id />
-      <Type>sound</Type>
-      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\commentary_basket.wav</File>
-      <Name>commentary_basket</Name>
     </Asset>
     <Asset>
       <Id />
@@ -678,6 +921,222 @@ game.ChangeScene("Laboratory");</OnUse>
       <Type>blob</Type>
       <File>C:\khaviar\BlocksFromHeaven\Assets\zorus.kravur</File>
       <Name>zorus18.kravur</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\C1_Prot_01.wav</File>
+      <Name>C1_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\DoorInside_Look_Prot_01.wav</File>
+      <Name>DoorInside_Look_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\DoorInside_Use_Prot_01.wav</File>
+      <Name>DoorInside_Use_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Bell_Look_Prot_01.wav</File>
+      <Name>Bell_Look_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Bell_Use_Prot_01.wav</File>
+      <Name>Bell_Use_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Intercom_Look_Prot_01.wav</File>
+      <Name>Intercom_Look_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Table_Look_Prot_01.wav</File>
+      <Name>Table_Look_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\C1_Airship_Look_Prot_01.wav</File>
+      <Name>C1_Airship_Look_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Intercom_Use_Prot_01.wav</File>
+      <Name>Intercom_Use_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\D_Neutral_Prot_Bertram_01.wav</File>
+      <Name>D_Neutral_Prot_Bertram_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\D_Neutral_Prot_Bertram_02.wav</File>
+      <Name>D_Neutral_Prot_Bertram_02</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\conservatory2_bertram.png</File>
+      <Name>conservatory2_bertram</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\C2_Intercom_Look_Prot_01.wav</File>
+      <Name>C2_Intercom_Look_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Outside_Gondola_Look_Prot_01.wav</File>
+      <Name>Outside_Gondola_Look_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Outside_Entrance_Use_Prot_01.wav</File>
+      <Name>Outside_Entrance_Use_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Outside_Entrance_Look_Prot_01.wav</File>
+      <Name>Outside_Entrance_Look_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Bookshelf_Book_Look_Prot_01.wav</File>
+      <Name>Bookshelf_Book_Look_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Book_Examine_Prot_01.wav</File>
+      <Name>Book_Examine_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Light_Receptacle_Look_Prot_01.wav</File>
+      <Name>Light_Receptacle_Look_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Light_Lever_Use_Prot_02.wav</File>
+      <Name>Light_Lever_Use_Prot_02</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Light_Lever_Use_Prot_01.wav</File>
+      <Name>Light_Lever_Use_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Light_Lever_Look_Prot_01.wav</File>
+      <Name>Light_Lever_Look_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Light_Gems_Look_Prot_01.wav</File>
+      <Name>Light_Gems_Look_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>music</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\ascend.wav</File>
+      <Name>ascend</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>music</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\music_outro.wav</File>
+      <Name>music_outro</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\C2_Intercom_Use_Prot_01.wav</File>
+      <Name>C2_Intercom_Use_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\C1_Bertram_01.wav</File>
+      <Name>C1_Bertram_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\D_Alarmed_Prot_Bertram_01.wav</File>
+      <Name>D_Alarmed_Prot_Bertram_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Intercom_Loudspeaker_Look_Prot_01.wav</File>
+      <Name>Intercom_Loudspeaker_Look_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Intercom_Microphone_Look_Prot_01.wav</File>
+      <Name>Intercom_Microphone_Look_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\D_Father_01.wav</File>
+      <Name>D_Father_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Laboratory_Father_Examine_Prot_01.wav</File>
+      <Name>Laboratory_Father_Examine_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Basket_Lever_Look_Prot_01.wav</File>
+      <Name>Basket_Lever_Look_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\C2_Outside_Use_Prot_01.wav</File>
+      <Name>C2_Outside_Use_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>music</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Father_Help.wav</File>
+      <Name>Father_Help</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>sound</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Intercom_Dial_Look_Prot_01.wav</File>
+      <Name>Intercom_Dial_Look_Prot_01</Name>
     </Asset>
   </Assets>
   <InventoryItems>

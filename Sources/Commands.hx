@@ -3,6 +3,7 @@ package;
 
 
 
+
 import kha.Image;
 import kha.Loader;
 import kha.Music;
@@ -30,6 +31,8 @@ class Commands
 	
 	public static var transition: Transition;
 	
+	private var symbols: Map<ActionType, UIElement>;
+	
 		
 	public function Speak(text: String, soundFile: String): Void {
 		var s: Sound = Loader.the.getSound(soundFile);
@@ -43,23 +46,24 @@ class Commands
 	
 	public function PlayMusic(musicFile: String, ?loop: Bool = false): Void {
 		var m: Music = Loader.the.getMusic(musicFile);
+		m.setVolume(1.0);
 		m.play(loop);
 	}
 	
-	public function FadeOutMusic(musicFile: String): Void {
+	public function FadeOutMusic(musicFile: String, ?duration: Float = 3.0): Void {
 		var m: Music = Loader.the.getMusic(musicFile);
 		var start: Float = Sys.time();
-		var end: Float = start + 1.0;
+		var end: Float = start + duration;
 		
 		
 		var task = function(): Bool { 
-			var v: Float = Sys.time() - start / (end - start);
+			var v: Float = (Sys.time() - start) / (end - start);
 			v = 1.0 - v;
 			if (v <= 0) m.stop();
-			
-			// TODO: Kore does not handle the volume...
+
 			m.setVolume(v);
 		
+			// trace("Volume: " + v);
 			return v > 0;
 		};
 		
@@ -67,12 +71,34 @@ class Commands
 		Scheduler.addBreakableFrameTask(task, 0);
 	}
 	
+	public function FadeInMusic(musicFile:String, ?duration: Float = 3.0) {
+		var m: Music = Loader.the.getMusic(musicFile);
+		m.play();
+		m.setVolume(0);
+		var start: Float = Sys.time();
+		var end: Float = start + duration;
+		
+		
+		var task = function(): Bool { 
+			var v: Float = (Sys.time() - start) / (end - start);
+
+			m.setVolume(v);
+		
+			//trace("Volume: " + v);
+			return v < 1;
+		};
+		
+		
+		Scheduler.addBreakableFrameTask(task, 0);
+		
+	}
+	
 
 	
 	public function ChangeBackground(scene: String, newBG: String) {
 		var s: Scene = game.scenes[scene];
 		var image: Image = Loader.the.getImage(newBG);
-		s.background = image;
+		s.setBackground(image);
 		if (s == game.currentScene) {
 			BlocksFromHeaven.instance.globe.texture = s.background;
 		}
@@ -96,66 +122,47 @@ class Commands
 		BlocksFromHeaven.instance.uiElements.splice(0, BlocksFromHeaven.instance.uiElements.length);
 	}
 	
+	public function EnableHotspotInScene(scene: String, name: String) {
+		game.scenes[scene].hotspots[name].enabled = true;
+	}
+	
+	public function DisableHotspotInScene(scene: String, name: String) {
+		game.scenes[scene].hotspots[name].enabled = false;
+		
+		if (game.currentScene.id == scene)
+			BlocksFromHeaven.instance.uiElements.splice(0, BlocksFromHeaven.instance.uiElements.length);
+		
+	}
+	
+	private function ShowAction(type: ActionType) {
+		var symbol: UIElement = symbols[type];
+		if (type != Exit) {
+			symbol.SetPosition(Hotspot.current.getUILonLat(), 5.0);
+			
+		} else {
+			symbol.SetPosition(Hotspot.current.getUILonLat(), 5.0);
+		}
+		BlocksFromHeaven.instance.uiElements.push(symbol);
+	}
+	
+	
+	
 	public function ShowUse(): Void {
-		trace("Showing the use icon");
-		// Show the "use" icon
-
-		var useSymbol: UIElement = new UIElement();
-		useSymbol.SetPosition(Hotspot.current.getUILonLat(), 5);
-		useSymbol.Offset = new Vector2(0, 1);
-		useSymbol.Texture = Loader.the.getImage("use");
-		useSymbol.InactiveTexture = useSymbol.Texture;
-		useSymbol.ActiveTexture = Loader.the.getImage("use_active");
-		// useSymbol.startAnimating();
-		BlocksFromHeaven.instance.uiElements.push(useSymbol);
-		BlocksFromHeaven.instance.currentAction = ActionType.Use;
+		ShowAction(Use);
 	}
 	
 	
 	public function ShowTalkTo(): Void {
-		trace("Showing the talk to icon");
-		// Show the "use" icon
-		
-		
-		var talkSymbol: UIElement = new UIElement();
-		talkSymbol.SetPosition(Hotspot.current.getUILonLat(), 5);
-		talkSymbol.Offset = new Vector2(1, 0.3);
-		talkSymbol.Texture = Loader.the.getImage("talk");
-		talkSymbol.InactiveTexture = talkSymbol.Texture;
-		talkSymbol.ActiveTexture = Loader.the.getImage("talk_active");
-		// useSymbol.startAnimating();
-		BlocksFromHeaven.instance.uiElements.push(talkSymbol);
-		BlocksFromHeaven.instance.currentAction = ActionType.TalkTo;
+		ShowAction(TalkTo);
 	}
+		
 	
 	public function ShowExamine(): Void {
-		trace("Showing the examine icon");
-		
-		
-		var examineSymbol: UIElement = new UIElement();
-		examineSymbol.SetPosition(Hotspot.current.getUILonLat(), 5);
-		examineSymbol.Offset = new Vector2(1, -1);
-		examineSymbol.Texture = Loader.the.getImage("examine");
-		examineSymbol.InactiveTexture = examineSymbol.Texture;
-		examineSymbol.ActiveTexture = Loader.the.getImage("examine_active");
-		// useSymbol.startAnimating();
-		BlocksFromHeaven.instance.uiElements.push(examineSymbol);
-		BlocksFromHeaven.instance.currentAction = ActionType.Examine;
+		ShowAction(Examine);
 	}
 	
 	public function ShowLook(): Void {
-		trace("Showing the look icon");
-		
-		
-		var lookSymbol: UIElement = new UIElement();
-		lookSymbol.SetPosition(Hotspot.current.getUILonLat(), 5);
-		lookSymbol.Offset = new Vector2(-1, -1);
-		lookSymbol.Texture = Loader.the.getImage("look");
-		lookSymbol.InactiveTexture = lookSymbol.Texture;
-		lookSymbol.ActiveTexture = Loader.the.getImage("look_active");
-		// useSymbol.startAnimating();
-		BlocksFromHeaven.instance.uiElements.push(lookSymbol);
-		BlocksFromHeaven.instance.currentAction = ActionType.Look;
+		ShowAction(Look);
 	}
 	
 	public function Log(s: String): Void {
@@ -163,22 +170,13 @@ class Commands
 	}
 	
 	public function ShowUseInventory(): Void {
-		trace("Showing the use inventory icon");
-		
-		
-		var showInventorySymbol: UIElement = new UIElement();
-		showInventorySymbol.SetPosition(Hotspot.current.getUILonLat(), 5);
-		showInventorySymbol.Offset = new Vector2(-1, 0.3);
-		showInventorySymbol.Texture = Loader.the.getImage("use_inventory");
-		showInventorySymbol.InactiveTexture = showInventorySymbol.Texture;
-		showInventorySymbol.ActiveTexture = Loader.the.getImage("use_inventory_active");
-		// useSymbol.startAnimating();
-		BlocksFromHeaven.instance.uiElements.push(showInventorySymbol);
-		BlocksFromHeaven.instance.currentAction = ActionType.UseInventory;
+		ShowAction(UseInventory);
 	}
 	
 	public function StopMusic(musicFile: String): Void {
 		var m: Music = Loader.the.getMusic(musicFile);
+		// TODO: Does stopping really work?
+		m.setVolume(0.0);
 		m.stop();
 	}
 	
@@ -189,12 +187,16 @@ class Commands
 	
 	// Display the exit icon over the hotspot
 	public function ShowExit(): Void {
-		BlocksFromHeaven.instance.showExit(Hotspot.current);
+		ShowAction(Exit);
 	}
 	
 	
 	public function GetCurrentScene(): String {
 		return game.currentScene.id;
+	}
+	
+	public function IsFirstTime(): Bool {
+		return game.currentScene.visitCount < 2;
 	}
 	
 	public function ChangeScene(scene: String): Void {
@@ -301,6 +303,8 @@ class Commands
 		// TODO: Needs to be more general!
 		BlocksFromHeaven.instance.globe.texture = baseRenderTarget;
 		
+		game.currentScene.background = baseRenderTarget;
+		
 	}
 	
 	
@@ -308,7 +312,81 @@ class Commands
 	
 	public function new() 
 	{
+		symbols = new Map<ActionType, UIElement>();
+		var scale: Float = 0.5;
 		
+		var useSymbol: UIElement = new UIElement();
+		useSymbol.Offset = new Vector2(0, 1);
+		useSymbol.Texture = Loader.the.getImage("use");
+		useSymbol.InactiveTexture = useSymbol.Texture;
+		useSymbol.ActiveTexture = Loader.the.getImage("use_active");
+		useSymbol.Scale = scale;
+		useSymbol.OnClick = function(): Void {
+			Interpreter.the.interpret(Hotspot.current.onUse);
+		}
+		symbols[ActionType.Use] = useSymbol;
+		
+		
+		var talkSymbol: UIElement = new UIElement();
+		talkSymbol.Offset = new Vector2(1, 0.3);
+		talkSymbol.Texture = Loader.the.getImage("talk");
+		talkSymbol.InactiveTexture = talkSymbol.Texture;
+		talkSymbol.ActiveTexture = Loader.the.getImage("talk_active");
+		talkSymbol.Scale = scale;
+		talkSymbol.OnClick = function(): Void {
+			Interpreter.the.interpret(Hotspot.current.onTalkTo);
+		}
+		symbols[ActionType.TalkTo] = talkSymbol;
+		
+		var examineSymbol: UIElement = new UIElement();
+		examineSymbol.Offset = new Vector2(1, -1);
+		examineSymbol.Texture = Loader.the.getImage("examine");
+		examineSymbol.InactiveTexture = examineSymbol.Texture;
+		examineSymbol.ActiveTexture = Loader.the.getImage("examine_active");
+		examineSymbol.Scale = scale;
+		examineSymbol.OnClick = function(): Void {
+			Interpreter.the.interpret(Hotspot.current.onExamine);
+		}
+		symbols[ActionType.Examine] = examineSymbol;
+		
+		
+		var showInventorySymbol: UIElement = new UIElement();
+		showInventorySymbol.Offset = new Vector2(-1, 0.3);
+		showInventorySymbol.Texture = Loader.the.getImage("use_inventory");
+		showInventorySymbol.InactiveTexture = showInventorySymbol.Texture;
+		showInventorySymbol.ActiveTexture = Loader.the.getImage("use_inventory_active");
+		showInventorySymbol.Scale = scale;
+		showInventorySymbol.OnClick = function(): Void {
+			BlocksFromHeaven.instance.showInventory(InventoryType.Use);
+			
+		}
+		symbols[ActionType.UseInventory] = showInventorySymbol;
+		
+		
+		var lookSymbol: UIElement = new UIElement();
+		lookSymbol.Offset = new Vector2(-1, -1);
+		lookSymbol.Texture = Loader.the.getImage("look");
+		lookSymbol.InactiveTexture = lookSymbol.Texture;
+		lookSymbol.ActiveTexture = Loader.the.getImage("look_active");
+		lookSymbol.Scale = scale;
+		lookSymbol.OnClick = function(): Void {
+			Interpreter.the.interpret(Hotspot.current.onLook);
+		}
+		symbols[ActionType.Look] = lookSymbol;
+		
+		
+		var exitSymbol:UIElement = new UIElement();
+		exitSymbol.Offset = new Vector2(0, 0);
+		exitSymbol.Texture = Loader.the.getImage("arrow_forward");
+		exitSymbol.ActiveTexture = Loader.the.getImage("arrow_forward_active");
+		exitSymbol.InactiveTexture = Loader.the.getImage("arrow_forward");
+		exitSymbol.Scale = 1.0;
+		exitSymbol.OnClick = function(): Void {
+			Interpreter.the.interpret(Hotspot.current.onUse);
+		}
+		exitSymbol.startAnimating();
+		exitSymbol.isExit = true;
+		symbols[ActionType.Exit] = exitSymbol;
 	}
 	
 }

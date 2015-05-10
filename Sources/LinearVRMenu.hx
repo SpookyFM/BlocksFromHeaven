@@ -45,7 +45,7 @@ class LinearVRMenu
 	}
 	
 	private function ArrangeItems() {
-		var itemWidth: Float = Math.PI * 2.0 / 20;
+		var itemWidth: Float = Math.PI * 2.0 / 20 * 1.3;
 		var allItemsWidth: Float = itemWidth * MenuItems.length;
 		var index: Int = 0;
 		for (item in MenuItems) {
@@ -69,6 +69,13 @@ class LinearVRMenu
 			} else {
 				uiElement.Texture = uiElement.InactiveTexture;
 			} 
+		}
+		if (ActiveElement != null) {
+			BlocksFromHeaven.instance.gazeActive = true;
+			BlocksFromHeaven.instance.gazeCursor.active = 1.0;
+		} else {
+			BlocksFromHeaven.instance.gazeActive = false;
+			BlocksFromHeaven.instance.gazeCursor.active = 0.0;
 		}
 	}
 	

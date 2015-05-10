@@ -10,4 +10,5 @@ enum ActionType {
 	Examine;
 	Look;
 	UseInventory;
+	Exit;
 }

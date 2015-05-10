@@ -80,6 +80,7 @@ class Transition
 				}
 				
 				game.currentScene = endScene;
+				game.currentScene.visitCount += 1;
 				Interpreter.the.interpret(game.currentScene.onEnter);
 				
 				startSceneLeft = true;

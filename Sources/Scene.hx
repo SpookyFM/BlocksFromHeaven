@@ -25,6 +25,8 @@ class Scene
 	
 	public var onLeave: String;
 	
+	public var visitCount: Int = 0;
+	
 	public var hotspots: Map<String, Hotspot>;
 	
 	public function new() 

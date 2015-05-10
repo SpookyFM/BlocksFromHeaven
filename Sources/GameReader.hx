@@ -56,6 +56,8 @@ class GameReader
 		var enabled: String = hotspotElement.att.IsEnabled;
 		if (enabled.toLowerCase() == "true") {
 			hotspot.enabled = true;
+		} else {
+			hotspot.enabled = false;
 		}
 		trace("Parse hotspot:" + hotspot.id);
 		
@@ -141,6 +143,7 @@ class GameReader
 		
 		// Bring the game into the started state
 		game.currentScene = game.startScene;
+		game.currentScene.visitCount = 1;
 		
 		return game;
 	}

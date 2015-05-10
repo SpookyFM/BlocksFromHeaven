@@ -26,6 +26,8 @@ class UIElement extends MeshBase
 	
 	public var Offset: Vector2;
 	
+	public var Scale: Float = 1;
+	
 	
 	public var Texture: Image;
 	
@@ -34,6 +36,8 @@ class UIElement extends MeshBase
 	public var InactiveTexture: Image;
 	
 	public var quad: Quad;
+	
+	
 	
 	// Set the position of the Mesh to be infront of the specified location in the background image
 	// viewPosition is the position in the image
@@ -182,9 +186,10 @@ class UIElement extends MeshBase
 		// Now move it into the screen the specified distance
 		var matT: Matrix4 = Matrix4.translation(0, 0, -Distance);
 		
+		var mScale = Matrix4.scale(Scale, Scale, Scale);
 		
 		
-		m = trans.multmat(mOffset.multmat(rot.multmat(matT)));
+		m = trans.multmat(mOffset.multmat(mScale.multmat(rot.multmat(matT))));
 	}
 	
 	public function updateUse() {
@@ -194,7 +199,9 @@ class UIElement extends MeshBase
 		
 		var mOffset: Matrix4 = Matrix4.translation(Offset.x, Offset.y, 0);
 		
-		m = m.multmat(mOffset);
+		var mScale: Matrix4 = Matrix4.scale(Scale, Scale, Scale);
+		
+		m = mScale.multmat(m.multmat(mOffset));
 	}
 	
 	

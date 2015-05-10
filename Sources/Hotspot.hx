@@ -41,6 +41,7 @@ class Hotspot
 	
 	public var enabled: Bool;
 	
+	
 	private function isInsideCircle(c: Vector2, r: Float, v: Vector2): Bool {
 		return ( v.sub(c).length < r);
 	}
@@ -82,7 +83,9 @@ class Hotspot
 			// Might be below the bottom
 			adjust.y = image.height;
 		} 
-		if (isOverNoBounds(vInImage.sub(adjust))) return true;
+		if (isOverNoBounds(vInImage.sub(adjust))) {
+			return true;
+		}
 		return false;
 	}
 	
@@ -107,7 +110,6 @@ class Hotspot
 				GazeStartTime = Sys.time();
 				IsGazeOver = true;
 				BlocksFromHeaven.instance.gazeActive = true;
-				current = this;
 			} else {
 				if (!GazeExecuted) {
 					var duration: Float = Sys.time() - GazeStartTime;
@@ -122,6 +124,7 @@ class Hotspot
 						// After one second, call our gaze function
 						GazeExecuted = true;
 						BlocksFromHeaven.instance.clearUI();
+						current = this;
 						Interpreter.the.interpret(onGaze);
 					}
 				}
@@ -139,8 +142,8 @@ class Hotspot
 			var duration: Float = Sys.time() - GazeLostTime;
 			if (duration > 0.5) {
 				if (!GazeLostExecuted) {
-					trace("Gaze lost - removing ui elements");
-					BlocksFromHeaven.instance.clearUI();
+					// trace("Gaze lost - removing ui elements");
+					// BlocksFromHeaven.instance.clearUI();
 					GazeLostExecuted = true;
 				}
 			}

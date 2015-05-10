@@ -107,7 +107,6 @@ class BlocksFromHeaven extends Game {
 	override public function init(): Void {
 		instance = this;
 		Configuration.setScreen(new LoadingScreen());
-		Interpreter.init();
 		uiElements = new Array<UIElement>();
 		Loader.the.loadRoom("blocks", loadingFinished);
 		Mouse.get(0).notify(mouseDownEvent, mouseUpEvent, null, null);
@@ -116,25 +115,7 @@ class BlocksFromHeaven extends Game {
 		
 	}
 	
-	// Show an exit symbol over the specified exit
-	public function showExit(hotspot: Hotspot) {
-		trace("Showing an exit");
-		// TODO: Quick hack 
-		uiElements.splice(0, uiElements.length);
-		
-		
-		var exitSymbol: UIElement = new UIElement();
-		exitSymbol.SetPosition(hotspot.getUILonLat(), 5);
-		exitSymbol.Offset = new Vector2(0, 0);
-		exitSymbol.Texture = Loader.the.getImage("arrow_forward");
-		exitSymbol.ActiveTexture = Loader.the.getImage("arrow_forward_active");
-		exitSymbol.InactiveTexture = Loader.the.getImage("arrow_forward");
-		
-		exitSymbol.startAnimating();
-		exitSymbol.isExit = true;
-		uiElements.push(exitSymbol);
-		currentAction = ActionType.Use;
-	}
+	
 	
 	
 	public function showInventory(type: InventoryType) {
@@ -168,6 +149,9 @@ class BlocksFromHeaven extends Game {
 			uiElement.InactiveTexture = item.image;
 			uiElement.ActiveTexture = item.activeImage;
 			uiElement.Texture = uiElement.InactiveTexture;
+			uiElement.isExit = false;
+			uiElement.Offset = new Vector2(0, 0);
+			uiElement.Scale = 0.7;
 			
 			var onClick: Void -> Void;
 			if (type == InventoryType.Examine) {
@@ -204,6 +188,7 @@ class BlocksFromHeaven extends Game {
 	
 	private function loadingFinished(): Void {
 		Configuration.setScreen(this);
+		Interpreter.init();
 
 		
 		
@@ -435,20 +420,18 @@ class BlocksFromHeaven extends Game {
 			}
 		} 
 		
+		var ray: Ray = getCameraRay(getViewMatrix(state));
 		
 		if (keypress) {
 			if (!inventoryActive) {
-				if (gazeActive) {
-					if (currentAction == ActionType.Use) {
-						Interpreter.the.interpret(Hotspot.current.onUse);
-					} else if (currentAction == ActionType.TalkTo) {
-						Interpreter.the.interpret(Hotspot.current.onTalkTo);
-					} else if (currentAction == ActionType.Examine) {
-						Interpreter.the.interpret(Hotspot.current.onExamine);
-					} else if (currentAction == ActionType.Look) {
-						Interpreter.the.interpret(Hotspot.current.onLook);
-					} else if (currentAction == ActionType.UseInventory) {
-						showInventory(InventoryType.Use);
+				for (uiElement in uiElements) {
+					if (ray.intersects(uiElement.quad)) {
+						uiElement.OnClick();
+					}
+					if (uiElement.isExit) {
+						if (Hotspot.current.IsGazeOver) {
+							uiElement.OnClick();
+						}
 					}
 				}
 			} else {
@@ -485,12 +468,22 @@ class BlocksFromHeaven extends Game {
 				// Render the GUI element
 				uiElement.render(curImage.g4, vp);
 				
-				var ray: Ray = getCameraRay(getViewMatrix(state));
+				
 				if (ray.intersects(uiElement.quad)) {
 					uiElement.Texture = uiElement.ActiveTexture;
+					gazeActive = true;
+					gazeCursor.active = 1.0;
 				} else {
 					uiElement.Texture = uiElement.InactiveTexture;
 				} 
+				
+				if (uiElement.isExit) {
+					// The exit should be active as long as the cursor is over the hotspot (anywhere)
+					if (Hotspot.current.IsGazeOver) {
+						uiElement.Texture = uiElement.ActiveTexture;
+					}
+					
+				}
 			
 				
 			}
