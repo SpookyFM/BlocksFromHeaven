@@ -102,9 +102,11 @@ class BlocksFromHeaven extends Game {
 	
 	public function new() {
 		super("BlocksFromHeaven", false);
+		trace("SteamQuest new");
 	}
 	
 	override public function init(): Void {
+		trace("Steamquest init");
 		instance = this;
 		Configuration.setScreen(new LoadingScreen());
 		uiElements = new Array<UIElement>();
@@ -187,6 +189,7 @@ class BlocksFromHeaven extends Game {
 	
 	
 	private function loadingFinished(): Void {
+		trace("Start of loading finished");
 		Configuration.setScreen(this);
 		Interpreter.init();
 
@@ -254,6 +257,8 @@ class BlocksFromHeaven extends Game {
 		
 		
 		f = Loader.the.loadFont("zorus", FontStyle.Default, 18.0);
+		
+		trace("Loading finished");
 	}
 	
 	private function nextImage(): Image {
