@@ -97,11 +97,15 @@ class Commands
 	
 	public function ChangeBackground(scene: String, newBG: String) {
 		var s: Scene = game.scenes[scene];
-		var image: Image = Loader.the.getImage(newBG);
+		
+		// TODO: Implement new
+		/* var image: Image = Loader.the.getImage(newBG);
 		s.setBackground(image);
 		if (s == game.currentScene) {
 			BlocksFromHeaven.instance.globe.texture = s.background;
-		}
+			s.updateBlurredBackground();
+			BlocksFromHeaven.instance.globe.blurredTexture = s.blurredBackground;
+		} */
 	}
 	
 	public function ChangeBackgroundFade(newBG: String) {
@@ -300,11 +304,15 @@ class Commands
 		baseRenderTarget.g4.end(); 
 		
 		
-		// TODO: Needs to be more general!
-		BlocksFromHeaven.instance.globe.texture = baseRenderTarget;
-		
-		game.currentScene.background = baseRenderTarget;
-		
+		// Check if we changed the current background image
+		// TODO: Re-implement with new system ImageHolder 
+		/* var currentBG: Image = game.currentScene.background;
+		if (currentBG == baseImage) {
+			BlocksFromHeaven.instance.globe.texture = baseRenderTarget;
+			game.currentScene.background = baseRenderTarget;
+			game.currentScene.updateBlurredBackground();
+			BlocksFromHeaven.instance.globe.blurredTexture = game.currentScene.blurredBackground;	
+		} */
 	}
 	
 	

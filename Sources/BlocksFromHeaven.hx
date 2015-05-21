@@ -61,7 +61,7 @@ class BlocksFromHeaven extends Game {
 	
 	private var images: Vector<Image>;
 	private var imagesR: Vector<Image>;
-	private var numImages: Int = 4;
+	private var numImages: Int = 3;
 	private var currentImage: Int = 0;
 	private var currentImageR: Int = 0;
 	
@@ -120,20 +120,17 @@ class BlocksFromHeaven extends Game {
 	
 	
 	
+	
+	
+	
+	
 	public function showInventory(type: InventoryType) {
 		// Disable the hotspots
 		inventoryActive = true;
 		inventoryType = type;
 		
 		
-		var filter: BlurFilter = new BlurFilter();
-		filter.texture = game.currentScene.background;
-		var image: Image = Image.createRenderTarget(game.currentScene.background.width, game.currentScene.background.height, TextureFormat.RGBA32);
-		image.g4.begin();
-		filter.render(image.g4);
-		image.g4.end();
-		globe.blurredTexture = image;
-		game.currentScene.blurredBackground = image;
+		globe.blurredTexture = game.currentScene.blurredBackground;
 		
 		
 		// Blur the background
@@ -195,8 +192,8 @@ class BlocksFromHeaven extends Game {
 
 		
 		
-		images = new Vector<Image>(4);
-		imagesR = new Vector<Image>(4);
+		images = new Vector<Image>(3);
+		imagesR = new Vector<Image>(3);
 		for (i in 0...numImages) {
 			var w: Int = 1024;
 			var h: Int = 1024;
@@ -232,9 +229,6 @@ class BlocksFromHeaven extends Game {
 		//game = new TestGame();
 		
 		globe = new GlobeMesh(1, 1);
-		globe.texture = game.startScene.background;
-		globe.blurredTexture = game.startScene.blurredBackground;
-		
 		
 		
 		transition = new Transition();
@@ -251,15 +245,25 @@ class BlocksFromHeaven extends Game {
 	
 		
 		
-		Interpreter.the.interpret(game.startScene.onEnter);
-		
 		vignette = new VignetteMesh(0.01);
 		
 		
 		f = Loader.the.loadFont("zorus", FontStyle.Default, 18.0);
 		
 		trace("Loading finished");
+		
+		game.startScene.enter(loadFirstBGFinished);
+		
 	}
+	
+	
+	public function loadFirstBGFinished() {
+		globe.texture = game.startScene.background.image;
+		globe.blurredTexture = game.startScene.blurredBackground;
+		
+		Interpreter.the.interpret(game.startScene.onEnter);
+	}
+	
 	
 	private function nextImage(): Image {
 		currentImage++;
@@ -413,7 +417,7 @@ class BlocksFromHeaven extends Game {
 		prev = now;
 		
 		var clampedPrediction = Math.min(0.1, rawDelta * 2.0);
-		var state: SensorState = VrInterface.instance.GetPredictedSensorState(now + clampedPrediction);
+		var state: SensorState = VrInterface.instance.GetPredictedSensorState(0.0);
 	
 		
 		var imageLocation: Vector2 = getViewCenter(state.Predicted.Pose.Orientation);
@@ -531,6 +535,8 @@ class BlocksFromHeaven extends Game {
 		rightTimeWarpImage.Pose = state.Predicted;
 		
 		
+		
+		
 		parms.LeftImage = leftTimeWarpImage;
 		parms.RightImage = rightTimeWarpImage;
 		
@@ -575,19 +581,26 @@ class BlocksFromHeaven extends Game {
 	private var lastMouseDown: Float;
 	
 	public function mouseUpEvent(button: Int, x: Int, y: Int): Void {
+		#if VR_GEAR_VR
 		var duration: Float = Sys.time() - lastMouseDown;
 		// TODO: Quick hack since the mapping of GearVR's second button doesn't seem to work
-		/* if (duration > 1) {
-			// Switch between blurred and unblurred
-			if (blurredBackground) {
-				globe.startAnimating(1, 1);
+		if (duration > 1) {
+			if (!inventoryActive)   {
+				if (!inventoryExamineActive) {
+					showInventory(InventoryType.Examine);
+				}
 			} else {
-				globe.startAnimating(-1, 1);
+				hideInventory();
 			}
-			blurredBackground = !blurredBackground;
-		} else { */
-		#if ANDROID
+		} else {
+			trace("Keypress");
 			keypress = true;
+		}
+		#end
+		#if ANDROID
+			#if VR_CARDBOARD
+				keypress = true;
+			#end
 		#end
 		// }
 	}

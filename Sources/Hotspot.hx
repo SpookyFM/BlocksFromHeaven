@@ -9,7 +9,7 @@ import kha.math.Vector2;
 class Hotspot
 {
 
-	public var image: Image;
+	public var image: ImageHolder;
 	
 	// The center is defined in uv coordinates of the image
 	public var center: Vector2;
@@ -42,12 +42,13 @@ class Hotspot
 	public var enabled: Bool;
 	
 	
+	
 	private function isInsideCircle(c: Vector2, r: Float, v: Vector2): Bool {
 		return ( v.sub(c).length < r);
 	}
 	
 	private function getCoordsInImage(v: Vector2): Vector2 {
-		return new Vector2(v.x * image.width, v.y * image.height);
+		return new Vector2(v.x * image.image.width, v.y * image.image.height);
 	}
 	
 	// TODO: Re-implement using properties
@@ -63,7 +64,7 @@ class Hotspot
 		
 		vInImage = getCoordsInImage(v);
 		centerInImage = getCoordsInImage(center);
-		rInImage = radius * image.width;
+		rInImage = radius * image.image.width;
 		
 		if (isInsideCircle(centerInImage, rInImage, vInImage)) return true;
 		
@@ -72,16 +73,16 @@ class Hotspot
 		var adjust: Vector2 = new Vector2();
 		if (vInImage.x - rInImage < 0) {
 			// Might be ovInImageer the left side
-			adjust.x = -image.width;
-		} else if (vInImage.x + rInImage > image.width)
+			adjust.x = -image.image.width;
+		} else if (vInImage.x + rInImage > image.image.width)
 			// Might be ovInImageer the right side
-			adjust.x = image.width;
+			adjust.x = image.image.width;
 		if (vInImage.y - rInImage < 0) {
 			// Might be ovInImageer the top
-			adjust.y = -image.height;
-		} else if (vInImage.y + rInImage > image.height) {
+			adjust.y = -image.image.height;
+		} else if (vInImage.y + rInImage > image.image.height) {
 			// Might be below the bottom
-			adjust.y = image.height;
+			adjust.y = image.image.height;
 		} 
 		if (isOverNoBounds(vInImage.sub(adjust))) {
 			return true;

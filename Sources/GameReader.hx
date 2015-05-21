@@ -86,7 +86,7 @@ class GameReader
 	private function ParseScene(sceneElement: Fast): Scene {
 		var scene: Scene = new Scene();
 		scene.id = sceneElement.att.Name;
-		scene.background = Loader.the.getImage(sceneElement.node.BackgroundImage.innerData);
+		scene.background.name = sceneElement.node.BackgroundImage.innerData;
 		if (sceneElement.hasNode.OnEnter)
 			scene.onEnter = GetString(sceneElement.node.OnEnter);
 		

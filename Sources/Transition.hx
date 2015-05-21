@@ -45,21 +45,33 @@ class Transition
 		
 		finished = false;
 		active = true;
+		loadingFinished = false;
+		
+		endScene.enter(function() { loadingFinished = true; } );
+		
+		
+		
+		// Start loading new textures here
+		
 	}
 	
-	
+	private var loadingFinished: Bool;
 	
 	public function update() {
 		if (!active) return;
 		if (!startSceneLeft) {
 			// We are waiting for the fade to finish
 			if (fade.isFinished()) {
+				// Unload the old images
+				startScene.leave();	
+				
+				
 				// Switch out the image
-				globe.texture = endScene.background;
+				globe.texture = endScene.background.image;
 				globe.blurredTexture = endScene.blurredBackground;
 				
 				if (toExamine) {
-					globe.blurredTexture = endScene.background;
+					globe.blurredTexture = endScene.background.image;
 				}
 				
 				// Start a new fade in
@@ -81,7 +93,12 @@ class Transition
 				
 				game.currentScene = endScene;
 				game.currentScene.visitCount += 1;
+				
+				
+				
 				Interpreter.the.interpret(game.currentScene.onEnter);
+				
+				
 				
 				startSceneLeft = true;
 			}

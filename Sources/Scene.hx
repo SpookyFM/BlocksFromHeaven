@@ -9,15 +9,40 @@ import kha.Image;
 class Scene
 {
 
-	public var background: Image;
+		
+	public var background: ImageHolder;
 	
 	public var blurredBackground: Image;
 	
-	public function setBackground(image: Image) {
+	private function setBackground(name: String) {
 		// Blur the image and save the result
-		background = image;
-		blurredBackground = Blur.BlurImage(background, TextureFormat.RGBA32);
+		background.name = name;
+		blurredBackground = null;
 	}
+	
+	// TODO: How to ensure that this is not called when the image is not loaded?
+	public function updateBlurredBackground() {
+		if (blurredBackground != null) {
+			blurredBackground.unload();
+			blurredBackground = null;
+		}
+		blurredBackground = Blur.BlurImage(background.image, TextureFormat.RGBA32);
+	}
+	
+	
+	
+	// Call will be called when the scene is ready
+	public function enter(call: Void -> Void) {
+		background.load(function() { updateBlurredBackground(); call(); } );
+	}
+	
+	public function leave() {
+		if (blurredBackground != null)
+			blurredBackground.unload();
+		blurredBackground = null;
+		background.unload();
+	}
+	
 	
 	public var id: String;
 	
@@ -32,6 +57,7 @@ class Scene
 	public function new() 
 	{
 		hotspots = new Map<String, Hotspot>();
+		background = new ImageHolder();
 		
 	}
 	
