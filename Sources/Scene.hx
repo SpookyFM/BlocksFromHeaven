@@ -14,19 +14,16 @@ class Scene
 	
 	public var blurredBackground: Image;
 	
-	private function setBackground(name: String) {
-		// Blur the image and save the result
-		background.name = name;
-		blurredBackground = null;
-	}
+	
 	
 	// TODO: How to ensure that this is not called when the image is not loaded?
 	public function updateBlurredBackground() {
-		if (blurredBackground != null) {
-			blurredBackground.unload();
-			blurredBackground = null;
-		}
+		var oldBlur = blurredBackground;
+		trace("Blurring: " + background.image);
 		blurredBackground = Blur.BlurImage(background.image, TextureFormat.RGBA32);
+		if (oldBlur != null) {
+			oldBlur.unload();
+		}
 	}
 	
 	

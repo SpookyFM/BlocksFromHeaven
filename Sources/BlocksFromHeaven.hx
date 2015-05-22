@@ -108,12 +108,14 @@ class BlocksFromHeaven extends Game {
 	override public function init(): Void {
 		trace("Steamquest init");
 		instance = this;
+		ImageHolder.initStatic();
 		Configuration.setScreen(new LoadingScreen());
 		uiElements = new Array<UIElement>();
 		Loader.the.loadRoom("blocks", loadingFinished);
 		Mouse.get(0).notify(mouseDownEvent, mouseUpEvent, null, null);
 		inventoryMenu = new LinearVRMenu();
 		inventoryMenu.Center = new Vector2(0, 0);
+		
 		
 	}
 	

@@ -13,7 +13,7 @@ game.SetVariable("basket_down", false);
     <Hotspots>
       <Hotspot Name="Play" IsEnabled="true">
         <Shape xsi:type="CircleShape">
-          <Center X="2072.8" Y="989.052063" />
+          <Center X="2072.799" Y="989.052" />
           <Radius>68.18638</Radius>
         </Shape>
         <OnExamine />
@@ -37,7 +37,7 @@ game.SetVariable("basket_down", false);
       <Hotspots>
         <Hotspot Name="Play" IsEnabled="true">
           <Shape xsi:type="CircleShape">
-            <Center X="2072.8" Y="989.052063" />
+            <Center X="2072.799" Y="989.052" />
             <Radius>68.18638</Radius>
           </Shape>
           <OnExamine />

@@ -87,6 +87,9 @@ class GameReader
 		var scene: Scene = new Scene();
 		scene.id = sceneElement.att.Name;
 		scene.background.name = sceneElement.node.BackgroundImage.innerData;
+		scene.background.register();
+		
+		
 		if (sceneElement.hasNode.OnEnter)
 			scene.onEnter = GetString(sceneElement.node.OnEnter);
 		

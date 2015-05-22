@@ -2,6 +2,7 @@ package;
 
 
 
+
 import kha.Image;
 import kha.Loader;
 import kha.loader.Room;
@@ -22,6 +23,36 @@ class ImageHolder
 	
 	private var room: Room;
 	
+	private static var allImages: Map<String, ImageHolder>;
+	
+	public function exchangeImage(i: Image): Void {
+		image.unload();
+		image = i;
+	}
+	
+	
+	public static function getHolder(s: String): ImageHolder {
+		var i: ImageHolder = allImages.get(s);
+		// Check if we have already loaded this image before
+		if (i == null) {
+			// Create one
+			i = new ImageHolder();
+			i.name = s;
+			i.register();
+		} 
+		return i;
+	}
+	
+	public static function initStatic(): Void {
+		allImages = new Map<String, ImageHolder>();
+	}
+	
+	
+	public function register(): Void {
+		allImages.set(name, this);
+	}
+	
+	
 	public function setDirty(): Void {
 		isDirty = true;
 	}
@@ -39,8 +70,9 @@ class ImageHolder
 	}
 	
 	public function unload(): Void {
+		if (image != null)
 		if (!isDirty) {
-			image.unload();
+			Loader.the.unloadedImage(name);
 			image = null;
 		}
 	}

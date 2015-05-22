@@ -98,14 +98,28 @@ class Commands
 	public function ChangeBackground(scene: String, newBG: String) {
 		var s: Scene = game.scenes[scene];
 		
-		// TODO: Implement new
-		/* var image: Image = Loader.the.getImage(newBG);
-		s.setBackground(image);
+		var image: ImageHolder = ImageHolder.getHolder(newBG);
+		
 		if (s == game.currentScene) {
-			BlocksFromHeaven.instance.globe.texture = s.background;
-			s.updateBlurredBackground();
-			BlocksFromHeaven.instance.globe.blurredTexture = s.blurredBackground;
-		} */
+			// Load the new image and use it to change the BG
+			image.load(function() {
+				trace("Load changed bg finished.");
+					BlocksFromHeaven.instance.globe.texture = image.image;
+					s.background.unload();
+					s.background = image;
+					
+					s.updateBlurredBackground();
+					BlocksFromHeaven.instance.globe.blurredTexture = s.blurredBackground;
+			});
+		} else {
+			s.background = image;
+		}
+		
+		for (hotspot in s.hotspots) {
+			hotspot.image = s.background;
+		}
+
+		
 	}
 	
 	public function ChangeBackgroundFade(newBG: String) {
@@ -281,11 +295,23 @@ class Commands
 	public function DrawSubImage(base: String, top: String, x: Float, y: Float, w: Float, h: Float) {
 		
 		
+		// Since by default, images are not saved as render targets we need to:
+		// Copy the old base into a new image
+		// Unload the old texture
+		// Mark the holder as dirty
+		// Replace the image
+		// Load the image to draw from
+		// Do the drawing
+		// Unload the image we drew from
 		
-		// var baseImage: Image = Loader.the.getImage(base);
-		var baseImage: Image = BlocksFromHeaven.instance.globe.texture;
-		var topImage: Image = Loader.the.getImage(top);
+		var baseHolder: ImageHolder = ImageHolder.getHolder(base);
+		var topHolder = ImageHolder.getHolder(top);
 		
+		// TODO: We are assuming that the image is currently loaded
+		var baseImage: Image = baseHolder.image;
+		
+		
+		// Copy the image to a render target
 		var baseRenderTarget: Image = Image.createRenderTarget(4096, 2048, TextureFormat.RGBA32);
 		var drawer2: SubImageDrawer = new SubImageDrawer(0, 0, 4096, 2048);
 		drawer2.imageToDraw = baseImage;
@@ -294,25 +320,35 @@ class Commands
 		drawer2.render(baseRenderTarget.g4);
 		baseRenderTarget.g4.end();
 		
-		
-		var drawer: SubImageDrawer = new SubImageDrawer(x, y, w, h);
-		
-		
-		drawer.imageToDraw = topImage;
-		baseRenderTarget.g4.begin();
-		drawer.render(baseRenderTarget.g4);
-		baseRenderTarget.g4.end(); 
+		// Exchange it in the image holder and mark dirty
+		baseHolder.exchangeImage(baseRenderTarget);
+		baseHolder.setDirty();
 		
 		
-		// Check if we changed the current background image
-		// TODO: Re-implement with new system ImageHolder 
-		/* var currentBG: Image = game.currentScene.background;
-		if (currentBG == baseImage) {
-			BlocksFromHeaven.instance.globe.texture = baseRenderTarget;
-			game.currentScene.background = baseRenderTarget;
-			game.currentScene.updateBlurredBackground();
-			BlocksFromHeaven.instance.globe.blurredTexture = game.currentScene.blurredBackground;	
-		} */
+		
+		topHolder.load(function() {
+			var topImage: Image = topHolder.image;
+			var drawer: SubImageDrawer = new SubImageDrawer(x, y, w, h);
+		
+		
+			drawer.imageToDraw = topImage;
+			baseRenderTarget.g4.begin();
+			drawer.render(baseRenderTarget.g4);
+			baseRenderTarget.g4.end(); 
+		
+		
+			// Check if we changed the current background image
+		
+			var currentBG: String = game.currentScene.background.name;
+			if (currentBG == baseHolder.name) {
+				BlocksFromHeaven.instance.globe.texture = baseRenderTarget;
+				game.currentScene.background.exchangeImage(baseRenderTarget);
+				game.currentScene.updateBlurredBackground();
+				BlocksFromHeaven.instance.globe.blurredTexture = game.currentScene.blurredBackground;	
+			}
+			// Unload the top image
+			topHolder.unload();
+		});
 	}
 	
 	

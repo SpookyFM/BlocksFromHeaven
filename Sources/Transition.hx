@@ -45,17 +45,13 @@ class Transition
 		
 		finished = false;
 		active = true;
-		loadingFinished = false;
-		
-		endScene.enter(function() { loadingFinished = true; } );
-		
 		
 		
 		// Start loading new textures here
 		
 	}
 	
-	private var loadingFinished: Bool;
+	
 	
 	public function update() {
 		if (!active) return;
@@ -66,41 +62,46 @@ class Transition
 				startScene.leave();	
 				
 				
-				// Switch out the image
-				globe.texture = endScene.background.image;
-				globe.blurredTexture = endScene.blurredBackground;
-				
-				if (toExamine) {
-					globe.blurredTexture = endScene.background.image;
-				}
-				
-				// Start a new fade in
-				var startColor: Color = fadeColor;
-				startColor.A = 0;
-				fade.fade(startColor, fadeColor, fadeDuration);
-				
-				// Remove all UI elements
-				BlocksFromHeaven.instance.uiElements.splice(0, BlocksFromHeaven.instance.uiElements.length); 
-				
-				// Reset the active hotspot
-				Hotspot.current = null;
-				BlocksFromHeaven.instance.gazeActive = false;
-				
-				if (!toExamine || !fromExamine) {
-					// Execute the two commands
-					Interpreter.the.interpret(game.currentScene.onLeave);
-				}
-				
-				game.currentScene = endScene;
-				game.currentScene.visitCount += 1;
-				
-				
-				
-				Interpreter.the.interpret(game.currentScene.onEnter);
-				
-				
-				
-				startSceneLeft = true;
+				endScene.enter(function() { 
+					// Switch out the image
+					globe.texture = endScene.background.image;
+					globe.blurredTexture = endScene.blurredBackground;
+					
+					if (toExamine) {
+						globe.blurredTexture = endScene.background.image;
+					}
+					
+					// Start a new fade in
+					var startColor: Color = fadeColor;
+					startColor.A = 0;
+					fade.fade(startColor, fadeColor, fadeDuration);
+					
+					// Remove all UI elements
+					BlocksFromHeaven.instance.uiElements.splice(0, BlocksFromHeaven.instance.uiElements.length); 
+					
+					// Reset the active hotspot
+					Hotspot.current = null;
+					BlocksFromHeaven.instance.gazeActive = false;
+					
+					if (!toExamine || !fromExamine) {
+						// Execute the two commands
+						Interpreter.the.interpret(game.currentScene.onLeave);
+					}
+					
+					game.currentScene = endScene;
+					game.currentScene.visitCount += 1;
+					
+					
+					
+					Interpreter.the.interpret(game.currentScene.onEnter);
+					
+					
+					
+					startSceneLeft = true;
+					
+					
+					
+				} );
 			}
 		} else {
 			// We are waiting for the second fade
