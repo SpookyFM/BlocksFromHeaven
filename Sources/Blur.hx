@@ -28,6 +28,22 @@ class Blur
 	}
 	
 	
+	public static function BlurInPlace(target: Image, image: Image, textureFormat: TextureFormat) {
+		var blur: BlurFilter = new BlurFilter();
+		
+		var blurred: Image = target;
+		
+		blurred.g4.begin();
+		
+		blur.texture = image;
+		
+		blur.render(blurred.g4);
+		
+		blurred.g4.end();
+		
+		return blurred;
+	}
+	
 	public function new() 
 	{
 		

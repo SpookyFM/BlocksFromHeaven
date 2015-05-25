@@ -1043,7 +1043,7 @@ game.PlayMusic("music_outro");</OnEnter>
       <Id />
       <Type>image</Type>
       <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\conservatory2_bertram.png</File>
-      <OwnRoom>false</OwnRoom>
+      <OwnRoom>true</OwnRoom>
       <Name>conservatory2_bertram</Name>
     </Asset>
     <Asset>

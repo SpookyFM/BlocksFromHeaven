@@ -18,12 +18,9 @@ class Scene
 	
 	// TODO: How to ensure that this is not called when the image is not loaded?
 	public function updateBlurredBackground() {
-		var oldBlur = blurredBackground;
 		trace("Blurring: " + background.image);
-		blurredBackground = Blur.BlurImage(background.image, TextureFormat.RGBA32);
-		if (oldBlur != null) {
-			oldBlur.unload();
-		}
+		Blur.BlurInPlace(BlocksFromHeaven.instance.globe.blurredTexture, background.image, TextureFormat.RGBA32);
+		blurredBackground = BlocksFromHeaven.instance.globe.blurredTexture;
 	}
 	
 	
@@ -34,9 +31,9 @@ class Scene
 	}
 	
 	public function leave() {
-		if (blurredBackground != null)
+		/* if (blurredBackground != null)
 			blurredBackground.unload();
-		blurredBackground = null;
+		blurredBackground = null; */
 		background.unload();
 	}
 	

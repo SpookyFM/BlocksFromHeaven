@@ -342,7 +342,7 @@ class Commands
 			var currentBG: String = game.currentScene.background.name;
 			if (currentBG == baseHolder.name) {
 				BlocksFromHeaven.instance.globe.texture = baseRenderTarget;
-				game.currentScene.background.exchangeImage(baseRenderTarget);
+				// game.currentScene.background.exchangeImage(baseRenderTarget);
 				game.currentScene.updateBlurredBackground();
 				BlocksFromHeaven.instance.globe.blurredTexture = game.currentScene.blurredBackground;	
 			}

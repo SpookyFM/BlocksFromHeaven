@@ -27,6 +27,7 @@ class ImageHolder
 	
 	public function exchangeImage(i: Image): Void {
 		image.unload();
+		Loader.the.unloadedImage(name);
 		image = i;
 	}
 	
@@ -66,6 +67,8 @@ class ImageHolder
 				image = Loader.the.getImage(name);
 				call();			
 			});
+		} else {
+			call();
 		}
 	}
 	
