@@ -1,5 +1,6 @@
 package;
 
+import haxe.io.Float32Array;
 import kha.graphics4.VertexBuffer;
 import kha.graphics4.IndexBuffer;
 import kha.Image;
@@ -41,7 +42,7 @@ class SubImageDrawer extends MeshBase
 		
 		
 		vb = new VertexBuffer(vertexCount, structure, Usage.StaticUsage);
-		var verts: Array<Float> = vb.lock();
+		var verts: Float32Array = vb.lock();
 		
 		var uvX: Float = x / imageW;
 		var uvY: Float = y / imageH;

@@ -1,5 +1,6 @@
 package;
 
+import haxe.io.Float32Array;
 import kha.Color;
 import kha.graphics4.*;
 import kha.Image;
@@ -26,7 +27,7 @@ class MeshBase
 	private var vs: VertexShader;
 	
 	
-	private function setVertex(a: Array<Float>, index: Int, pos: Vector3, uv: Vector2, color: Vector4) {
+	private function setVertex(a: Float32Array, index: Int, pos: Vector3, uv: Vector2, color: Vector4) {
 		var base: Int = index * 9;
 		a[base + 0] = pos.x;
 		a[base + 1] = pos.y;

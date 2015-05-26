@@ -1,6 +1,7 @@
 package;
 
 
+import haxe.io.Float32Array;
 import kha.graphics4.*;
 import kha.Image;
 import kha.math.Matrix4;
@@ -67,7 +68,7 @@ class UIElement extends MeshBase
 		
 		
 		vb = new VertexBuffer(vertexCount, structure, Usage.StaticUsage);
-		var verts: Array<Float> = vb.lock();
+		var verts: Float32Array = vb.lock();
 
 		setVertex(verts, 0, new Vector3(1, 1, 0), new Vector2(0, 0), new Vector4(1, 1, 1, 1));
 		setVertex(verts, 1, new Vector3(1, -1, 0), new Vector2(0, 1), new Vector4(1, 1, 1, 1));

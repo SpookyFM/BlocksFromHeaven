@@ -2,6 +2,7 @@ package;
 
 
 import haxe.ds.Vector;
+import haxe.io.Float32Array;
 import kha.graphics4.*;
 import kha.Image;
 import kha.math.Vector2;
@@ -165,7 +166,7 @@ class GlobeMesh
 		
 		// Create the VBO and IBO
 		vb = new VertexBuffer(vertexCount, structure, Usage.StaticUsage);
-		var vba: Array<Float> = vb.lock();
+		var vba: Float32Array = vb.lock();
 		for (i in 0...vertexCount) {
 			var current: Int = i * 9;
 			// Position

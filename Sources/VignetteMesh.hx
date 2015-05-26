@@ -1,4 +1,5 @@
 package;
+import haxe.io.Float32Array;
 import kha.graphics4.*;
 import kha.math.Vector3;
 import kha.Loader;
@@ -31,7 +32,7 @@ class VignetteMesh extends MeshBase
 		a[i * 3 +2] = index3;
 	}
 	
-	private function setVert(a: Array<Float>, i: Int, x: Float, y: Float) {
+	private function setVert(a: Float32Array, i: Int, x: Float, y: Float) {
 		a[i * 3 +0] = x;
 		a[i * 3 +1] = y;
 		a[i * 3 +2] = 0;
@@ -46,7 +47,7 @@ class VignetteMesh extends MeshBase
 		vertexCount = 12;
 		// Go from left to right
 		vb = new VertexBuffer(vertexCount, structure, Usage.StaticUsage);
-		var verts: Array<Float> = vb.lock();
+		var verts: Float32Array = vb.lock();
 		setVert(verts, 0, -1.01, 1.01);
 		setVert(verts, 1, -1.0 + vignetteSize, 1.01);
 		setVert(verts, 2, 1.0 - vignetteSize, 1.01);

@@ -319,16 +319,20 @@ class BlocksFromHeaven extends Game {
 
 		var proj: Matrix4 = Matrix4.empty();
 		
-		for (x in 0...4) for (y in 0...4) {
-			proj.set(x, y, projection.get(x, y));
-		}
+		proj._00 = projection._00;
+		proj._11 = projection._11;
+		proj._22 = projection._22;
+		proj._33 = projection._33;
 		
-		for (i in 2...4) {
+		
+		
+		// TODO: This function is not used anymore anyway, right?
+		/* for (i in 2...4) {
 			proj.set(i, 0, 0);
 			proj.set(i, 1, 0);
 			proj.set(i, 2, -1);
 			proj.set(i, 3, 0);
-		}
+		} */
 	
 		var t: Matrix4 = Matrix4.translation(0.5, 0.5, 0);
 		var s: Matrix4 = Matrix4.scale(0.5, 0.5, 1);
