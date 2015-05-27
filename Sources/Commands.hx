@@ -6,7 +6,9 @@ package;
 
 import kha.Image;
 import kha.Loader;
+import kha.math.Vector4;
 import kha.Music;
+import kha.Rectangle;
 import kha.Sound;
 
 import kha.Color;
@@ -291,6 +293,67 @@ class Commands
 	}
 	
 	
+	
+	// Draws from one image into the other, specifying a source and target rectangle (source, target = (x, y, w, h)
+	public function DrawSubImage2(base: String, top: String, sX, sY, sW, sH, tX, tY, tW, tH) {
+		// Since by default, images are not saved as render targets we need to:
+		// Copy the old base into a new image
+		// Unload the old texture
+		// Mark the holder as dirty
+		// Replace the image
+		// Load the image to draw from
+		// Do the drawing
+		// Unload the image we drew from
+		
+		var baseHolder: ImageHolder = ImageHolder.getHolder(base);
+		var topHolder = ImageHolder.getHolder(top);
+		
+		// TODO: We are assuming that the image is currently loaded
+		var baseImage: Image = baseHolder.image;
+		
+		
+		// Copy the image to a render target
+		var baseRenderTarget: Image = Image.createRenderTarget(4096, 2048, TextureFormat.RGBA32);
+		var drawer2: SubImageDrawer = new SubImageDrawer(new Rectangle(0, 0, 4096, 2048), new Rectangle(0, 0, 4096, 2048));
+		drawer2.imageToDraw = baseImage;
+		
+		baseRenderTarget.g4.begin();
+		drawer2.render(baseRenderTarget.g4);
+		baseRenderTarget.g4.end();
+		
+		// Exchange it in the image holder and mark dirty
+		baseHolder.exchangeImage(baseRenderTarget);
+		baseHolder.setDirty();
+		
+		
+		
+		topHolder.load(function() {
+			var topImage: Image = topHolder.image;
+			var sourceRect: Rectangle = new Rectangle(sX, sY, sW, sH);
+			var targetRect: Rectangle = new Rectangle(tX, tY, tW, tH);
+			var drawer: SubImageDrawer = new SubImageDrawer(sourceRect, targetRect);
+		
+		
+			drawer.imageToDraw = topImage;
+			baseRenderTarget.g4.begin();
+			drawer.render(baseRenderTarget.g4);
+			baseRenderTarget.g4.end(); 
+		
+		
+			// Check if we changed the current background image
+		
+			var currentBG: String = game.currentScene.background.name;
+			if (currentBG == baseHolder.name) {
+				BlocksFromHeaven.instance.globe.texture = baseRenderTarget;
+				// game.currentScene.background.exchangeImage(baseRenderTarget);
+				
+				
+			}
+			// Unload the top image
+			topHolder.unload();
+		});
+	}
+	
 	public function DrawSubImage(base: String, top: String, x: Float, y: Float, w: Float, h: Float) {
 		
 		
@@ -312,7 +375,7 @@ class Commands
 		
 		// Copy the image to a render target
 		var baseRenderTarget: Image = Image.createRenderTarget(4096, 2048, TextureFormat.RGBA32);
-		var drawer2: SubImageDrawer = new SubImageDrawer(0, 0, 4096, 2048);
+		var drawer2: SubImageDrawer = new SubImageDrawer(new Rectangle(0, 0, 4096, 2048), new Rectangle(0, 0, 4096, 2048));
 		drawer2.imageToDraw = baseImage;
 		
 		baseRenderTarget.g4.begin();
@@ -327,7 +390,8 @@ class Commands
 		
 		topHolder.load(function() {
 			var topImage: Image = topHolder.image;
-			var drawer: SubImageDrawer = new SubImageDrawer(x, y, w, h);
+			var rect: Rectangle = new Rectangle(x, y, w, h);
+			var drawer: SubImageDrawer = new SubImageDrawer(rect, rect);
 		
 		
 			drawer.imageToDraw = topImage;

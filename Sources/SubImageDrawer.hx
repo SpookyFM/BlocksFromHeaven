@@ -16,6 +16,7 @@ import kha.graphics4.CullMode;
 import kha.math.Matrix4;
 import kha.graphics4.ConstantLocation;
 import kha.Loader;
+import kha.Rectangle;
 
 /**
  * ...
@@ -23,6 +24,9 @@ import kha.Loader;
  */
 class SubImageDrawer extends MeshBase
 {
+	private var sourceRect: Rectangle;
+	private var targetRect: Rectangle;
+	
 	private var x: Float;
 	private var y: Float;
 	private var w: Float;
@@ -43,21 +47,42 @@ class SubImageDrawer extends MeshBase
 		vb = new VertexBuffer(vertexCount, structure, Usage.StaticUsage);
 		var verts: Array<Float> = vb.lock();
 		
-		var uvX: Float = x / imageW;
+		
+		
+		var viewport: Rectangle = new Rectangle(0, 0, 0, 0);
+		viewport.x = (targetRect.x / imageW) * 2 - 1;
+		viewport.y = (targetRect.y / imageH) * 2 - 1;
+		viewport.width = (targetRect.width / imageW) * 2;
+		viewport.height = (targetRect.height / imageH) * 2;
+		
+		var uv: Rectangle = new Rectangle(0, 0, 0, 0);
+		uv.x = sourceRect.x / imageW;
+		uv.y = sourceRect.y / imageH;
+		uv.width = sourceRect.width / imageW;
+		uv.height = sourceRect.height / imageH;
+		
+		
+		
+		/*var uvX: Float = x / imageW;
 		var uvY: Float = y / imageH;
 		var uvW: Float = w / imageW;
 		var uvH: Float = h / imageH;
 		var viewportX: Float =  uvX * 2 - 1;
 		var viewportY: Float = uvY * 2 - 1;
 		var viewportW: Float = uvW * 2;
-		var viewportH: Float = uvH * 2;
+		var viewportH: Float = uvH * 2; */
 		
 		
 
-		setVertex(verts, 0, new Vector3(viewportX, viewportY, 0), new Vector2(uvX, uvY), new Vector4(1, 1, 1, 1));
+		/* setVertex(verts, 0, new Vector3(viewportX, viewportY, 0), new Vector2(uvX, uvY), new Vector4(1, 1, 1, 1));
 		setVertex(verts, 1, new Vector3(viewportX, viewportY + viewportH, 0), new Vector2(uvX, uvY + uvH), new Vector4(1, 1, 1, 1));
 		setVertex(verts, 2, new Vector3(viewportX + viewportW, viewportY, 0), new Vector2(uvX + uvW, uvY), new Vector4(1, 1, 1, 1));
-		setVertex(verts, 3, new Vector3(viewportX + viewportW, viewportY + viewportH, 0), new Vector2(uvX + uvW, uvY + uvH), new Vector4(1, 1, 1, 1));
+		setVertex(verts, 3, new Vector3(viewportX + viewportW, viewportY + viewportH, 0), new Vector2(uvX + uvW, uvY + uvH), new Vector4(1, 1, 1, 1)); */
+		
+		setVertex(verts, 0, new Vector3(viewport.x, viewport.y, 0), new Vector2(uv.x, uv.y), new Vector4(1, 1, 1, 1));
+		setVertex(verts, 1, new Vector3(viewport.x, viewport.y + viewport.height, 0), new Vector2(uv.x, uv.y + uv.height), new Vector4(1, 1, 1, 1));
+		setVertex(verts, 2, new Vector3(viewport.x + viewport.width, viewport.y, 0), new Vector2(uv.x + uv.width, uv.y), new Vector4(1, 1, 1, 1));
+		setVertex(verts, 3, new Vector3(viewport.x + viewport.width, viewport.y + viewport.height, 0), new Vector2(uv.x + uv.width, uv.y + uv.height), new Vector4(1, 1, 1, 1));
 		
 		vb.unlock();
 		
@@ -101,12 +126,10 @@ class SubImageDrawer extends MeshBase
 	}
 	
 	
-	public function new(x: Float, y: Float, w: Float, h: Float) 
+	public function new(source: Rectangle, target: Rectangle ) 
 	{
-		this.x = x;
-		this.y = y;
-		this.w = w;
-		this.h = h;
+		this.sourceRect = source;
+		this.targetRect = target;
 		super();
 		
 	}

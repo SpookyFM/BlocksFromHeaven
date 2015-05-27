@@ -270,6 +270,7 @@ class BlocksFromHeaven extends Game {
 		//list.add("intercom_2.png");
 		//list.add("intercom_3.png");
 		//list.add("outside_basket");
+		list.add("atlas");
 		for (name in list) {
 			var h: ImageHolder = ImageHolder.getHolder(name);
 			h.load(function() { } );

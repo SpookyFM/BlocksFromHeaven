@@ -75,8 +75,10 @@ game.PlaySound("C1_Bertram_01");
 game.SetVariable("Bertram_called", true);
 game.EnableHotspot("Bertram");
 game.EnableHotspotInScene("Conservatory 2", "Bertram");
-game.ChangeBackground("Conservatory 1", "conservatory1_bertram");
-game.ChangeBackground("Conservatory 2", "conservatory2_bertram");
+// game.ChangeBackground("Conservatory 1", "conservatory1_bertram");
+game.DrawSubImage2("conservatory", "atlas", 1109, 959,525,569, 3064, 4,525,569);
+// game.ChangeBackground("Conservatory 2", "conservatory2_bertram");
+game.DrawSubImage2("conservatory2", "atlas", 3658, 968,313,569, 531, 579,313,569);
 } else {
 game.PlaySound("Bell_Use_Prot_01");
 }</OnUse>
@@ -92,8 +94,10 @@ game.PlaySound("Bell_Use_Prot_01");
           <OnUse />
           <OnTalkTo>if (game.GetVariable("father_heard") == true) {
    game.PlaySound("D_Alarmed_Prot_Bertram_01");
-   game.ChangeBackground("Conservatory 1", "conservatory");
-   game.ChangeBackground("Conservatory 2", "conservatory2");
+//   game.ChangeBackground("Conservatory 1", "conservatory");
+  game.DrawSubImage2("conservatory", "atlas", 1109, 959,525,569, 4, 579,525,569);
+//   game.ChangeBackground("Conservatory 2", "conservatory2");
+game.DrawSubImage2("conservatory2", "atlas", 3658, 968,313,569, 846, 579,313,569);
    game.DisableHotspotInScene("Conservatory 1", "Bertram");
    game.DisableHotspotInScene("Conservatory 2", "Bertram");
 } else 
@@ -177,13 +181,16 @@ game.ShowLook();</OnGaze>
           <OnUse>var dial = game.GetVariable("dial");
 if (dial == 1) {
   dial = 2;
-  game.ChangeBackground("Examine_Intercom", "intercom_2");
+  //game.ChangeBackground("Examine_Intercom", "intercom_2");
+game.DrawSubImage2("intercom_1", "atlas", 1941, 1242,189,196, 1720, 579,189,196);
 } else if (dial == 2) {
   dial = 3;
-  game.ChangeBackground("Examine_Intercom", "intercom_3");
+  // game.ChangeBackground("Examine_Intercom", "intercom_3");
+game.DrawSubImage2("intercom_1", "atlas", 1941, 1242,189,196, 1911, 579,189,196);
 } else {
   dial = 1;
-  game.ChangeBackground("Examine_Intercom", "intercom_1");
+//  game.ChangeBackground("Examine_Intercom", "intercom_1");
+game.DrawSubImage2("intercom_1", "atlas", 1941, 1242,189,196, 1529, 579,189,196);
 }
 game.SetVariable("dial", dial);
 game.PlaySound("klack");</OnUse>
@@ -319,8 +326,12 @@ game.ShowLook();</OnGaze>
           <OnUse />
           <OnTalkTo>if (game.GetVariable("father_heard") == true) {
    game.PlaySound("D_Alarmed_Prot_Bertram_01");
-   game.ChangeBackground("Conservatory 1", "conservatory");
-   game.ChangeBackground("Conservatory 2", "conservatory2");
+//   game.ChangeBackground("Conservatory 1", "conservatory");
+  game.DrawSubImage2("conservatory", "atlas", 1109, 959,525,569, 4, 579,525,569);
+//   game.ChangeBackground("Conservatory 2", "conservatory2");
+game.DrawSubImage2("conservatory2", "atlas", 3658, 968,313,569, 846, 579,313,569);
+   game.DisableHotspotInScene("Conservatory 1", "Bertram");
+   game.DisableHotspotInScene("Conservatory 2", "Bertram");
 } else 
 if (game.GetVariable("talked_to_bertram") == false) {
 game.PlaySound("D_Neutral_Prot_Bertram_01");
@@ -404,7 +415,9 @@ game.ShowUse();</OnGaze>
           <OnGaze>game.ShowUse();
 game.ShowLook();</OnGaze>
           <OnUse>game.AddInventoryItem("Book");
-game.ChangeBackground(game.GetCurrentScene(), "examine_bookshelf_no_book");
+//game.ChangeBackground(game.GetCurrentScene(), "examine_bookshelf_no_book");
+game.DrawSubImage2("examine_bookshelf", "atlas", 2082, 1154,366,241, 1161, 579,366,241);
+
 game.PlaySound("add_inventory");
 game.DisableHotspot("Instructions");</OnUse>
           <OnLook>game.PlaySound("Bookshelf_Book_Look_Prot_01");</OnLook>
@@ -455,7 +468,8 @@ game.AddInventoryItem("Green Gem");
 game.AddInventoryItem("Blue Gem");
 game.AddInventoryItem("Yellow Gem");
 game.AddInventoryItem("Purple Gem");
-game.ChangeBackground("Examine_Light", "examine_light_no_gems");
+// game.ChangeBackground("Examine_Light", "examine_light_no_gems");
+game.DrawSubImage2("examine_light", "atlas", 1941, 1676,543,214, 2519, 4,543,214);
 game.PlaySound("add_inventory");
 game.DisableHotspot("Gems");</OnUse>
           <OnLook>game.PlaySound("Light_Gems_Look_Prot_01")</OnLook>
@@ -473,14 +487,19 @@ game.ShowLook();</OnGaze>
           <OnUseInventory>var image = "";
 if (game.GetActiveInventory() == "Red Gem") {
   image = "gems_red";
+  game.DrawSubImage2("examine_light", "atlas", 1729, 1508,189,189, 507, 4,189,189);
 } else if (game.GetActiveInventory() == "Green Gem") {
   image = "gems_green";
+  game.DrawSubImage2("examine_light", "atlas", 1729, 1508,189,189, 1010, 4,189,189);
 } else if (game.GetActiveInventory() == "Blue Gem") {
   image = "gems_blue";
+  game.DrawSubImage2("examine_light", "atlas", 1729, 1508,189,189, 4, 4,189,189);
 } else if (game.GetActiveInventory() == "Yellow Gem") {
   image = "gems_yellow";
+  game.DrawSubImage2("examine_light", "atlas", 1729, 1508,189,189, 1513, 4,189,189);
 } else if (game.GetActiveInventory() == "Purple Gem") {
   image = "gems_purple";
+  game.DrawSubImage2("examine_light", "atlas", 1729, 1508,189,189, 2016, 4,189,189);
 }
 game.Log("Used inventory:" + game.GetActiveInventory());
 
@@ -500,7 +519,8 @@ if (game.GetVariable("gemLeft") == "Purple Gem") {
   game.AddInventoryItem("Purple Gem");
 }
 
-game.DrawSubImage("examine_light_no_gems", image, 1729, 1508, 189, 189);
+// game.DrawSubImage("examine_light_no_gems", image, 1729, 1508, 189, 189);
+
 game.PlaySound("add_inventory");
 game.RemoveInventoryItem(game.GetActiveInventory());
 game.SetVariable("gemLeft", game.GetActiveInventory());</OnUseInventory>
@@ -515,19 +535,22 @@ game.SetVariable("gemLeft", game.GetActiveInventory());</OnUseInventory>
 game.ShowLook();</OnGaze>
           <OnUse />
           <OnLook>game.PlaySound("Light_Receptacle_Look_Prot_01");</OnLook>
-          <OnUseInventory>
-
-var image = "";
+          <OnUseInventory>var image = "";
 if (game.GetActiveInventory() == "Red Gem") {
   image = "gems_red";
+  game.DrawSubImage2("examine_light", "atlas", 1888, 1508,154,189, 698, 4,154,189);
 } else if (game.GetActiveInventory() == "Green Gem") {
   image = "gems_green";
+  game.DrawSubImage2("examine_light", "atlas", 1888, 1508,154,189, 1201, 4,154,189);
 } else if (game.GetActiveInventory() == "Blue Gem") {
   image = "gems_blue";
+  game.DrawSubImage2("examine_light", "atlas", 1888, 1508,154,189, 195, 4,154,189);
 } else if (game.GetActiveInventory() == "Yellow Gem") {
   image = "gems_yellow";
+  game.DrawSubImage2("examine_light", "atlas", 1888, 1508,154,189, 1704, 4,154,189);
 } else if (game.GetActiveInventory() == "Purple Gem") {
   image = "gems_purple";
+  game.DrawSubImage2("examine_light", "atlas", 1888, 1508,154,189, 2207, 4,154,189);
 }
 game.Log("Used inventory:" + game.GetActiveInventory());
 
@@ -547,14 +570,10 @@ if (game.GetVariable("gemMiddle") == "Purple Gem") {
   game.AddInventoryItem("Purple Gem");
 }
 
-game.DrawSubImage("examine_light_no_gems", image, 1888, 1508, 154, 189);
+// game.DrawSubImage("examine_light_no_gems", image, 1888, 1508, 154, 189);
 game.PlaySound("add_inventory");
 game.RemoveInventoryItem(game.GetActiveInventory());
-game.SetVariable("gemMiddle", game.GetActiveInventory());
-
-
-
-</OnUseInventory>
+game.SetVariable("gemMiddle", game.GetActiveInventory());</OnUseInventory>
         </Hotspot>
         <Hotspot Name="Receptacle 3" IsEnabled="true">
           <Shape xsi:type="CircleShape">
@@ -569,14 +588,19 @@ game.ShowLook();</OnGaze>
           <OnUseInventory>var image = "";
 if (game.GetActiveInventory() == "Red Gem") {
   image = "gems_red";
+  game.DrawSubImage2("examine_light", "atlas", 2039, 1508,154,189, 854, 4,154,189);
 } else if (game.GetActiveInventory() == "Green Gem") {
   image = "gems_green";
+  game.DrawSubImage2("examine_light", "atlas", 2039, 1508,154,189, 1357, 4,154,189);
 } else if (game.GetActiveInventory() == "Blue Gem") {
   image = "gems_blue";
+  game.DrawSubImage2("examine_light", "atlas", 2039, 1508,154,189, 351, 4,154,189);
 } else if (game.GetActiveInventory() == "Yellow Gem") {
   image = "gems_yellow";
+  game.DrawSubImage2("examine_light", "atlas", 2039, 1508,154,189, 1860, 4,154,189);
 } else if (game.GetActiveInventory() == "Purple Gem") {
   image = "gems_purple";
+  game.DrawSubImage2("examine_light", "atlas", 2039, 1508,154,189, 2363, 4,154,189);
 }
 game.Log("Used inventory:" + game.GetActiveInventory());
 
@@ -596,7 +620,7 @@ if (game.GetVariable("gemRight") == "Purple Gem") {
   game.AddInventoryItem("Purple Gem");
 }
 
-game.DrawSubImage("examine_light_no_gems", image, 2039, 1508, 154, 189);
+//game.DrawSubImage("examine_light_no_gems", image, 2039, 1508, 154, 189);
 game.PlaySound("add_inventory");
 game.RemoveInventoryItem(game.GetActiveInventory());
 game.SetVariable("gemRight", game.GetActiveInventory());
@@ -620,7 +644,8 @@ if (correct == false) {
   game.PlaySound("Light_Lever_Use_Prot_01");
 } else {
   game.PlaySound("Light_Lever_Use_Prot_02");
-  game.ChangeBackground("Outside", "outside_basket");
+  //game.ChangeBackground("Outside", "outside_basket");
+game.DrawSubImage2("outside", "atlas", 2118, 109,260,1347, 2102, 579,260,1347);
   game.SetVariable("basket_down", true);
 }
 </OnUse>
@@ -1213,6 +1238,13 @@ game.PlayMusic("music_outro");</OnEnter>
       <File>C:\khaviar\BlocksFromHeaven\Assets\Sound\Intercom_Dial_Look_Prot_01.wav</File>
       <OwnRoom>false</OwnRoom>
       <Name>Intercom_Dial_Look_Prot_01</Name>
+    </Asset>
+    <Asset>
+      <Id />
+      <Type>image</Type>
+      <File>C:\khaviar\BlocksFromHeaven\Assets\Graphics\atlas.png</File>
+      <OwnRoom>true</OwnRoom>
+      <Name>atlas</Name>
     </Asset>
   </Assets>
   <InventoryItems>
