@@ -21,6 +21,8 @@ class ImageHolder
 	
 	private var isDirty: Bool;
 	
+	public var isRenderTarget: Bool;
+	
 	private var room: Room;
 	
 	private static var allImages: Map<String, ImageHolder>;

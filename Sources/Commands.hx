@@ -4,12 +4,14 @@ package;
 
 
 
+
 import kha.Image;
 import kha.Loader;
 import kha.math.Vector4;
 import kha.Music;
 import kha.Rectangle;
 import kha.Sound;
+import kha.SoundChannel;
 
 import kha.Color;
 
@@ -35,7 +37,9 @@ class Commands
 	
 	private var symbols: Map<ActionType, UIElement>;
 	
-		
+	
+	private var lastDialogue: SoundChannel;
+	
 	public function Speak(text: String, soundFile: String): Void {
 		var s: Sound = Loader.the.getSound(soundFile);
 		s.play();
@@ -44,6 +48,15 @@ class Commands
 	public function PlaySound(soundFile: String): Void {
 		var s: Sound = Loader.the.getSound(soundFile);
 		s.play();
+	}
+	
+	// Say plays a sound and stops any sound that was started with "say" previously.
+	public function Say(soundFile: String): Void {
+		if (lastDialogue != null) {
+			lastDialogue.stop();
+		}
+		var s: Sound = Loader.the.getSound(soundFile);
+		lastDialogue = s.play();
 	}
 	
 	public function PlayMusic(musicFile: String, ?loop: Bool = false): Void {
@@ -311,19 +324,28 @@ class Commands
 		// TODO: We are assuming that the image is currently loaded
 		var baseImage: Image = baseHolder.image;
 		
+		var baseRenderTarget: Image = null;
 		
-		// Copy the image to a render target
-		var baseRenderTarget: Image = Image.createRenderTarget(4096, 2048, TextureFormat.RGBA32);
-		var drawer2: SubImageDrawer = new SubImageDrawer(new Rectangle(0, 0, 4096, 2048), new Rectangle(0, 0, 4096, 2048));
-		drawer2.imageToDraw = baseImage;
+		if (baseHolder.isRenderTarget) {
+			baseRenderTarget = baseImage;
+		} else {
+			// Copy the image to a render target
+			var baseRenderTarget: Image = Image.createRenderTarget(4096, 2048, TextureFormat.RGBA32);
+			var drawer2: SubImageDrawer = new SubImageDrawer(new Rectangle(0, 0, 4096, 2048), new Rectangle(0, 0, 4096, 2048));
+			drawer2.imageToDraw = baseImage;
+			
+			baseRenderTarget.g4.begin();
+			drawer2.render(baseRenderTarget.g4);
+			baseRenderTarget.g4.end();
+			
+			// Exchange it in the image holder and mark dirty
+			baseHolder.exchangeImage(baseRenderTarget);
+			baseHolder.setDirty();
+			baseHolder.isRenderTarget = true;
+		}
 		
-		baseRenderTarget.g4.begin();
-		drawer2.render(baseRenderTarget.g4);
-		baseRenderTarget.g4.end();
 		
-		// Exchange it in the image holder and mark dirty
-		baseHolder.exchangeImage(baseRenderTarget);
-		baseHolder.setDirty();
+		
 		
 		
 		
