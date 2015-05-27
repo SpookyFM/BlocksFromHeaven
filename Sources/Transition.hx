@@ -65,11 +65,7 @@ class Transition
 				endScene.enter(function() { 
 					// Switch out the image
 					globe.texture = endScene.background.image;
-					globe.blurredTexture = endScene.blurredBackground;
 					
-					if (toExamine) {
-						globe.blurredTexture = endScene.background.image;
-					}
 					
 					// Start a new fade in
 					var startColor: Color = fadeColor;

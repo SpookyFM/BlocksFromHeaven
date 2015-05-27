@@ -12,22 +12,9 @@ class Scene
 		
 	public var background: ImageHolder;
 	
-	public var blurredBackground: Image;
-	
-	
-	
-	// TODO: How to ensure that this is not called when the image is not loaded?
-	public function updateBlurredBackground() {
-		trace("Blurring: " + background.image);
-		Blur.BlurInPlace(BlocksFromHeaven.instance.globe.blurredTexture, background.image, TextureFormat.RGBA32);
-		blurredBackground = BlocksFromHeaven.instance.globe.blurredTexture;
-	}
-	
-	
-	
 	// Call will be called when the scene is ready
 	public function enter(call: Void -> Void) {
-		background.load(function() { updateBlurredBackground(); call(); } );
+		background.load(function() { call(); } );
 	}
 	
 	public function leave() {

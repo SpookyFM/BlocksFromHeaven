@@ -30,7 +30,7 @@ class GlobeMesh
 	
 	public var texture: Image;
 	
-	public var blurredTexture: Image;
+	
 	
 	private var animationStart: Float;
 	
@@ -242,8 +242,12 @@ class GlobeMesh
 		var textureUnit: TextureUnit = program.getTextureUnit("tex");
 		g4.setTexture(textureUnit, texture);
 		
-		var tex2: TextureUnit = program.getTextureUnit("tex2");
-		g4.setTexture(tex2, blurredTexture);
+		var texelWidthOffset: ConstantLocation = program.getConstantLocation("texelWidthOffset");
+		
+		g4.setFloat(texelWidthOffset, 1.0 / texture.width);
+		
+		var texelHeightOffset: ConstantLocation = program.getConstantLocation("texelHeightOffset");
+		g4.setFloat(texelHeightOffset, 1.0 / texture.height);
 		
 		g4.drawIndexedVertices();
 	}

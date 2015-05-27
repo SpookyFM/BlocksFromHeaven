@@ -108,8 +108,7 @@ class Commands
 					s.background.unload();
 					s.background = image;
 					
-					s.updateBlurredBackground();
-					BlocksFromHeaven.instance.globe.blurredTexture = s.blurredBackground;
+					
 			});
 		} else {
 			s.background = image;
@@ -343,8 +342,8 @@ class Commands
 			if (currentBG == baseHolder.name) {
 				BlocksFromHeaven.instance.globe.texture = baseRenderTarget;
 				// game.currentScene.background.exchangeImage(baseRenderTarget);
-				game.currentScene.updateBlurredBackground();
-				BlocksFromHeaven.instance.globe.blurredTexture = game.currentScene.blurredBackground;	
+				
+				
 			}
 			// Unload the top image
 			topHolder.unload();

@@ -48,7 +48,6 @@ import VignetteMesh;
 import GameReader;
 import GazeCursor;
 import ActionType;
-import BlurFilter;
 import LinearVRMenu;
 
 
@@ -83,7 +82,7 @@ class BlocksFromHeaven extends Game {
 	
 	public var gazeCursor: GazeCursor;
 	
-	public var blurredBackground: Bool;
+	
 	
 	public var gazeActive: Bool;
 	
@@ -130,9 +129,6 @@ class BlocksFromHeaven extends Game {
 		// Disable the hotspots
 		inventoryActive = true;
 		inventoryType = type;
-		
-		
-		globe.blurredTexture = game.currentScene.blurredBackground;
 		
 		
 		// Blur the background
@@ -231,7 +227,7 @@ class BlocksFromHeaven extends Game {
 		//game = new TestGame();
 		
 		globe = new GlobeMesh(1, 1);
-		globe.blurredTexture = Image.createRenderTarget(4096, 2048, TextureFormat.RGBA32);
+		
 		
 		
 		transition = new Transition();
@@ -255,7 +251,7 @@ class BlocksFromHeaven extends Game {
 		
 		trace("Loading finished");
 		
-		game.startScene.enter(loadFirstBGFinished);
+		
 		
 		for (scene in game.scenes) {
 			scene.background.load(function() { } );
@@ -263,30 +259,30 @@ class BlocksFromHeaven extends Game {
 		}
 		
 		var list: List<String> = new List<String>();
-		list.add("conservatory1_bertram");
-		list.add("conservatory2_bertram");
-		list.add("examine_bookshelf_no_book");
-		list.add("gems_blue");
+		//list.add("conservatory1_bertram");
+		//list.add("conservatory2_bertram");
+		//list.add("examine_bookshelf_no_book");
+		/* list.add("gems_blue");
 		list.add("gems_green");
 		list.add("gems_red");
 		list.add("gems_yellow");
-		list.add("gems_purple");
-		list.add("intercom_2.png");
-		list.add("intercom_3.png");
-		list.add("outside_basket");
+		list.add("gems_purple"); */
+		//list.add("intercom_2.png");
+		//list.add("intercom_3.png");
+		//list.add("outside_basket");
 		for (name in list) {
 			var h: ImageHolder = ImageHolder.getHolder(name);
 			h.load(function() { } );
 			h.setDirty();
 		}
 		
-		
+		game.startScene.enter(loadFirstBGFinished);
 	}
 	
 	
 	public function loadFirstBGFinished() {
 		globe.texture = game.startScene.background.image;
-		globe.blurredTexture = game.startScene.blurredBackground;
+		
 		
 		Interpreter.the.interpret(game.startScene.onEnter);
 	}
